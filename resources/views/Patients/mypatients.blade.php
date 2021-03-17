@@ -120,6 +120,13 @@
                                     <span class="font-weight-bold text-primary">Waiting to Accept</span>
                                     @else
                                     <span class="font-weight-bold">Scheduled </span>
+                                    @if(App\Http\Controllers\LoggedUser::getuser())
+                                    <form action="{{route('myschedules')}}" method="POST">
+                                        @csrf
+                                        <input name="myTrigger" type="hidden" value="test" hidden>
+                                        <button class=" ml-1 mx-auto btn btn-outline-danger btn-sm">Create Another Schedule</button>
+                                    </form>
+                                    @endif
                                     @endif
                                 </td>
                                 @if(App\Http\Controllers\LoggedUser::user_role() == 1)
@@ -134,7 +141,7 @@
                                         View
                                     </button>
                                 </td> --}}
-
+{{-- 
                                 <div class="modal fade" id="viewPat{{$pat->hpercode}}" tabindex="-1" aria-labelledby="viewPatLabel"
                                     aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-scrollable exmode">
@@ -164,7 +171,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </tr>
                             @endforeach
                         </tbody>
