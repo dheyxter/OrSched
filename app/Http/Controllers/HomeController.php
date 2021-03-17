@@ -27,6 +27,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {   
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
+        $mydata = DB::select("SELECT * from jhay.orsched_user WHERE employeeid = '".Auth::user()->employeeid."'");
         $today = Carbon\Carbon::now();
         $employee = Auth::user()->employeeid;
         $patients = toAccept::with('reservation')
@@ -115,12 +116,12 @@ class HomeController extends Controller
         $patcount1 = count($patients);
 
         
-        // $trigger = $request->myTrigger;
-        // if(!empty($trigger)){
-        //     $getTrigger = $trigger;
-        // }else{
+        $trigger = $request->myTrigger;
+        if(!empty($trigger)){
+            $getTrigger = $trigger;
+        }else{
            
-        // }
+        }
 
         $datetoday = $request->selectdate;
         $roomtoday = $request->selectroom;
@@ -146,8 +147,9 @@ class HomeController extends Controller
             'datetoday' => $datetoday,
             'roomtoday' => $roomtoday,
             'scheds' => $scheds,
-            'schedcount' => $schedcount
-            // 'getTrigger' => $getTrigger
+            'schedcount' => $schedcount,
+            'getTrigger' => $trigger,
+            'mydata' => $mydata
         ]);
     }
 
@@ -225,6 +227,15 @@ class HomeController extends Controller
     public function Charts()
     {
         $chart = DB::SELECT("EXEC dex.spOrsched_ChartData");
+    }
+
+
+    public function is_confirm(Request $r)
+    {   
+       $empid = $r->employeeid;
+       $updt = DB::UPDATE("UPDATE jhay.orsched_user SET is_confirm = '1' WHERE employeeid = '$empid'");
+
+       return redirect('/');
     }
 
 

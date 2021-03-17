@@ -45,6 +45,9 @@ Route::middleware('auth')->group (function (){
     Route::any('/myschedules', 'ReservationController@myschedules')
         ->name('myschedules');
 
+    Route::any('/schedlist', 'ReservationController@schedlist')->name('schedlist');
+    Route::GET('/schedlist_gen', 'ReservationController@schedlist_gen')->name('schedlist_gen');
+
     Route::get('calendarView', 'ReservationController@newCalendar')->name('calendarView');
     Route::get('/selectdate', 'ReservationController@storeCalendar');
 
@@ -136,4 +139,8 @@ Route::middleware('auth')->group (function (){
     // USER MANUAL
     Route::get('/ChartReport', 'HomeController@ChartReport')->name('ChartReport');
     Route::post('/Charts', 'HomeController@Charts')->name('Charts');
+
+
+
+    Route::post('/isConfirm','HomeController@is_confirm');
 });

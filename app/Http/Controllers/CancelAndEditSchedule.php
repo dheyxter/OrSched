@@ -14,7 +14,6 @@ class CancelAndEditSchedule extends Controller
 
         $id = $r->id;
         $hpercode = $r->patient_id;
-        // dd($hpercode);
         DB::table('jhay.orsched_patients')
         ->where('id', $id)
         ->update([
@@ -44,12 +43,12 @@ class CancelAndEditSchedule extends Controller
 
         $id = $r->id;
         $hpercode = $r->patient_id;
-        // dd($hpercode);
         DB::table('jhay.orsched_reservations')
         ->where('patient_id', $id)
         ->update([
             'defer' => '1'
         ]);
+
         
         DB::table('jhay.orsched_actlog')
         ->insert([

@@ -171,6 +171,134 @@ class ReservationController extends Controller
         ));
     }
 
+    public function schedlist(request $request)
+    {
+        $timeStart = '07:00:00';
+        $timeEnd = '16:00:00';
+        $elec = 0;
+        $emer = 1;
+        $employee = Auth::user()->employeeid;
+        $time = DB::SELECT("SELECT GETDATE() as datetoday");
+        $datetoday = Carbon::now()->format('Y-m-d');
+        $available_time = $this->time_available($request);
+        $roomtoday = 1;
+
+        $scheds = DB::SELECT(
+            "SELECT * FROM jhay.orsched_reservations AS re 
+            INNER JOIN jhay.orsched_patients pa 
+            ON re.patient_id = pa.id      
+            where re.created_at  = getdate()
+            ");
+
+        $count = DB::SELECT(
+            "SELECT COUNT (re.id) as total
+            FROM jhay.orsched_reservations AS re 
+            INNER JOIN jhay.orsched_patients pa 
+            ON re.patient_id = pa.id 
+            WHERE room_id = '$roomtoday' and accept = '1'");
+
+        $res = DB::SELECT("SELECT * FROM jhay.orsched_reservations");
+        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
+            $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid");
+        }
+        else {
+            $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid WHERE a.entry_by = '$employee'");
+        }
+
+        $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '$employee'");
+        $schedcount = count($scheds);
+
+        $trigger = $request->myTrigger;
+        // return $getTrigger;
+        if(!empty($trigger)){
+            $getTrigger = $trigger;
+        }else{
+            $getTrigger = '';
+        }
+        
+        return view('Calendar.schedlist', compact(
+            'hpersonal',
+            'datetoday',
+            'scheds',
+            'roomtoday',
+            'time',
+            'pat',
+            'schedcount',
+            'available_time',
+            'res',
+            'count',
+            'getTrigger',
+            'timeStart',
+            'timeEnd',
+            'elec',
+            'emer'
+            
+        ));
+    }
+
+    public function schedlist_gen(request $request)
+    {
+        $timeStart = '07:59:59';
+        $timeEnd = '16:00:00';
+        $elec = 0;
+        $emer = 1;
+        $employee = Auth::user()->employeeid;
+        $enteredBy = LoggedUser::getUser();
+        $time = DB::SELECT("SELECT GETDATE() as datetoday");
+        $datetoday = $request->selectdate;
+        $roomtoday = $request->selectroom;
+       if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2) {
+        $scheds = DB::SELECT("SELECT * FROM jhay.orsched_reservations AS re 
+        INNER JOIN jhay.orsched_patients pa ON re.patient_id = pa.id 
+        INNER JOIN jhay.orsched_schedule sc ON pa.id = sc.patient_id
+        WHERE accept = 1 and cast(re.created_at as date) = '$datetoday'");
+       }
+       else
+       {
+        $scheds = DB::SELECT("SELECT * FROM jhay.orsched_reservations AS re INNER JOIN jhay.orsched_patients pa ON re.patient_id = pa.id WHERE accept = 1 AND cast(re.created_at as date) = '$datetoday' AND re.entry_by = '$employee'");
+       }
+        $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid WHERE accept = 1 AND a.entry_by = '$employee'");
+        $pat1 = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid WHERE accept = 1");
+        $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '$employee'");
+        
+        $schedcount = count($scheds);
+        $count = DB::SELECT(
+            "SELECT COUNT (*) as total
+            FROM jhay.orsched_reservations AS re 
+            INNER JOIN jhay.orsched_patients pa 
+            ON re.patient_id = pa.id 
+            WHERE 
+            year(re.created_at) = year(getdate()) and month(re.created_at) = month(getdate()) and day(re.created_at) = day(getdate()) AND
+            room_id = '$roomtoday' and accept = '1'");
+
+        $trigger = $request->myTrigger;
+        // return $getTrigger;
+        if(!empty($trigger)){
+            $getTrigger = $trigger;
+        }else{
+            $getTrigger = '';
+        }
+
+        return view('Calendar.schedlist', compact(
+            'hpersonal',
+            'datetoday',
+            'scheds',
+            'roomtoday',
+            'time',
+            'pat',
+            'pat1',
+            'enteredBy',
+            'schedcount',
+            // 'available_time',
+            'getTrigger',
+            'count',
+            'timeStart',
+            'timeEnd',
+            'elec',
+            'emer'
+        ));
+    }
+
     public function addAnes(Request $r)
     {
         $ann_id = $r->patient_id;

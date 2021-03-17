@@ -18,6 +18,7 @@
                 <th>Position</th>
                 <th>Role</th>
                 <th>System</th>
+                <th>Confirm?</th>
                 <th>Action</th>
             </thead>
             <tbody>
@@ -45,6 +46,13 @@
                         @elseif($users->system == 'homis')
                             <button class="btn btn-outline-primary btn-sm">HOMIS USER <span><i class="fas fa-user fa-1x"></i></span></button>
                         @else
+                        @endif
+                    </td>
+                    <td class="text-center">
+                        @if($users->is_confirm == NULL)
+                            
+                        @else
+                        <span class="text-success"><i class="fas fa-check"></i></span>
                         @endif
                     </td>
                     <td class="text-center">
