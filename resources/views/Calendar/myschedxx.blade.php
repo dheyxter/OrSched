@@ -840,7 +840,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                             <input name="surgeon_name" type="hidden"
                                 value="{{App\Http\Controllers\LoggedUser::getUser()}}">
                             </select> --}}
-                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple
+                            {{-- <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple
                                 data-live-search="true" required>
                                 <option disabled value="">-- Select Surgeon --</option>
                                 @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
@@ -851,7 +851,9 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                                 @endforeach
                                 <input name="entry_by" type="hidden"
                                     value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                            </select>
+                            </select> --}}
+
+                            <input type="text" class="form-control col-sm-12" name="surgeon" required>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -1128,7 +1130,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="surgeon" class="col-sm-3 col-form-label">Surgeon:</label>
                         <div class="col-sm-9">
-                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple data-live-search="true"
+                            {{-- <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple data-live-search="true"
                                 required>
                                 <option disabled value="">-- Select Surgeon --</option>
                                 @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
@@ -1139,7 +1141,8 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                                 @endforeach
                                 <input name="entry_by" type="hidden"
                                     value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                            </select>
+                            </select> --}}
+                            <input type="text" class="form-control col-sm-12" name="surgeon" required>
                             <div class="invalid-feedback">
                                 required
                             </div>
