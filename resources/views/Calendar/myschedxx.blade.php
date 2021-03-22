@@ -853,7 +853,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                                     value="{{App\Http\Controllers\LoggedUser::getUser()}}">
                             </select> --}}
 
-                            <input type="text" class="form-control col-sm-12" name="surgeon" required>
+                            <input type="text" class="form-control col-sm-12 is-invalid" name="surgeon" required>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -1142,7 +1142,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                                 <input name="entry_by" type="hidden"
                                     value="{{App\Http\Controllers\LoggedUser::getUser()}}">
                             </select> --}}
-                            <input type="text" class="form-control col-sm-12" name="surgeon" required>
+                            <input type="text" class="form-control col-sm-12 is-invalid" name="surgeon" required>
                             <div class="invalid-feedback">
                                 required
                             </div>
