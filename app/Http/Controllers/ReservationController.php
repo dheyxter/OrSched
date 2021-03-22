@@ -517,7 +517,7 @@ class ReservationController extends Controller
         $patient = $request->patient;
         $patid = $request->patid;
         $emp = Auth::user()->employeeid;
-        $surgeon = implode(', ', $request->surgeon);
+        $surgeon = $request->surgeon;
         $caseNum = $request->caseNum;
         $timeStart = $request->timeStart;
         $timeDuration = $request->timeDuration;
@@ -580,7 +580,7 @@ class ReservationController extends Controller
         $schedule_date =$request->date;
         $schedule_date =Carbon::parse($request->date);
         $schedule_annex = $request->room;
-        $schedule_surgeon = implode(', ', $request->surgeon);
+        $schedule_surgeon = $request->surgeon;
         // $schedule_patient = $request->patname;
         // $schedule_timeout = $request->timeout;
         // $schedule_timeout = Carbon::parse($request->timeout)->format('H:i');
@@ -609,7 +609,7 @@ class ReservationController extends Controller
         $patient = $request->patient;
         $patid = $request->patid;
         $emp = Auth::user()->employeeid;
-        $surgeon = implode(', ', $request->surgeon);
+        $surgeon = $request->surgeon;
         $caseNum = $request->caseNum;
         $timeStart = $request->timeStart;
         $timeDuration = $request->timeDuration;
@@ -663,7 +663,7 @@ class ReservationController extends Controller
         $schedule_date =$request->date;
         $schedule_date =Carbon::parse($request->date);
         $schedule_annex = $request->room;
-        $schedule_surgeon = implode(', ', $request->surgeon);
+        $schedule_surgeon = $request->surgeon;
         // $schedule_patient = $request->patname;
         // $schedule_timeout = $request->timeout;
         // $schedule_timeout = Carbon::parse($request->timeout)->format('H:i');
