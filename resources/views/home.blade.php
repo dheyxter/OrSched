@@ -695,6 +695,10 @@
                                 <li>For RE-SCHEDULE, please proceed to PATIENT tab on your side panel and select your patient to re-schedule.</li>
                             </ul>
                         </div>
+                        <div class="w-100"></div>
+                        <div class="col-12">
+                            <span class="h5 text-danger">Starting next week our new Address for OR Scheduler is: <b>192.168.7.57:84</b></span>
+                        </div>
                     </div>
                     <center><button type="submit" class="btn btn-outline-primary mt-4">Acknowledge</button></center>
                 </form>

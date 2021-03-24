@@ -135,6 +135,7 @@ $(function () {
         $pat_id = $(this).siblings('.patId').val();
         $hpercode = $(this).siblings('.hpercode').val();
         console.log($hpercode);
+        
         Swal.fire({
             title: 'Confirm Action',
             text: "Do you want to defer this schedule?",
