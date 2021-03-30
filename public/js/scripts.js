@@ -517,7 +517,8 @@ $(function () {
     //WHEN BUTTON ADD IS CLICKED, IT WILL CHECK FOR VALIDATIONS
     $('.btnAddSchedule1').on('click', function () {
         $show_time = $('#show_time').val();
-        console.log($show_time);
+        $show_date = $('#date').val();
+        console.log($show_date);
         if ($show_time >= 0) {
 
             Swal.fire({

@@ -13,22 +13,9 @@
     <link rel="icon" href="../img/bghmc.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="jquery3.5.1.js"></script>
-    {{-- <script src="jquery.print-preview.js"></script> --}}
-    {{-- <script src="https://momentjs.com/downloads/moment-with-locales.js"></script> --}}
-
-    {{-- calendar  --}}
-    {{-- <link href='fullcalendar/packages/core/main.css' rel='stylesheet' />
-    <link href='fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
-    <link href='fullcalendar/packages/timegrid/main.css' rel='stylesheet' /> --}}
     <link href="print-preview.css" rel='stylesheet'>
 
     <script src="https://kit.fontawesome.com/98a5459d87.js" crossorigin="anonymous"></script>
-    
-    {{-- <script src='fullcalendar/packages/core/main.js'></script>
-    <script src='fullcalendar/packages/daygrid/main.js'></script>
-    <script src='fullcalendar/packages/timegrid/main.js'></script> --}}
-
-    {{-- <script src='fullcalendar/packages/interaction/main.js'></script> --}}
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     @yield('style')
@@ -307,9 +294,6 @@
         currentLink[0].classList.add("active")
         currentLink[0].closest(".nav-treeview").style.display = "block";
         currentLink[0].closest(".has-treeview").classList.add("active");
-
-      
-
     </script>
 
     @yield('script')
