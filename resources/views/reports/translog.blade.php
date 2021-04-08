@@ -12,20 +12,20 @@
     <div class="col-12 mt-3">
         <table class="table table-bordered table-hover" id="myTable1">
             <thead>
+                <th>Date and Time</th>
                 <th>Hospital Number</th>
                 <th>Patient Name</th>
                 <th>Details</th>
                 <th>Entry by</th>
-                <th>Time and Date</th>
             </thead>
             <tbody>
                 @foreach($logs as $l)
                 <tr>
+                    <td>{{date('F j, Y, g:i a', strtotime($l->created_at))}}</td>
                     <td><small>{{$l->patient_id}}</small></td>
                     <td>{{$l->patient_name}}</td>
                     <td>{{$l->act_details}}</td>
                     <td>{{$l->full_name}}</td>
-                    <td>{{date('F j, Y, g:i a', strtotime($l->created_at))}}</td>
                 </tr>
                 @endforeach
             </tbody>

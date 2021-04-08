@@ -373,7 +373,13 @@
                     });
                     $('#modalenclist tbody').append(template);
                 } else {
-                    alert("NO ENCOUTER FOUND");
+                    // alert("NO ACTIVE ENCOUNTER FOUND");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'NO ACTIVE ENCOUNTER FOUND!'
+                        // footer: '<a href>Why do I have this issue?</a>'
+                        })
                 }
 
             },

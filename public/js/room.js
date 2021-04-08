@@ -1,5 +1,11 @@
 $(function(){
     // $('#btnTrig').trigger('click');
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
 
 
 //THIS POTION IS FOR TESTING ONLY

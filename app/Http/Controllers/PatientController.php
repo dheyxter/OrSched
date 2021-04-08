@@ -112,7 +112,7 @@ class PatientController extends Controller
 
     public function JS_GenEncounterList(request $request)
     {
-        $enctrs = DB::SELECT("SELECT * from les.AllEncounters('$request->hpercode') order by admdate desc");
+        $enctrs = DB::SELECT("SELECT * from dex.AllEncounters('$request->hpercode') order by admdate desc");
         return response()->json($enctrs);
     }
 
