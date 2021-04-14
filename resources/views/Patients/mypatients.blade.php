@@ -194,7 +194,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-6">
                         <label for="hospnumber">HOSPITAL NUMBER</label>
                         <input type="text" id="hospnumber" name="hospnumber" class="form-control">
                         <label for="patlast">LAST NAME:</label>
@@ -206,6 +206,7 @@
                         <button class="btn btn-primary btn-lg mt-3 btn-block" onclick="genpatlist()">Retrieve</button>
                     </div>
                     <div class="col-sm-6" style="height: 300px; overflow: auto;">
+                        <span class="font-weight-bold text-danger h5">LIST OF ALL ACTIVE ENCOUNTERS</span>
                         <table class="table table-bordered" style="width: 100%" id="modalenclist">
                             <thead class="bg-success text-white">
                                 <th style="width: 20%">
