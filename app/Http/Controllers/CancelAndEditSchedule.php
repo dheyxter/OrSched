@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use \Carbon\Carbon;
-use Auth;
 
 class CancelAndEditSchedule extends Controller
 {
@@ -14,6 +14,7 @@ class CancelAndEditSchedule extends Controller
 
         $id = $r->id;
         $hpercode = $r->patient_id;
+        // dd($r->all());
         DB::table('jhay.orsched_patients')
         ->where('id', $id)
         ->update([

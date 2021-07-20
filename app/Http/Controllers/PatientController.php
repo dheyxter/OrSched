@@ -106,7 +106,17 @@ class PatientController extends Controller
 
     public function JS_GenPatientList(request $request)
     {
+        $hos_num = $request->hospnumber;
+        $patlast = $request->patlast;
+        $patfirst = $request->patfirst;
+        $patmiddle = $request->patmiddle;
+
+
+        // $patlist = DB::SELECT("SELECT hp.hpercode, hp.patlast, hp.patfirst, hp.patmiddle, hp.patbdate, hp.patbplace, hp.patsex, enccode = (SELECT top 1 enccode FROM henctr hc where hpercode = hp.hpercode ORDER BY hc.encdate DESC)
+        // FROM [hospital].[dbo].[hperson] AS hp 
+        // WHERE hpercode = '000000000708614'");
         $patlist = DB::SELECT("select * from jhay.fnPatSearch('%$request->hospnumber%', '%$request->patlast%', '%$request->patfirst%', '%$request->patmiddle%')");
+        // $patlist = DB::SELECT()
         return response()->json($patlist);
     }
 

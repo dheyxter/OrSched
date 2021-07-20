@@ -90,7 +90,7 @@ $(function () {
     $('.btnCancel').on('click', function () {
         $pat_id = $(this).siblings('.patId').val();
         $hpercode = $(this).siblings('.hpercode').val();
-        // console.log($hpercode);
+        console.log($hpercode, $pat_id);
         Swal.fire({
             title: 'Confirm cancellation',
             text: "Do you want to cancel this schedule?",
