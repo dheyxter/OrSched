@@ -122,7 +122,7 @@
                                 App\Http\Controllers\LoggedUser::user_role()==2)
                                 <td>
                                     {{-- <a href="{{route('myschedules')}}" class="btn btn-sm btn-primary">See Details</a> --}}
-                                    {{$p->accept_by}}
+                                    <small>{{$p->accept_by}}</small>
                                 </td>
                                 @endif
                             </tr>
