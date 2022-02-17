@@ -363,10 +363,8 @@
                             '<td>' +
                             '<form action="/patientdetails" method="POST" enctype="multipart/form-data">' +
                             '@csrf' +
-                            '<input type="text" name="enccode" id="enccode" value="' +
-                            element.enccode + '" hidden>' +
-                            '<input type="text" name="hpercode" id="hpercode" value="' +
-                            element.hpercode + '" hidden >' +
+                            '<input type="text" name="enccode" id="enccode" value="' + element.enccode + '" hidden>' +
+                            '<input type="text" name="hpercode" id="hpercode" value="' + element.hpercode + '" hidden >' +
                             '<button type="submit" class="btn btn-primary btnSelect">SELECT</button>' +
                             '</form>' +
                             '</td>' +

@@ -331,7 +331,7 @@
                 </div>
             </div>
         </div>
-        @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==3)
+        {{-- @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==3)
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header bg-primary">
@@ -605,7 +605,7 @@
                 </div>
             </div>
         </div>
-        @endif
+        @endif --}}
     </div>
 </div>
 <!-- Modal -->
@@ -629,7 +629,7 @@
 </div>
 
 {{-- trigger button if emergency --}}
-@if(App\Http\Controllers\LoggedUser::user_role()==2 || App\Http\Controllers\LoggedUser::user_role()==3)
+@if(App\Http\Controllers\LoggedUser::user_role()==2 || App\Http\Controllers\LoggedUser::user_role()==3  )
 <button type="button" class="btn btn-sm btn-primary" hidden id="trigg" data-toggle="modal"
     data-target="#UpdateModal">test</button>
 

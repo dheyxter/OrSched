@@ -7,9 +7,10 @@ use App\Model\Reservation;
 use App\Model\patient;
 use App\Model\toAccept;
 use App\Model\Translog;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use DB;
+
 
 class PatientController extends Controller
 {
@@ -32,6 +33,7 @@ class PatientController extends Controller
         $patients = patient::with('reservation')
         ->join('hospital.dbo.hpersonal', 'jhay.orsched_patients.entry_by', '=', 'dbo.hpersonal.employeeid')
         ->leftJoin('hospital.jhay.orsched_schedule', 'jhay.orsched_patients.id', '=', 'jhay.orsched_schedule.patient_id')
+        ->whereYear('created_at', Carbon::now())
         ->get();
         } 
         else

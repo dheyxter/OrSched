@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ReportsController extends Controller
@@ -340,7 +340,7 @@ class ReportsController extends Controller
 
     public function trans_log()
     {
-        $logs = DB::SELECT("SELECT * from jhay.vw_OrschedActLog ORDER BY created_at");
+        $logs = DB::SELECT("SELECT * from jhay.vw_OrschedActLog WHERE year(created_at) = year(getdate()) ORDER BY created_at");
 
         return view('reports.translog', [
             'logs' => $logs
