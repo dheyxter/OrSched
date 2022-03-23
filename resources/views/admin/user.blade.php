@@ -36,6 +36,8 @@
                            <span class="badge badge-success">Anesthesiologist</span>
                         @elseif($users->user_role == 4)
                            <span class="badge badge-secondary">Doctor / Surgeon</span>
+                        @elseif($users->user_role == 5)
+                           <span class="badge badge-info">Pharmacist</span>
                         @else
                             <span class="badge badge-warning">OR Nurse</span>
                         @endif
@@ -87,6 +89,7 @@
                                             <option value="2"><h2>[2] - OR Nurse / Ward Assistant</h2></option>
                                             <option value="3"><h2>[3] - Anesthesiologist</h2></option>
                                             <option value="4"><h2>[4] - Doctor / Surgeon</h2></option>
+                                            <option value="5"><h2>[5] - Pharmacist</h2></option>
                                         </select>
                                     </div>
                                 </div>

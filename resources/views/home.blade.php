@@ -95,27 +95,27 @@
                                 </td>
                                 <td>
                                     @if($p->annex == 1)
-                                    Annex 1
+                                    Room 1 - MIS
                                     @elseif($p->annex == 2)
-                                    Annex 2
+                                    Room 2 - ER
                                     @elseif($p->annex == 3)
-                                    Annex 3
+                                    Room 3 - Surgery
                                     @elseif($p->annex == 4)
-                                    Room 1
+                                    Room 4 - OB Gyne
                                     @elseif($p->annex == 5)
-                                    Room 2
+                                    Room 5 - ENT
                                     @elseif($p->annex == 6)
-                                    Room 3
+                                    Room 6 - Ortho
                                     @elseif($p->annex == 7)
-                                    Room 4
+                                    Room 7 - Ophtha
                                     @elseif($p->annex == 8)
-                                    Room 5
-                                    @elseif($p->annex == 9)
+                                    Room 8 - Surgery
+                                    {{-- @elseif($p->annex == 9)
                                     Room 6
                                     @elseif($p->annex == 10)
-                                    Room 7
+                                    Room 7 --}}
                                     @else
-                                    Room 8
+                                    
                                     @endif
                                 </td>
                                 @if(App\Http\Controllers\LoggedUser::user_role()==1 ||
@@ -216,7 +216,7 @@
                             <th>Ward</th>
                             <th>Encounter</th>
                             <th>Type</th>
-                            <th>Status</th>
+                            <th><center>Action</center></th>
                         </thead>
                         {{-- @if(App\Http\Controllers\LoggedUser::getUser() && App\Http\Controllers\LoggedUser::user_role()==0 ) --}}
                         @if(App\Http\Controllers\LoggedUser::user_role()==0 ||
@@ -311,8 +311,12 @@
                                         <input type="hidden" value="{{App\Http\Controllers\LoggedUser::userid()}}"
                                             class="name">
                                         <input type="hidden" class="id" value="{{$pat->id}}">
-                                        <button class=" ml-1 mx-auto btn btn-primary btn-sm btnAccept"
-                                            type="submit">Accept</button>
+                                        <button class=" ml-5 btn btn-primary btn-sm btnAccept"
+                                            type="submit" data-toggle="tooltip" data-placement="left"
+                                            title="Accept"><i class="fa-solid fa-check"></i></button>
+                                        <button class="ml-3 btn btn-secondary btn-sm"
+                                            type="submit" data-toggle="tooltip" data-placement="top"
+                                            title="Cancel"><i class="fa-solid fa-xmark"></i></button>
                                         {{-- @endif --}}
                                         @endif
                                     </div>

@@ -15,7 +15,8 @@
     <script src="jquery3.5.1.js"></script>
     <link href="print-preview.css" rel='stylesheet'>
 
-    <script src="https://kit.fontawesome.com/98a5459d87.js" crossorigin="anonymous"></script>
+    {{-- <script src="https://kit.fontawesome.com/98a5459d87.js" crossorigin="anonymous"></script> --}}
+    <script src="https://kit.fontawesome.com/604effa3cf.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     @yield('style')
@@ -96,6 +97,8 @@
                         <a href="#" class="d-block">Anesthesiologist</a>
                         @elseif(App\Http\Controllers\LoggedUser::user_role()==4)
                         <a href="#" class="d-block">Doctor / Surgeon</a>
+                        @elseif(App\Http\Controllers\LoggedUser::user_role()==5)
+                        <a href="#" class="d-block">Pharmacist</a>
                         @else
                         <a href="#" class="d-block">Ward Nurse</a>
                         @endif
@@ -106,6 +109,9 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
 
+                        
+
+                        @if (App\Http\Controllers\LoggedUser::user_role()!=5)
                         <li class="nav-item">
                             <a href="{{route('home')}}" class="nav-link">
                                 <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-display" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -128,18 +134,6 @@
                                 </p>
                             </a>
                         </li>
-
-                        {{-- <li class="nav-item">
-                            <a href="{{route('myschedules')}}" class="nav-link">
-                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-calendar3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
-                                    <path fill-rule="evenodd" d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                  </svg>
-                                <p> Schedules </p>
-                            </a>
-                        </li> --}}
-
-
                         <li class="nav-item">
                             <a href="{{route('schedlist')}}" class="nav-link">
                                 <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-calendar3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -150,18 +144,6 @@
                             </a>
                         </li>
 
-                        @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 2 || App\Http\Controllers\LoggedUser::user_role()== 3)
-                        <li class="nav-item">
-                            <a href="{{route('anesSched')}}" class="nav-link">
-                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-calendar3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
-                                    <path fill-rule="evenodd" d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                  </svg>
-                                <p> Generate Final Schedules </p>
-                            </a>
-                        </li>
-                        @endif
-                        
                         <li class="nav-item">
                             <a href="{{route('Rooms')}}" class="nav-link">
                                 <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-door-open" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -174,6 +156,23 @@
                                 </p>
                             </a>
                         </li>
+                        @else
+                            
+                        @endif
+
+                        @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 2 || App\Http\Controllers\LoggedUser::user_role()== 3 || App\Http\Controllers\LoggedUser::user_role()== 5)
+                        <li class="nav-item">
+                            <a href="{{route('anesSched')}}" class="nav-link">
+                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-calendar3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+                                    <path fill-rule="evenodd" d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                  </svg>
+                                <p> Generate Final Schedules </p>
+                            </a>
+                        </li>
+                        @endif
+                        
+                        
                     </ul>
 
                     <hr>

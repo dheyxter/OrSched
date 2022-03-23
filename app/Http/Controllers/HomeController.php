@@ -54,8 +54,14 @@ class HomeController extends Controller
             $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) AND entry_by = '$employee'");      
             // $pat = DB::SELECT("SELECT * FROM jhay.orsched_reservations AS re INNER JOIN jhay.orsched_patients pa ON re.patient_id = pa.id  WHERE pa.entry_by =  '$employee'");      
 
-        $emer = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 1 AND b.accept = 1 and year(b.created_at) = year(getdate())");
-        $elec = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 0 AND b.accept = 1 and year(b.created_at) = year(getdate())");
+        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 ) {
+            $emer = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 1 AND b.accept = 1 and year(b.created_at) = year(getdate())");
+            $elec = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 0 AND b.accept = 1 and year(b.created_at) = year(getdate())");
+        } else {
+            $emer = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 1 AND b.accept = 1 and year(b.created_at) = year(getdate()) AND a.entry_by = '$employee'");
+            $elec = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 0 AND b.accept = 1 and year(b.created_at) = year(getdate()) AND a.entry_by = '$employee'");
+        }
+        
         // $tot = DB::SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations where op_status = '1'");
        
         $month = $request->month;

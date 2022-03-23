@@ -45,13 +45,9 @@ class ReservationController extends Controller
     {
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
         $datetoday = $r->selectdate;   
-        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1'");
-        // $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where annex in (select min(annex) from jhay.vw_toAccept group by annex)
-        // and cast(date_of_sched as date) = '$datetoday'
-        // order by annex");
-        
+        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1'");   
+             
         $schedcount = count($scheds);
-        // dd($schedcount, $scheds);
         return view('Calendar.sched', compact(
             'hpersonal',
             'datetoday',

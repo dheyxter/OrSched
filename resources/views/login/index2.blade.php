@@ -144,7 +144,7 @@
             <div class="row">
                 <div class="col-4 border-0">
                     <div class="mt-5 border-0 shake">
-                        <div class="mt-5 img-thumbnail bg-white element border-0 float-right" style="width: auto;">
+                        <div class="mt-5 bg-white element border-0 float-right" style="width: auto; border: none !important;">
                             <img src="../img/appointment.png" height="255" width="255" class="responsive">
                         </div>
                     </div>
