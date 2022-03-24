@@ -38,6 +38,7 @@ class HomeController extends Controller
         ->orderBy('type', 'DESC')
         // ->whereMonth('jhay.vw_toAccept.created_at', '=', $today)
         ->get();
+        // dd($patients);
 
         $patients1 = toAccept::with('reservation')
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')

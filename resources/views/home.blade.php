@@ -69,7 +69,7 @@
                             <th>Patient Name</th>
                             <th>Date and Time Accepted</th>
                             <th>Type</th>
-                            <th>Room / Annex</th>
+                            <th>Room</th>
                             <th>Accepted By</th>
                         </thead>
                         <tbody>
@@ -303,7 +303,56 @@
                                         @else --}}
                                         {{-- @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2) --}}
                                         @elseif($pat->cancel == 1) 
-                                            
+                                            <span data-toggle="tooltip" data-placement="left" title="Remarks for Cancellation">
+                                                <button class="btn btn-sm btn-danger ml-5"  data-toggle="modal" data-target="#cancelSched{{$pat->id}}"><i class="fa-solid fa-notes-medical"></i></button>
+                                            </span>
+                                           <form action="/cancelRemarks" method="POST">
+                                            <div class="modal fade" id="cancelSched{{$pat->id}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered ">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header">
+                                                      <h5 class="modal-title" id="exampleModalLabel">Reason for Cancellation Schedule </h5>
+                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                      </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <h5>Patient Name: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
+                                                            <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
+                                                            <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
+                                                                @if($pat->annex == 1)
+                                                                Room 1 - MIS
+                                                                @elseif($pat->annex == 2)
+                                                                Room 2 - ER
+                                                                @elseif($pat->annex == 3)
+                                                                Room 3 - Surgery
+                                                                @elseif($pat->annex == 4)
+                                                                Room 4 - OB Gyne
+                                                                @elseif($pat->annex == 5)
+                                                                Room 5 - ENT
+                                                                @elseif($pat->annex == 6)
+                                                                Room 6 - Ortho
+                                                                @elseif($pat->annex == 7)
+                                                                Room 7 - Ophtha
+                                                                @elseif($pat->annex == 8)
+                                                                Room 8 - Surgery
+                                                                @endif
+                                                            </h5>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="cancelSched">Reason</label>
+                                                            <textarea class="form-control" id="cancelSched" rows="3" name="cancelShed" autofocus></textarea>
+                                                          </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                      <button type="submit" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                           </form>
                                         @else 
                                         <input class="namePat" type="hidden"
                                             value="{{$pat->patlast}}, {{$pat->patfirst}} {{$pat->patmiddle}} ">
