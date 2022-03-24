@@ -34,6 +34,7 @@ class HomeController extends Controller
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
         ->whereYear('jhay.vw_toAccept.created_at', '=', $today)
         ->where('accept', NULL)
+        // ->where('cancel',NULL)
         ->orderBy('type', 'DESC')
         // ->whereMonth('jhay.vw_toAccept.created_at', '=', $today)
         ->get();
@@ -47,7 +48,7 @@ class HomeController extends Controller
 
         if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
             // ADMIN
-            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date)");
+            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) ");
         }
         else
         // WARD
@@ -177,6 +178,43 @@ class HomeController extends Controller
         DB::table('hospital.jhay.orsched_actlog')
         ->insert([
             'act_details' => 'Accept Patient Reservation', 
+            'employeeid' => $employeeid,
+            'patient_id' => $patID
+        ]);
+
+        return 0;
+    }
+
+    public function cancel(Request $request) {
+        $id = $request->id;
+        $patID = $request->patient_id;
+        $employeeid = $request->name;
+        $namePat = $request->namePat;
+        $nameEmp = $request->nameEmp;
+        // dd($patID);
+
+        DB::TABLE('jhay.orsched_reservations')
+        ->where('patient_id', $id)
+        ->update([
+            'deleted_at'    => Carbon\Carbon::now()
+        ]);
+
+        DB::TABLE('jhay.orsched_schedule')
+        ->where('patient_id', $id)
+        ->update([
+            'deleted_at'    => Carbon\Carbon::now()
+        ]);
+
+        DB::table('jhay.orsched_patients')
+        ->where('id', $id)
+            ->update([
+                'cancel_by' => $nameEmp,
+                'cancel' => 1
+            ]);
+        
+        DB::table('hospital.jhay.orsched_actlog')
+        ->insert([
+            'act_details' => 'Cancel Patient Schedule', 
             'employeeid' => $employeeid,
             'patient_id' => $patID
         ]);

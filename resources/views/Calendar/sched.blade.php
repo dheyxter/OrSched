@@ -13,7 +13,7 @@
             <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z" />
             <path fill-rule="evenodd" d="M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z" />
             <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
-        </svg> Generate Final Schedule</h2>
+        </svg> View Final Schedule</h2>
 </div>
 <hr>
 <div class="container-fluid">
@@ -30,7 +30,7 @@
                         @csrf
                         <div class="input-group-prepend">
                             <span class="input-group-text bg-secondary text-light mr-2" id="basic-addon1">Select
-                                Scheduled Date - <i class="fa fa-calendar-day"></i></span>
+                                Scheduled Date - <i class="ml-2 fa fa-calendar-day"></i></span>
                             <input type="date" class="form-control mr-3" id="selectdate" name="selectdate"
                                 value="{{$datetoday}}">
                             <button type="submit" class="btn btn-success" type="button" id="btnGenerate">Generate
@@ -479,6 +479,7 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
+                                        
                                         <input type="text" class="patID" name="patID" id="patID" value="{{$s->id}}" hidden>
                                       <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">CANCEL</button>
                                       @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 3)

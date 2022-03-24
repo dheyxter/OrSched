@@ -44,9 +44,13 @@ class ReservationController extends Controller
     public function anesSched2(Request $r)
     {
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
+        $employeeid = $hpersonal[0]->employeeid;
         $datetoday = $r->selectdate;   
-        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1'");   
-             
+        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
+            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1'");   
+        } else {
+            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND entry_by = '$employeeid'");   
+        }
         $schedcount = count($scheds);
         return view('Calendar.sched', compact(
             'hpersonal',
@@ -175,7 +179,7 @@ class ReservationController extends Controller
         $emer = 1;
         $employee = Auth::user()->employeeid;
         $time = DB::SELECT("SELECT GETDATE() as datetoday");
-        $datetoday = Carbon::now()->format('Y-m-d');
+        $datetoday = Carbon::now();
         $available_time = $this->time_available($request);
         $roomtoday = 1;
 

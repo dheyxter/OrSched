@@ -302,7 +302,9 @@
                                             <span>Scheduled</span>
                                         @else --}}
                                         {{-- @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2) --}}
-                                        @else
+                                        @elseif($pat->cancel == 1) 
+                                            
+                                        @else 
                                         <input class="namePat" type="hidden"
                                             value="{{$pat->patlast}}, {{$pat->patfirst}} {{$pat->patmiddle}} ">
                                         <input class="patID" type="hidden" value="{{$pat->hpercode}}">
@@ -314,7 +316,7 @@
                                         <button class=" ml-5 btn btn-primary btn-sm btnAccept"
                                             type="submit" data-toggle="tooltip" data-placement="left"
                                             title="Accept"><i class="fa-solid fa-check"></i></button>
-                                        <button class="ml-3 btn btn-secondary btn-sm"
+                                        <button class="ml-3 btn btn-secondary btn-sm btnCancel"
                                             type="submit" data-toggle="tooltip" data-placement="top"
                                             title="Cancel"><i class="fa-solid fa-xmark"></i></button>
                                         {{-- @endif --}}

@@ -1031,14 +1031,14 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Time Start:</label>
                         <div class="col-sm-9">
-                            <input type="time" name="timeStart" id="timeStart" class="form-control">
+                            <input type="time" name="timeStart" id="timeStart" class="form-control is-invalid">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Time Duration:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="timeDuration" id="timeDuration" class="form-control"
+                            <input type="text" name="timeDuration" id="timeDuration" class="form-control is-invalid"
                                 placeholder="indicate number of hours only">
                         </div>
                     </div>
@@ -1115,7 +1115,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Instruments Needed:</label>
                         <div class="col-sm-9">
-                            <textarea id="instru" name="instru" class="form-control" rows="2" required></textarea>
+                            <textarea id="instru" name="instru" class="form-control is-invalid" rows="2" required></textarea>
                         </div>
                     </div>
                 </div>
