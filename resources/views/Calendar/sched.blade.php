@@ -89,7 +89,8 @@
                                 @endif
                             </td>
                             <td>
-                                <small> @if($s->annex == 1)
+                                <small> 
+                                    @if($s->annex == 1)
                                     Room 1 - MIS
                                     @elseif($s->annex == 2)
                                     Room 2 - ER
@@ -107,7 +108,8 @@
                                     Room 8 - Surgery
                                     @else
                                     
-                                    @endif</small>
+                                    @endif
+                                </small>
                                 {{-- @if($s->annex == 1)
                                     <small>Annex 1</small>
                                     @elseif($s->annex == 2)

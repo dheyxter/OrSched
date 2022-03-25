@@ -203,15 +203,10 @@ class HomeController extends Controller
         DB::TABLE('jhay.orsched_schedule')
         ->where('patient_id', $id)
         ->update([
-            'deleted_at'    => Carbon\Carbon::now()
+            'deleted_at'    => Carbon\Carbon::now(),
+            'cancel_by' => $nameEmp,
+            'cancel' => 1
         ]);
-
-        DB::table('jhay.orsched_patients')
-        ->where('id', $id)
-            ->update([
-                'cancel_by' => $nameEmp,
-                'cancel' => 1
-            ]);
         
         DB::table('hospital.jhay.orsched_actlog')
         ->insert([
@@ -221,6 +216,23 @@ class HomeController extends Controller
         ]);
 
         return 0;
+    }
+
+    public function cancelRemarks(Request $r) {
+        $employee = Auth::user()->employeeid;
+        $today = Carbon\Carbon::now();
+        $hosp_id = $r->hospID;
+        $cancelRemarks = $r->cancelRemarks;
+
+        DB::TABLE('jhay.orsched_schedule')
+        ->where('patient_id', $hosp_id)
+        ->update([
+            'cancel_remarks'    => $cancelRemarks,
+            'cancel_remarks_by' => $employee,
+            'cancel_remarks_at' => $today
+        ]);
+        return redirect('/');
+
     }
 
     public static function aneslist()

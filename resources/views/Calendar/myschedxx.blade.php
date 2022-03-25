@@ -634,6 +634,8 @@ App\Http\Controllers\LoggedUser::user_role()==2)
 </div>
 @else --}}
 
+{{-- ELECTIVE SCHEDULE --}}
+
 <div class="modal fade" id="addsched1" name="" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-scrollable modal-lg ">
         <form id="addscheduleform" action="{{route('addschedule')}}" method="POST" enctype="multipart/form-data"
@@ -648,7 +650,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label for="date" class="col-sm-3 col-form-label">Date of Operation:</label>
+                        <label for="date" class="col-sm-3 col-form-label" value="{{date('d-m-Y', strtotime($datetoday))}}">Date of Operation:</label>
                         <div class="col-sm-9">
                             {{-- <input type="date" id="date" name="date" class="form-control font-weight-bold" readonly
                                 hidden> --}}
@@ -676,12 +678,77 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="room" class="col-sm-3 col-form-label">Annex / Room:</label>
+                        <label for="room" class="col-sm-3 col-form-label">Room:</label>
                         <div class="col-sm-9">
                             <select name="room" id="room" class="form-control is-invalid">
-                                <option value="0" disabled>Select Annex / Room</option>
+                                <option value="0" disabled>Select Room</option>
+                                @if($roomtoday == 1)
+                                <option value="1" selected>Room 1 - MIS</option>
+                                @else
+                                <option value="1">Room 1 - MIS</option>
+                                @endif
+                                
+                                @if($roomtoday == 2)
+                                <option value="2" selected>Room 2 - ER</option>
+                                @else
+                                <option value="2">Room 2 - ER</option>
+                                @endif
 
-                                @if ($roomtoday == 1)
+                                @if($roomtoday == 3)
+                                <option value="3" selected>Room 3 - Surgery</option>
+                                @else
+                                <option value="3">Room 3 - Surgery</option>
+                                @endif
+
+                                @if($roomtoday == 4)
+                                <option value="4" selected>Room 4 - OB Gyne</option>
+                                @else
+                                <option value="4">Room 4 - OB Gyne</option>
+                                @endif
+
+                                @if($roomtoday == 5)
+                                <option value="5" selected>Room 5 - ENT</option>
+                                @else
+                                <option value="5">Room 5 - ENT</option>
+                                @endif
+
+                                @if($roomtoday == 6)
+                                <option value="6" selected>Room 6 - Ortho</option>
+                                @else
+                                <option value="6">Room 6 - Ortho</option>
+                                @endif
+
+                                @if($roomtoday == 7)
+                                <option value="7" selected>Room 7 - Ophtha</option>
+                                @else
+                                <option value="7">Room 7 - Ophtha</option>
+                                @endif
+
+                                @if($roomtoday == 8)
+                                <option value="8" selected>Room 8 - Surgery</option>
+                                @else
+                                <option value="8">Room 8 - Surgery</option>
+                                @endif
+
+                                {{-- @elseif($roomtoday == 2)
+                                Room 2 - ER
+                                @elseif($roomtoday == 3)
+                                Room 3 - Surgery
+                                @elseif($roomtoday == 4)
+                                Room 4 - OB Gyne
+                                @elseif($roomtoday == 5)
+                                Room 5 - ENT
+                                @elseif($roomtoday == 6)
+                                Room 6 - Ortho
+                                @elseif($roomtoday == 7)
+                                Room 7 - Ophtha
+                                @elseif($roomtoday == 8)
+                                Room 8 - Surgery
+                                @else
+                                
+                                @endif --}}
+
+                                {{-- @if ($roomtoday == 1)
                                 <option value="1" selected>Annex 1 - Private</option>
                                 @else
                                 <option value="1">Annex 1 - Private</option>
@@ -748,7 +815,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                                 <option value="12" selected>Covid Room </option>
                                 @else
                                 <option value="12">Covid Room </option>
-                                @endif
+                                @endif --}}
                             </select>
                             <div class="invalid-feedback">
                                 required
@@ -803,8 +870,11 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Time Duration:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="timeDuration" id="timeDuration" class="form-control"
+                            <input type="text" name="timeDuration" id="timeDuration" class="form-control is-invalid"
                                 placeholder="indicate number of hours only">
+                                <div class="invalid-feedback">
+                                    required
+                                </div>
                         </div>
                     </div>
 
@@ -895,9 +965,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Planned Procedure:</label>
                         <div class="col-sm-9">
-                            <textarea id="procedures" name="procedures" class="form-control is-invalid" rows="3"
-                                required>
-                            </textarea>
+                            <textarea id="procedures" name="procedures" class="form-control is-invalid" rows="3" required> </textarea>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -907,7 +975,20 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Instruments Needed:</label>
                         <div class="col-sm-9">
-                            <textarea id="instru" name="instru" class="form-control" rows="2"></textarea>
+                            <textarea id="instru" name="instru" class="form-control is-invalid" rows="2" required></textarea>
+                            <div class="invalid-feedback">
+                                required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="procedure" class="col-sm-3 col-form-label">Other Instruments Needed:</label>
+                        <div class="col-sm-9">
+                            <textarea id="other_instru" name="other_instru" class="form-control is-invalid" rows="2" required></textarea>
+                            <div class="invalid-feedback">
+                                required
+                            </div>
                         </div>
                     </div>
 
@@ -990,7 +1071,55 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                             <select name="room" id="room" class="form-control is-invalid">
                                 <option value="0" disabled>Select Annex / Room</option>
 
-                                @if ($roomtoday == 1)
+                                @if($roomtoday == 1)
+                                <option value="1" selected>Room 1 - MIS</option>
+                                @else
+                                <option value="1">Room 1 - MIS</option>
+                                @endif
+                                
+                                @if($roomtoday == 2)
+                                <option value="2" selected>Room 2 - ER</option>
+                                @else
+                                <option value="2">Room 2 - ER</option>
+                                @endif
+
+                                @if($roomtoday == 3)
+                                <option value="3" selected>Room 3 - Surgery</option>
+                                @else
+                                <option value="3">Room 3 - Surgery</option>
+                                @endif
+
+                                @if($roomtoday == 4)
+                                <option value="4" selected>Room 4 - OB Gyne</option>
+                                @else
+                                <option value="4">Room 4 - OB Gyne</option>
+                                @endif
+
+                                @if($roomtoday == 5)
+                                <option value="5" selected>Room 5 - ENT</option>
+                                @else
+                                <option value="5">Room 5 - ENT</option>
+                                @endif
+
+                                @if($roomtoday == 6)
+                                <option value="6" selected>Room 6 - Ortho</option>
+                                @else
+                                <option value="6">Room 6 - Ortho</option>
+                                @endif
+
+                                @if($roomtoday == 7)
+                                <option value="7" selected>Room 7 - Ophtha</option>
+                                @else
+                                <option value="7">Room 7 - Ophtha</option>
+                                @endif
+
+                                @if($roomtoday == 8)
+                                <option value="8" selected>Room 8 - Surgery</option>
+                                @else
+                                <option value="8">Room 8 - Surgery</option>
+                                @endif
+                                
+                                {{-- @if ($roomtoday == 1)
                                 <option value="1" selected>Annex 1 - Private</option>
                                 @else
                                 <option value="1">Annex 1 - Private</option>
@@ -1057,7 +1186,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                                 <option value="12" selected>Covid Room </option>
                                 @else
                                 <option value="12">Covid Room </option>
-                                @endif
+                                @endif --}}
                             </select>
                             <div class="invalid-feedback">
                                 required

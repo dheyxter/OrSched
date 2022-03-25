@@ -18,12 +18,7 @@ class ReservationController extends Controller
         $elec = 0;
         $emer = 1;
         
-        $scheds = DB::SELECT(
-            "SELECT * FROM jhay.orsched_reservations AS re 
-            INNER JOIN jhay.orsched_patients pa 
-            ON re.patient_id = pa.id      
-            where re.created_at  = getdate()
-            ");
+        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY patlast");   
         
         $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid");
 
@@ -46,10 +41,10 @@ class ReservationController extends Controller
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
         $employeeid = $hpersonal[0]->employeeid;
         $datetoday = $r->selectdate;   
-        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
-            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1'");   
+        if(LoggedUser::user_role() == 0) {
+            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND entry_by = '$employeeid' AND cancel is null ORDER BY patlast" );     
         } else {
-            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND entry_by = '$employeeid'");   
+            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY patlast");   
         }
         $schedcount = count($scheds);
         return view('Calendar.sched', compact(
@@ -114,7 +109,8 @@ class ReservationController extends Controller
         $emer = 1;
         $employee = Auth::user()->employeeid;
         $time = DB::SELECT("SELECT GETDATE() as datetoday");
-        $datetoday = Carbon::now()->format('Y-m-d');
+        $datetoday = Carbon::now()->addDays(1);
+        $electDate = Carbon::now();
         $available_time = $this->time_available($request);
         $roomtoday = 1;
 
@@ -154,6 +150,7 @@ class ReservationController extends Controller
         return view('Calendar.myschedxx', compact(
             'hpersonal',
             'datetoday',
+            'electDate',
             'scheds',
             'roomtoday',
             'time',

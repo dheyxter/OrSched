@@ -35,6 +35,7 @@ Route::middleware('auth')->group (function (){
     Route::GET('/selectAnes', 'HomeController@index')->name('selectAnes');
     Route::get('/accept','HomeController@accept');
     Route::get('/cancel','HomeController@cancel');
+    Route::post('/cancelRemarks','HomeController@cancelRemarks');
     // Route::post('/', 'HomeController@index')->name('home');
 
     // Route::get('/', 'HomeController@patNoRsrv')->name('patNoRserve');

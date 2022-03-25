@@ -248,10 +248,60 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($pat->accept == NULL)
-                                    <span class="blinking">
-                                        <h5>Waiting to Accept</h5>
-                                    </span>
+                                    @if($pat->accept == NULL && $pat->cancel == NULL )
+                                        <span class="blinking">
+                                            <h5>Waiting to Accept</h5>
+                                        </span>
+                                    @elseif($pat->accept == NULL && $pat->cancel != NULL)
+                                        <center><span><small class="font-weight-bold text-danger">Schedule Cancelled</small> <a href="#" class="badge badge-primary" data-toggle="modal" data-target="#viewCancel{{$pat->id}}">View</a></span>
+                                       </center>
+
+                                       <div class="modal fade" id="viewCancel{{$pat->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                          <div class="modal-content">
+                                            <div class="modal-header bg-primary text-white">
+                                              <h5 class="modal-title" id="exampleModalLabel">OR Nurse Remarks</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <h5>Patient: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
+                                                    <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
+                                                    <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
+                                                        @if($pat->annex == 1)
+                                                        Room 1 - MIS
+                                                        @elseif($pat->annex == 2)
+                                                        Room 2 - ER
+                                                        @elseif($pat->annex == 3)
+                                                        Room 3 - Surgery
+                                                        @elseif($pat->annex == 4)
+                                                        Room 4 - OB Gyne
+                                                        @elseif($pat->annex == 5)
+                                                        Room 5 - ENT
+                                                        @elseif($pat->annex == 6)
+                                                        Room 6 - Ortho
+                                                        @elseif($pat->annex == 7)
+                                                        Room 7 - Ophtha
+                                                        @elseif($pat->annex == 8)
+                                                        Room 8 - Surgery
+                                                        @endif
+                                                    </h5>
+                                                </div>
+                                              <div class="form-group">
+                                                <label for="exampleFormControlTextarea1">Remarks:</label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{$pat->cancel_remarks}}</textarea>
+                                              </div>
+                                                <small class="text-muted">Entry by: {{$pat->cancel_lname}}, {{$pat->cancel_fname}} - {{date('F j, Y h:m a', strtotime($pat->cancel_remarks_at))}}</small>
+                                            </div>
+                                            {{-- <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                              <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div> --}}
+                                          </div>
+                                        </div>
+                                      </div>
                                     @else
                                     <span class="text-success font-weight-bold">Accepted</span>
                                     @endif
@@ -307,18 +357,19 @@
                                                 <button class="btn btn-sm btn-danger ml-5"  data-toggle="modal" data-target="#cancelSched{{$pat->id}}"><i class="fa-solid fa-notes-medical"></i></button>
                                             </span>
                                            <form action="/cancelRemarks" method="POST">
+                                            @csrf
                                             <div class="modal fade" id="cancelSched{{$pat->id}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered ">
                                                   <div class="modal-content">
-                                                    <div class="modal-header">
+                                                    <div class="modal-header bg-primary text-white">
                                                       <h5 class="modal-title" id="exampleModalLabel">Reason for Cancellation Schedule </h5>
-                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                       </button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="form-group">
-                                                            <h5>Patient Name: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
+                                                            <h5>Patient: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
                                                             <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
                                                             <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
                                                                 @if($pat->annex == 1)
@@ -342,10 +393,12 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="cancelSched">Reason</label>
-                                                            <textarea class="form-control" id="cancelSched" rows="3" name="cancelShed" autofocus></textarea>
+                                                            <textarea class="form-control" rows="3" name="cancelRemarks" autofocus >{{$pat->cancel_remarks}}</textarea>
                                                           </div>
+                                                          <small class="text-muted">Entry by: {{$pat->cancel_lname}}, {{$pat->cancel_fname}} - {{date('F j, Y h:m a', strtotime($pat->cancel_remarks_at))}}</small>
                                                     </div>
                                                     <div class="modal-footer">
+                                                        <input type="text" name="hospID" value="{{$pat->id}}" hidden>
                                                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                       <button type="submit" class="btn btn-primary">Save</button>
                                                     </div>
