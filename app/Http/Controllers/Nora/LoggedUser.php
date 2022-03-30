@@ -14,8 +14,8 @@ class LoggedUser extends Controller
 
         foreach($getname as $name){
             $fullname = $name->lastname.', '.$name->firstname.' '.$name->middlename;
-        }   
-                
+        }    
+       
         return $fullname;
 //END OF FULL NAME RETRIEVAL
     }

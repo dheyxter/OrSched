@@ -696,58 +696,6 @@ $(function () {
 
     });
 
-    $('.btnCancel').on('click', function() {
-        console.log("test");
-        let id = $(this).siblings('input.id').val();
-        let name = $(this).siblings('input.name').val();
-        let namePat = $(this).siblings('input.namePat').val();
-        let nameEmp = $(this).siblings('input.nameEmp').val();
-        let patient_id = $(this).siblings('input.patID').val();
-        Swal.fire({
-            title: 'Confirmation',
-            text: "Are you sure to cancel this schedule?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Yes',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    type: 'get',
-                    url: '/cancel',
-                    data: {
-                        'id': id,
-                        'name': name,
-                        'namePat': namePat,
-                        'nameEmp': nameEmp,
-                        'patient_id': patient_id,
-                    },
-                    beforeSend: function () {
-                        Swal.fire({
-                            position: 'top-end',
-                            title: '<div style="width: 7rem; height: 7rem;" class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div>',
-                            showConfirmButton: false,
-                        });
-                    },
-                    success: function (data) {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Schedule Deleted Successfully',
-                            showConfirmButton: false,
-                            timer: 3000
-                        })
-                        // location.reload();
-                    }
-        
-                })
-            }
-        });
-    });
-
     $('.btnViewLogs').on('click', function () {
         let hpercode = $(this).siblings('input.hpercode').val();
         console.log(hpercode);

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('nora.layouts.master')
 
 @section('content')
 <div class="col-12">
@@ -586,7 +586,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header shadow bg-dark">
-                <h5 class="modal-title" id="exampleModalLabel">Select Type</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Select Service</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -594,14 +594,17 @@ App\Http\Controllers\LoggedUser::user_role()==2)
             <div class="modal-body">
                 <div class="row" align="center">
                     <div class="col-12">
-                        @if(Carbon\Carbon::now()->format('H:i') > '16:30' || Carbon\Carbon::now()->format('H:i')
-                        < '07:00' ) @else <a href="" data-dismiss="modal" data-toggle="modal" data-id="elec"
-                            value="{{$elec}}" data-target="#addsched1"
-                            class="btn btn-lg shadow btn-warning btn-block elec">Elective</a>
-                            @endif
-                            <a href="" data-dismiss="modal" data-toggle="modal" data-id="emer" value="{{$emer}}"
-                                data-target="#addsched2"
-                                class="btn btn-lg shadow btn-danger btn-block emer">Emergent</a>
+                            <a href="" data-dismiss="modal" data-toggle="modal" data-id="gi"  value="{{$gi}}" 
+                                data-target="#noraAddSchedule"
+                                class="btn btn-lg shadow btn-info btn-block elec">GI</a>
+                            
+                            <a href="" data-dismiss="modal" data-toggle="modal" data-id="radio_onco" value="{{$radio_onco}}"
+                                data-target="#noraAddSchedule"
+                                class="btn btn-lg shadow btn-info btn-block emer">RADIO/ONCHO</a>
+
+                            <a href="" data-dismiss="modal" data-toggle="modal" data-id="brachy" value="{{$brachy}}"
+                                data-target="#noraAddSchedule"
+                                class="btn btn-lg shadow btn-info btn-block emer">BRACHY</a>
                     </div>
                 </div>
             </div>
@@ -947,6 +950,19 @@ App\Http\Controllers\LoggedUser::user_role()==2)
 </div>
 </form>
 </div>
+</div>
+
+<!--NORA ADD SCHEDULE -->
+<div class="modal fade" id="noraAddSchedule" name="" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg ">
+        <!-- <form id="addscheduleform" action="{{route('addschedule')}}" method="POST" enctype="multipart/form-data"
+            class=""> -->
+        <form id="addscheduleform" action="{{route('addschedule')}}" method="POST" enctype="multipart/form-data"
+            class="">
+            @csrf
+            
+        </form>
+    </div>
 </div>
 
 <div class="modal fade" id="addsched2" name="" role="dialog" data-backdrop="static" data-keyboard="false">
