@@ -34,11 +34,9 @@ class HomeController extends Controller
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
         ->whereYear('jhay.vw_toAccept.created_at', '=', $today)
         ->where('accept', NULL)
-        // ->where('cancel',NULL)
         ->orderBy('type', 'DESC')
         // ->whereMonth('jhay.vw_toAccept.created_at', '=', $today)
         ->get();
-        // dd($patients);
 
         $patients1 = toAccept::with('reservation')
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
@@ -49,21 +47,15 @@ class HomeController extends Controller
 
         if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
             // ADMIN
-            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) ");
+            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date)");
         }
         else
         // WARD
             $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) AND entry_by = '$employee'");      
             // $pat = DB::SELECT("SELECT * FROM jhay.orsched_reservations AS re INNER JOIN jhay.orsched_patients pa ON re.patient_id = pa.id  WHERE pa.entry_by =  '$employee'");      
 
-        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 ) {
-            $emer = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 1 AND b.accept = 1 and year(b.created_at) = year(getdate())");
-            $elec = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 0 AND b.accept = 1 and year(b.created_at) = year(getdate())");
-        } else {
-            $emer = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 1 AND b.accept = 1 and year(b.created_at) = year(getdate()) AND a.entry_by = '$employee'");
-            $elec = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 0 AND b.accept = 1 and year(b.created_at) = year(getdate()) AND a.entry_by = '$employee'");
-        }
-        
+        $emer = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 1 AND b.accept = 1 and year(b.created_at) = year(getdate())");
+        $elec = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 0 AND b.accept = 1 and year(b.created_at) = year(getdate())");
         // $tot = DB::SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations where op_status = '1'");
        
         $month = $request->month;
@@ -184,55 +176,6 @@ class HomeController extends Controller
         ]);
 
         return 0;
-    }
-
-    public function cancel(Request $request) {
-        $id = $request->id;
-        $patID = $request->patient_id;
-        $employeeid = $request->name;
-        $namePat = $request->namePat;
-        $nameEmp = $request->nameEmp;
-        // dd($patID);
-
-        DB::TABLE('jhay.orsched_reservations')
-        ->where('patient_id', $id)
-        ->update([
-            'deleted_at'    => Carbon\Carbon::now()
-        ]);
-
-        DB::TABLE('jhay.orsched_schedule')
-        ->where('patient_id', $id)
-        ->update([
-            'deleted_at'    => Carbon\Carbon::now(),
-            'cancel_by' => $nameEmp,
-            'cancel' => 1
-        ]);
-        
-        DB::table('hospital.jhay.orsched_actlog')
-        ->insert([
-            'act_details' => 'Cancel Patient Schedule', 
-            'employeeid' => $employeeid,
-            'patient_id' => $patID
-        ]);
-
-        return 0;
-    }
-
-    public function cancelRemarks(Request $r) {
-        $employee = Auth::user()->employeeid;
-        $today = Carbon\Carbon::now();
-        $hosp_id = $r->hospID;
-        $cancelRemarks = $r->cancelRemarks;
-
-        DB::TABLE('jhay.orsched_schedule')
-        ->where('patient_id', $hosp_id)
-        ->update([
-            'cancel_remarks'    => $cancelRemarks,
-            'cancel_remarks_by' => $employee,
-            'cancel_remarks_at' => $today
-        ]);
-        return redirect('/');
-
     }
 
     public static function aneslist()

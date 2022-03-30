@@ -13,7 +13,7 @@
             <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z" />
             <path fill-rule="evenodd" d="M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z" />
             <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
-        </svg> View Final Schedule</h2>
+        </svg> Generate Final Schedule</h2>
 </div>
 <hr>
 <div class="container-fluid">
@@ -30,7 +30,7 @@
                         @csrf
                         <div class="input-group-prepend">
                             <span class="input-group-text bg-secondary text-light mr-2" id="basic-addon1">Select
-                                Scheduled Date - <i class="ml-2 fa fa-calendar-day"></i></span>
+                                Scheduled Date - <i class="fa fa-calendar-day"></i></span>
                             <input type="date" class="form-control mr-3" id="selectdate" name="selectdate"
                                 value="{{$datetoday}}">
                             <button type="submit" class="btn btn-success" type="button" id="btnGenerate">Generate
@@ -62,15 +62,13 @@
                     </tbody>
                 </table> --}}
                 
-                <table class="table table-sm table-striped table-hover table-bordered">
+                <table class="table table-sm table-striped table-hover">
                     <thead>
                         <th>Hosp. #</th>
                         <th>Patient</th>
                         <th>Ward</th>
                         <th>Type</th>
                         <th>Room</th>
-                        <th>Duration</th>
-                        <th>SVC/PAY</th>
                         <th>Surgeon</th>
                         <th>Procedure</th>
                         <th class="text-center">Action</th>
@@ -78,9 +76,9 @@
                     <tbody>
                         @foreach($scheds as $s)
                         <tr>
-                            <td><small>{{$s->shortcode}}</small></td>
+                            <td>{{$s->shortcode}}</td>
                             <td><b>{{$s->patlast}}</b>, {{$s->patfirst}} <small class="text-muted">{{$s->patmiddle}}</small></td>
-                            <td><small>{{$s->patward}}</small></td>
+                            <td>{{$s->patward}}</td>
                             <td>
                                 @if($s->type == 0)
                                <span class="badge badge-warning"> Elective</span>
@@ -89,64 +87,41 @@
                                 @endif
                             </td>
                             <td>
-                                <small> 
-                                    @if($s->annex == 1)
-                                    Room 1 - MIS
+                                @if($s->annex == 1)
+                                    Annex 1
                                     @elseif($s->annex == 2)
-                                    Room 2 - ER
+                                    Annex 2
                                     @elseif($s->annex == 3)
-                                    Room 3 - Surgery
+                                    Annex 3
                                     @elseif($s->annex == 4)
-                                    Room 4 - OB Gyne
+                                    Room 1
                                     @elseif($s->annex == 5)
-                                    Room 5 - ENT
+                                    Room 2
                                     @elseif($s->annex == 6)
-                                    Room 6 - Ortho
+                                    Room 3
                                     @elseif($s->annex == 7)
-                                    Room 7 - Ophtha
+                                    Room 4
                                     @elseif($s->annex == 8)
-                                    Room 8 - Surgery
-                                    @else
-                                    
-                                    @endif
-                                </small>
-                                {{-- @if($s->annex == 1)
-                                    <small>Annex 1</small>
-                                    @elseif($s->annex == 2)
-                                    <small>Annex 2</small>
-                                    @elseif($s->annex == 3)
-                                    <small>Annex 3</small>
-                                    @elseif($s->annex == 4)
-                                    <small>Room 1</small>
-                                    @elseif($s->annex == 5)
-                                    <small>Room 2</small>
-                                    @elseif($s->annex == 6)
-                                    <small>Room 3</small>
-                                    @elseif($s->annex == 7)
-                                    <small>Room 4</small>
-                                    @elseif($s->annex == 8)
-                                    <small>Room 5</small>
+                                    Room 5
                                     @elseif($s->annex == 9)
-                                    <small>Room 6</small>
+                                    Room 6
                                     @elseif($s->annex == 10)
-                                    <small>Room 7</small>
+                                    Room 7
                                     @elseif($s->annex == 11)
-                                    <small>Room 8</small>
+                                    Room 8
                                     @elseif($s->annex == 12)
-                                    <small>Covid Room</small>
+                                    Covid Room
                                     @else
-                                    <small>No Room Indicate</small>
-                                @endif --}}
+                                    No Room Indicate
+                                @endif
                             </td>
-                            <td><small>{{$s->timeDuration}}</small></td>
-                            <td><small> {{$s->adm_tacode == 'SERVI' ? "Service" : "Pay"}} </small></td>
-                            <td><small>{{$s->surgeon}}</small></td>
-                            <td><small>{{$s->procedures}}</small></td>
+                            <td>{{$s->surgeon}}</td>
+                            <td>{{$s->procedures}}</td>
 
                             <td class="text-center">
                                 @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 3)
                                     <button class="btn btn-outline-success" data-toggle="modal" data-target="#updPat{{$s->id}}">Update</button></td>
-                                @elseif(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 2 || App\Http\Controllers\LoggedUser::user_role()== 5 )
+                                @elseif(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 2 )
                                 <button class="btn btn-outline-primary" data-toggle="modal" data-target="#updPat{{$s->id}}">View</button></td>
                                 @endif
                         </tr>
@@ -158,7 +133,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                       <h5 class="modal-title">
-                                        <span class="text-warning ">VIEW OR SCHEDULE</span>
+                                        <span class="text-warning ">UPDATE / VIEW OR SCHEDULE</span>
                                         <span><b>{{$s->patlast}}</b>, {{$s->patfirst}} <small class="text-muted">{{$s->patmiddle}}</small></span>
                                         <span class="text-muted ml-2">{{$s->hpercode}},</span>
                                         <span> <i>{{$s->patage}} y.o</i></span>
@@ -248,17 +223,17 @@
                                                             <div class="col-md-6 bg-light py-1 mb-5">
                                                                 <span class="mb-0"> <mark> Time Start</mark> </span>
                                                                 @if($s->timeStart !=NULL)
-                                                                    <input type="time" name="time_start" class="form-control is-required time_start" id="time_start" value="{{date('H:i', strtotime($s->timeStart))}}" disabled>
+                                                                    <input type="time" name="time_start" class="form-control is-required time_start" id="time_start" value="{{date('H:i', strtotime($s->timeStart))}}">
                                                                 @else
-                                                                    <input type="time" name="time_start" class="form-control is-required time_start" id="time_start" value="" disabled >
+                                                                    <input type="time" name="time_start" class="form-control is-required time_start" id="time_start" value="" >
                                                                 @endif
                                                             </div>
                                                             <div class="col-md-6 bg-light py-1 mb-5">
-                                                                <span class="mb-0"> <mark> Estimated Time Duration</mark> </span>
+                                                                <span class="mb-0"> <mark> Time Duration</mark> </span>
                                                                 @if($s->timeDuration !=NULL)
-                                                                    <input type="text" name="time_duration" class="form-control is-required time_duration" id="time_duration" value="{{$s->timeDuration}}" disabled>
+                                                                    <input type="text" name="time_duration" class="form-control is-required time_duration" id="time_duration" value="{{$s->timeDuration}}">
                                                                 @else
-                                                                    <input type="text" name="time_duration" class="form-control is-required time_duration" id="time_duration" value="" placeholder="" disabled>
+                                                                    <input type="text" name="time_duration" class="form-control is-required time_duration" id="time_duration" value="" placeholder="indicate number of hours only">
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -273,7 +248,7 @@
                                                             <div class="col-6 bg-light py-1">
                                                                 <span class="mb-0"> <mark> Case Number </mark> </span>
                                                                 <div class="input-group">
-                                                                    <select name="case_num" class="form-control is-required " id="case_num" disabled>
+                                                                    <select name="case_num" class="form-control is-required " id="case_num">
                                                                         <option value="" disabled>Select Case Number</option>
                                                                         @if($s->case_num == 1)
                                                                             <option value="1" selected>Case 1</option>
@@ -340,7 +315,7 @@
                                                             <div class="col-6 bg-light py-1">
                                                                 <span class="mb-0"> <mark> Room / Annex </mark> </span>
                                                                 <div class="input-group">
-                                                                    <select name="romm" class="form-control is-required" id="room" disabled>
+                                                                    <select name="romm" class="form-control is-required" id="room">
                                                                         <option value="" disabled>Select Room</option>
 
                                                                          @if ($s->annex == 1)
@@ -419,7 +394,7 @@
                                                             <div class="col bg-light py-1">
                                                                 <span class="mb-0"> <mark> Surgeon </mark> </span>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control text-uppercase" name="surgeons" value="{{$s->surgeon}}" id="surgeon" disabled>
+                                                                    <input type="text" class="form-control" name="surgeons" value="{{$s->surgeon}}" id="surgeon" readonly>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -427,7 +402,7 @@
                                                             <div class="col bg-light py-1">
                                                                 <span class="mb-0"> <mark> Type of Anesthesia </mark> </span>
                                                                 <div class="input-group">
-                                                                    <select class="form-control col-sm-12 is-required" name="typeAnes" id="typeAnes" disabled>
+                                                                    <select class="form-control col-sm-12 is-required" name="typeAnes" id="typeAnes" required>
                                                                         <option disabled value="">-- Select Type of Anesthesia --</option>
                                                                         @foreach(\App\Http\Controllers\ReservationController::anestype() as $type)
                                                                         <option value="{{$type->shortcode}}">
@@ -442,7 +417,7 @@
                                                             <div class="col bg-light py-1">
                                                                 <span class="mb-0"> <mark> Anesthesiologist </mark> </span>
                                                                 <div class="input-group">
-                                                                    <input type="text" class="form-control" name="anes" id="anes" value="{{$s->anes}}" disabled>
+                                                                    <input type="text" class="form-control" name="anes" id="anes" value="{{$s->anes}}" >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -457,7 +432,7 @@
                                                             <div class="col bg-light py-1">
                                                                 <span class="mb-0"> <mark> Procedures </mark> </span>
                                                                 <div class="input-group">
-                                                                    <textarea name="procedure" class="form-control is-required" id="procedure" cols="100" rows="3" value="{{$s->procedures}}" disabled>{{$s->procedures}}</textarea>
+                                                                    <textarea name="procedure" class="form-control is-required" id="procedure" cols="100" rows="3" value="{{$s->procedures}}">{{$s->procedures}}</textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -471,7 +446,7 @@
                                                             <div class="col bg-light py-1">
                                                                 <span class="mb-0"> <mark> Instrument's Needed </mark> </span>
                                                                 <div class="input-group">
-                                                                    <textarea name="instrument" class="form-control is-required" id="instrument" cols="80" rows="3" value="{{$s->instru}}" disabled>{{$s->instru}}</textarea>
+                                                                    <textarea name="instrument" class="form-control is-required" id="instrument" cols="80" rows="3" value="{{$s->instru}}">{{$s->instru}}</textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -481,7 +456,6 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        
                                         <input type="text" class="patID" name="patID" id="patID" value="{{$s->id}}" hidden>
                                       <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">CANCEL</button>
                                       @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 3)

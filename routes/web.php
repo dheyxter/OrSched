@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Nora\NoraSchedulerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,11 +31,11 @@ Route::middleware('auth')->group (function (){
     //     return view('/home');
     // });
 
-    Route::get('/', 'HomeController@index')->name('home');
+    // Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/', 'MainHomeController@index')->name('homepage\master_index');
+    Route::get('/orScheduler', 'HomeController@index')->name('home');
     Route::GET('/selectAnes', 'HomeController@index')->name('selectAnes');
     Route::get('/accept','HomeController@accept');
-    Route::get('/cancel','HomeController@cancel');
-    Route::post('/cancelRemarks','HomeController@cancelRemarks');
     // Route::post('/', 'HomeController@index')->name('home');
 
     // Route::get('/', 'HomeController@patNoRsrv')->name('patNoRserve');
@@ -145,4 +145,31 @@ Route::middleware('auth')->group (function (){
 
 
     Route::post('/isConfirm','HomeController@is_confirm');
+
+    /////////////////////////////// /NORA ROUTES ////////////////////////////////////////
+    Route::any('/noraHome', 'Nora\NoraHomeController@index')->name('noraHome');
+    Route::post('/noraHome/action', 'Nora\NoraHomeController@action')->name('noraHome/action');
+    Route::post('/noraHome/action/delete', 'Nora\NoraHomeController@destroy');
+
+    
+    Route::get('/noraPatients', 'Nora\NoraPatientsController@getAllPatients')->name('noraPatients');
+    Route::post('/noraPatientdetails', 'Nora\NoraPatientsController@noraPatientdetails');
+    Route::post('/JS/noraGenpatientlist', 'Nora\NoraPatientsController@Nora_JS_GenPatientList');
+    Route::post('/JS/noraGenenclist', 'Nora\NoraPatientsController@Nora_JS_GenEncounterList');
+    Route::any('/noraMyschedules', 'Nora\NoraReservationController@noraMyschedules')
+        ->name('noraMyschedules');
+    Route::any('/noraScheduler', 'Nora\NoraSchedulerController@index')->name('noraScheduler');
+    Route::post('/noraScheduler/action', 'Nora\NoraSchedulerController@action');
+    
+    ///////////////////////////////PAIN ROUTES////////////////////////////////////////
+    Route::any('/painHome', 'Pain\PainHomeController@index')->name('painHome');
+    Route::post('/painHome/action', 'Pain\PainHomeController@action')->name('painHome/action');;
+    Route::post('/painHome/action/delete', 'Pain\PainHomeController@destroy');
+
+    Route::get('/painPatients', 'Pain\PainPatientsController@getAllPainPatients')->name('painPatients');
+    Route::post('/painPatientdetails', 'Pain\PainPatientsController@painPatientdetails');
+    Route::any('/painScheduler', 'Pain\PainSchedulerController@index')->name('painScheduler');
+    Route::post('/painScheduler/action', 'Pain\PainSchedulerController@action');
+    
+
 });
