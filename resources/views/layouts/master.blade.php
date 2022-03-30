@@ -15,7 +15,8 @@
     <script src="jquery3.5.1.js"></script>
     <link href="print-preview.css" rel='stylesheet'>
 
-    <script src="https://kit.fontawesome.com/98a5459d87.js" crossorigin="anonymous"></script>
+    {{-- <script src="https://kit.fontawesome.com/98a5459d87.js" crossorigin="anonymous"></script> --}}
+    <script src="https://kit.fontawesome.com/604effa3cf.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     @yield('style')

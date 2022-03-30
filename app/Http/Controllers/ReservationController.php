@@ -25,9 +25,10 @@ class ReservationController extends Controller
             where re.created_at  = getdate()
             ");
         
+        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY patlast");   
+        
         $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid");
-
-
+        
         $schedcount = count($scheds);
         return view('Calendar.sched', compact(
             'hpersonal',
@@ -45,10 +46,11 @@ class ReservationController extends Controller
     {
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
         $datetoday = $r->selectdate;   
-        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1'");
-        // $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where annex in (select min(annex) from jhay.vw_toAccept group by annex)
-        // and cast(date_of_sched as date) = '$datetoday'
-        // order by annex");
+        if(LoggedUser::user_role() == 0) {
+            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND entry_by = '$employeeid' AND cancel is null ORDER BY patlast" );     
+        } else {
+            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY patlast");   
+        }
         
         $schedcount = count($scheds);
         // dd($schedcount, $scheds);
