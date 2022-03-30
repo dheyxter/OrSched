@@ -72,7 +72,7 @@
                             <th width="10%">Patient Name</th>
                             {{-- <th>Date and Time of Operation</th> --}}
                             <th width="5%">Type</th>
-                            <th width="5%">Room / Annex</th>
+                            <th width="5%">Room</th>
                             <th width="15%">Surgeon</th>
                             <th width="10%">Anesthesiologist</th>
                             <th width="15%">Procedure</th>
@@ -105,7 +105,30 @@
                                 @endif
                             </td>
                             <td>
-                                @if($sched->room_id == 1)
+                               <small> @if($sched->room_id == 1)
+                                Room 1 - MIS
+                                @elseif($sched->room_id == 2)
+                                Room 2 - ER
+                                @elseif($sched->room_id == 3)
+                                Room 3 - Surgery
+                                @elseif($sched->room_id == 4)
+                                Room 4 - OB Gyne
+                                @elseif($sched->room_id == 5)
+                                Room 5 - ENT
+                                @elseif($sched->room_id == 6)
+                                Room 6 - Ortho
+                                @elseif($sched->room_id == 7)
+                                Room 7 - Ophtha
+                                @elseif($sched->room_id == 8)
+                                Room 8 - Surgery
+                                {{-- @elseif($sched->room_id == 9)
+                                Room 6
+                                @elseif($sched->room_id == 10)
+                                Room 7 --}}
+                                @else
+                                
+                                @endif</small>
+                                {{-- @if($sched->room_id == 1)
                                 Annex 1
                                 @elseif($sched->room_id == 2)
                                 Annex 2
@@ -131,7 +154,7 @@
                                 Covid Room
                                 @else
                                 No Room Indicate
-                                @endif
+                                @endif --}}
                             </td>
                             <td>
                                 Dr. {{$sched->surgeon}}
@@ -237,7 +260,31 @@
                                 @endif
                             </td>
                             <td>
-                                @if($sched->room_id == 1)
+
+                               <small> @if($sched->room_id == 1)
+                                Room 1 - MIS
+                                @elseif($sched->room_id == 2)
+                                Room 2 - ER
+                                @elseif($sched->room_id == 3)
+                                Room 3 - Surgery
+                                @elseif($sched->room_id == 4)
+                                Room 4 - OB Gyne
+                                @elseif($sched->room_id == 5)
+                                Room 5 - ENT
+                                @elseif($sched->room_id == 6)
+                                Room 6 - Ortho
+                                @elseif($sched->room_id == 7)
+                                Room 7 - Ophtha
+                                @elseif($sched->room_id == 8)
+                                Room 8 - Surgery
+                                {{-- @elseif($sched->room_id == 9)
+                                Room 6
+                                @elseif($sched->room_id == 10)
+                                Room 7 --}}
+                                @else
+                                
+                                @endif</small>
+                                {{-- @if($sched->room_id == 1)
                                 Annex 1
                                 @elseif($sched->room_id == 2)
                                 Annex 2
@@ -263,10 +310,10 @@
                                 Covid Room
                                 @else
                                 No Room Indicate
-                                @endif
+                                @endif --}}
                             </td>
                             <td>
-                                Dr. {{$sched->surgeon}}
+                               <small class="text-uppercase"> {{$sched->surgeon}}</small>
                             </td>
 
                             <td>
@@ -586,56 +633,56 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                         <label for="room" class="col-sm-3 col-form-label">Annex / Room:</label>
                         <div class="col-sm-9">
                             <select name="room" id="room" class="form-control is-invalid">
-                                <option value="0" disabled>Select Annex / Room</option>
+                                <option value="0" disabled>Select Room</option>
 
                                 @if ($roomtoday == 1)
-                                <option value="1" selected>Annex 1 - Private</option>
+                                <option value="1" selected>Room 1- MIS</option>
                                 @else
-                                <option value="1">Annex 1 - Private</option>
+                                <option value="1">Room 1- MIS</option>
                                 @endif
 
                                 @if ($roomtoday == 2)
-                                <option value="2" selected>Annex 2 - Private</option>
+                                <option value="2" selected>Room 2 - ER</option>
                                 @else
-                                <option value="2">Annex 2 - Private</option>
+                                <option value="2">Room 2 - ER</option>
                                 @endif
 
                                 @if ($roomtoday == 3)
-                                <option value="3" selected>Annex 3 - Private</option>
+                                <option value="3" selected>Room 3 - Surgery</option>
                                 @else
-                                <option value="3">Annex 3 - Private</option>
+                                <option value="3">Room 3 - Surgery</option>
                                 @endif
                                 @if ($roomtoday == 4)
-                                <option value="4" selected>Room 1 - ER</option>
+                                <option value="4" selected>Room 4 - OB Gyne</option>
                                 @else
-                                <option value="4">Room 1 - ER</option>
+                                <option value="4">Room 4 - OB Gyne</option>
                                 @endif
 
                                 @if ($roomtoday == 5)
-                                <option value="5" selected>Room 2 - Optha</option>
+                                <option value="5" selected>Room 5 - ENT</option>
                                 @else
-                                <option value="5">Room 2 - Optha</option>
+                                <option value="5">Room 5 - ENT</option>
                                 @endif
 
                                 @if ($roomtoday == 6)
-                                <option value="6" selected>Room 3</option>
+                                <option value="6" selected>Room 6 - Ortho</option>
                                 @else
-                                <option value="6">Room 3</option>
+                                <option value="6">Room 6 - Ortho</option>
                                 @endif
 
                                 @if ($roomtoday == 7)
-                                <option value="7" selected>Room 4</option>
+                                <option value="7" selected>Room 7 - Ophtha</option>
                                 @else
-                                <option value="7">Room 4</option>
+                                <option value="7">Room 7 - Ophtha</option>
                                 @endif
 
                                 @if ($roomtoday == 8)
-                                <option value="8" selected>Room 5</option>
+                                <option value="8" selected>Room 8 - Surgery</option>
                                 @else
-                                <option value="8">Room 5</option>
+                                <option value="8">Room 8 - Surgery</option>
                                 @endif
 
-                                @if ($roomtoday == 9)
+                                {{-- @if ($roomtoday == 9)
                                 <option value="9" selected>Room 6</option>
                                 @else
                                 <option value="9">Room 6</option>
@@ -655,7 +702,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                                 <option value="12" selected>Covid Room </option>
                                 @else
                                 <option value="12">Covid Room </option>
-                                @endif
+                                @endif --}}
                             </select>
                             <div class="invalid-feedback">
                                 required
@@ -896,75 +943,53 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                         <label for="room" class="col-sm-3 col-form-label">Annex / Room:</label>
                         <div class="col-sm-9">
                             <select name="room" id="room" class="form-control is-invalid">
-                                <option value="0" disabled>Select Annex / Room</option>
+                                <option value="0" disabled>Select Room</option>
 
                                 @if ($roomtoday == 1)
-                                <option value="1" selected>Annex 1 - Private</option>
+                                <option value="1" selected>Room 1- MIS</option>
                                 @else
-                                <option value="1">Annex 1 - Private</option>
+                                <option value="1">Room 1- MIS</option>
                                 @endif
 
                                 @if ($roomtoday == 2)
-                                <option value="2" selected>Annex 2 - Private</option>
+                                <option value="2" selected>Room 2 - ER</option>
                                 @else
-                                <option value="2">Annex 2 - Private</option>
+                                <option value="2">Room 2 - ER</option>
                                 @endif
 
                                 @if ($roomtoday == 3)
-                                <option value="3" selected>Annex 3 - Private</option>
+                                <option value="3" selected>Room 3 - Surgery</option>
                                 @else
-                                <option value="3">Annex 3 - Private</option>
+                                <option value="3">Room 3 - Surgery</option>
                                 @endif
                                 @if ($roomtoday == 4)
-                                <option value="4" selected>Room 1 - ER</option>
+                                <option value="4" selected>Room 4 - OB Gyne</option>
                                 @else
-                                <option value="4">Room 1 - ER</option>
+                                <option value="4">Room 4 - OB Gyne</option>
                                 @endif
 
                                 @if ($roomtoday == 5)
-                                <option value="5" selected>Room 2 - Optha</option>
+                                <option value="5" selected>Room 5 - ENT</option>
                                 @else
-                                <option value="5">Room 2 - Optha</option>
+                                <option value="5">Room 5 - ENT</option>
                                 @endif
 
                                 @if ($roomtoday == 6)
-                                <option value="6" selected>Room 3</option>
+                                <option value="6" selected>Room 6 - Ortho</option>
                                 @else
-                                <option value="6">Room 3</option>
+                                <option value="6">Room 6 - Ortho</option>
                                 @endif
 
                                 @if ($roomtoday == 7)
-                                <option value="7" selected>Room 4</option>
+                                <option value="7" selected>Room 7 - Ophtha</option>
                                 @else
-                                <option value="7">Room 4</option>
+                                <option value="7">Room 7 - Ophtha</option>
                                 @endif
 
                                 @if ($roomtoday == 8)
-                                <option value="8" selected>Room 5</option>
+                                <option value="8" selected>Room 8 - Surgery</option>
                                 @else
-                                <option value="8">Room 5</option>
-                                @endif
-
-                                @if ($roomtoday == 9)
-                                <option value="9" selected>Room 6</option>
-                                @else
-                                <option value="9">Room 6</option>
-                                @endif
-
-                                @if ($roomtoday == 10)
-                                <option value="10" selected>Room 7 - Optha</option>
-                                @else
-                                <option value="10">Room 7 - Optha</option>
-                                @endif
-                                @if ($roomtoday == 11)
-                                <option value="11" selected>Room 8 </option>
-                                @else
-                                <option value="11">Room 8 </option>
-                                @endif
-                                @if ($roomtoday == 12)
-                                <option value="12" selected>Covid Room </option>
-                                @else
-                                <option value="12">Covid Room </option>
+                                <option value="8">Room 8 - Surgery</option>
                                 @endif
                             </select>
                             <div class="invalid-feedback">
@@ -1006,14 +1031,14 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Time Start:</label>
                         <div class="col-sm-9">
-                            <input type="time" name="timeStart" id="timeStart" class="form-control">
+                            <input type="time" name="timeStart" id="timeStart" class="form-control is-invalid">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Time Duration:</label>
                         <div class="col-sm-9">
-                            <input type="text" name="timeDuration" id="timeDuration" class="form-control"
+                            <input type="text" name="timeDuration" id="timeDuration" class="form-control is-invalid"
                                 placeholder="indicate number of hours only">
                         </div>
                     </div>
@@ -1090,7 +1115,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Instruments Needed:</label>
                         <div class="col-sm-9">
-                            <textarea id="instru" name="instru" class="form-control" rows="2" required></textarea>
+                            <textarea id="instru" name="instru" class="form-control is-invalid" rows="2" required></textarea>
                         </div>
                     </div>
                 </div>

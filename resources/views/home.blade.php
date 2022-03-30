@@ -69,7 +69,7 @@
                             <th>Patient Name</th>
                             <th>Date and Time Accepted</th>
                             <th>Type</th>
-                            <th>Room / Annex</th>
+                            <th>Room</th>
                             <th>Accepted By</th>
                         </thead>
                         <tbody>
@@ -95,27 +95,27 @@
                                 </td>
                                 <td>
                                     @if($p->annex == 1)
-                                    Annex 1
+                                    Room 1 - MIS
                                     @elseif($p->annex == 2)
-                                    Annex 2
+                                    Room 2 - ER
                                     @elseif($p->annex == 3)
-                                    Annex 3
+                                    Room 3 - Surgery
                                     @elseif($p->annex == 4)
-                                    Room 1
+                                    Room 4 - OB Gyne
                                     @elseif($p->annex == 5)
-                                    Room 2
+                                    Room 5 - ENT
                                     @elseif($p->annex == 6)
-                                    Room 3
+                                    Room 6 - Ortho
                                     @elseif($p->annex == 7)
-                                    Room 4
+                                    Room 7 - Ophtha
                                     @elseif($p->annex == 8)
-                                    Room 5
-                                    @elseif($p->annex == 9)
+                                    Room 8 - Surgery
+                                    {{-- @elseif($p->annex == 9)
                                     Room 6
                                     @elseif($p->annex == 10)
-                                    Room 7
+                                    Room 7 --}}
                                     @else
-                                    Room 8
+                                    
                                     @endif
                                 </td>
                                 @if(App\Http\Controllers\LoggedUser::user_role()==1 ||
@@ -216,7 +216,7 @@
                             <th>Ward</th>
                             <th>Encounter</th>
                             <th>Type</th>
-                            <th>Status</th>
+                            <th><center>Action</center></th>
                         </thead>
                         {{-- @if(App\Http\Controllers\LoggedUser::getUser() && App\Http\Controllers\LoggedUser::user_role()==0 ) --}}
                         @if(App\Http\Controllers\LoggedUser::user_role()==0 ||
@@ -248,10 +248,60 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($pat->accept == NULL)
-                                    <span class="blinking">
-                                        <h5>Waiting to Accept</h5>
-                                    </span>
+                                    @if($pat->accept == NULL && $pat->cancel == NULL )
+                                        <span class="blinking">
+                                            <h5>Waiting to Accept</h5>
+                                        </span>
+                                    @elseif($pat->accept == NULL && $pat->cancel != NULL)
+                                        <center><span><small class="font-weight-bold text-danger">Schedule Cancelled</small> <a href="#" class="badge badge-primary" data-toggle="modal" data-target="#viewCancel{{$pat->id}}">View</a></span>
+                                       </center>
+
+                                       <div class="modal fade" id="viewCancel{{$pat->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                          <div class="modal-content">
+                                            <div class="modal-header bg-primary text-white">
+                                              <h5 class="modal-title" id="exampleModalLabel">OR Nurse Remarks</h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <h5>Patient: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
+                                                    <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
+                                                    <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
+                                                        @if($pat->annex == 1)
+                                                        Room 1 - MIS
+                                                        @elseif($pat->annex == 2)
+                                                        Room 2 - ER
+                                                        @elseif($pat->annex == 3)
+                                                        Room 3 - Surgery
+                                                        @elseif($pat->annex == 4)
+                                                        Room 4 - OB Gyne
+                                                        @elseif($pat->annex == 5)
+                                                        Room 5 - ENT
+                                                        @elseif($pat->annex == 6)
+                                                        Room 6 - Ortho
+                                                        @elseif($pat->annex == 7)
+                                                        Room 7 - Ophtha
+                                                        @elseif($pat->annex == 8)
+                                                        Room 8 - Surgery
+                                                        @endif
+                                                    </h5>
+                                                </div>
+                                              <div class="form-group">
+                                                <label for="exampleFormControlTextarea1">Remarks:</label>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{$pat->cancel_remarks}}</textarea>
+                                              </div>
+                                                <small class="text-muted">Entry by: {{$pat->cancel_lname}}, {{$pat->cancel_fname}} - {{date('F j, Y h:m a', strtotime($pat->cancel_remarks_at))}}</small>
+                                            </div>
+                                            {{-- <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                              <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div> --}}
+                                          </div>
+                                        </div>
+                                      </div>
                                     @else
                                     <span class="text-success font-weight-bold">Accepted</span>
                                     @endif
@@ -302,7 +352,61 @@
                                             <span>Scheduled</span>
                                         @else --}}
                                         {{-- @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2) --}}
-                                        @else
+                                        @elseif($pat->cancel == 1) 
+                                            <span data-toggle="tooltip" data-placement="left" title="Remarks for Cancellation">
+                                                <button class="btn btn-sm btn-danger ml-5"  data-toggle="modal" data-target="#cancelSched{{$pat->id}}"><i class="fa-solid fa-notes-medical"></i></button>
+                                            </span>
+                                           <form action="/cancelRemarks" method="POST">
+                                            @csrf
+                                            <div class="modal fade" id="cancelSched{{$pat->id}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered ">
+                                                  <div class="modal-content">
+                                                    <div class="modal-header bg-primary text-white">
+                                                      <h5 class="modal-title" id="exampleModalLabel">Reason for Cancellation Schedule </h5>
+                                                      <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                      </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <h5>Patient: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
+                                                            <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
+                                                            <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
+                                                                @if($pat->annex == 1)
+                                                                Room 1 - MIS
+                                                                @elseif($pat->annex == 2)
+                                                                Room 2 - ER
+                                                                @elseif($pat->annex == 3)
+                                                                Room 3 - Surgery
+                                                                @elseif($pat->annex == 4)
+                                                                Room 4 - OB Gyne
+                                                                @elseif($pat->annex == 5)
+                                                                Room 5 - ENT
+                                                                @elseif($pat->annex == 6)
+                                                                Room 6 - Ortho
+                                                                @elseif($pat->annex == 7)
+                                                                Room 7 - Ophtha
+                                                                @elseif($pat->annex == 8)
+                                                                Room 8 - Surgery
+                                                                @endif
+                                                            </h5>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="cancelSched">Reason</label>
+                                                            <textarea class="form-control" rows="3" name="cancelRemarks" autofocus >{{$pat->cancel_remarks}}</textarea>
+                                                          </div>
+                                                          <small class="text-muted">Entry by: {{$pat->cancel_lname}}, {{$pat->cancel_fname}} - {{date('F j, Y h:m a', strtotime($pat->cancel_remarks_at))}}</small>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="text" name="hospID" value="{{$pat->id}}" hidden>
+                                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                      <button type="submit" class="btn btn-primary">Save</button>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                           </form>
+                                        @else 
                                         <input class="namePat" type="hidden"
                                             value="{{$pat->patlast}}, {{$pat->patfirst}} {{$pat->patmiddle}} ">
                                         <input class="patID" type="hidden" value="{{$pat->hpercode}}">
@@ -311,8 +415,12 @@
                                         <input type="hidden" value="{{App\Http\Controllers\LoggedUser::userid()}}"
                                             class="name">
                                         <input type="hidden" class="id" value="{{$pat->id}}">
-                                        <button class=" ml-1 mx-auto btn btn-primary btn-sm btnAccept"
-                                            type="submit">Accept</button>
+                                        <button class=" ml-5 btn btn-primary btn-sm btnAccept"
+                                            type="submit" data-toggle="tooltip" data-placement="left"
+                                            title="Accept"><i class="fa-solid fa-check"></i></button>
+                                        <button class="ml-3 btn btn-secondary btn-sm btnCancel"
+                                            type="submit" data-toggle="tooltip" data-placement="top"
+                                            title="Cancel"><i class="fa-solid fa-xmark"></i></button>
                                         {{-- @endif --}}
                                         @endif
                                     </div>
