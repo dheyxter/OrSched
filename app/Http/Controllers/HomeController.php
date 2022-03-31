@@ -34,7 +34,7 @@ class HomeController extends Controller
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
         ->whereYear('jhay.vw_toAccept.created_at', '=', $today)
         ->where('accept', NULL)
-        ->whereNull('cancel')
+        ->whereNull('cancel_remarks_by')
         ->orderBy('type', 'DESC')
         // ->whereMonth('jhay.vw_toAccept.created_at', '=', $today)
         ->get();
