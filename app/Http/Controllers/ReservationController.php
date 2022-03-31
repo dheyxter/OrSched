@@ -25,7 +25,7 @@ class ReservationController extends Controller
             where re.created_at  = getdate()
             ");
         
-        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY annex");   
+        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY annex, case_num");   
         
         $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid");
         

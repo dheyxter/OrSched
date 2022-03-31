@@ -181,6 +181,55 @@ class HomeController extends Controller
         return 0;
     }
 
+    public function cancel(Request $request) {
+        $id = $request->id;
+        $patID = $request->patient_id;
+        $employeeid = $request->name;
+        $namePat = $request->namePat;
+        $nameEmp = $request->nameEmp;
+        // dd($patID);
+
+        DB::TABLE('jhay.orsched_reservations')
+        ->where('patient_id', $id)
+        ->update([
+            'deleted_at'    => Carbon\Carbon::now()
+        ]);
+
+        DB::TABLE('jhay.orsched_schedule')
+        ->where('patient_id', $id)
+        ->update([
+            'deleted_at'    => Carbon\Carbon::now(),
+            'cancel_by' => $nameEmp,
+            'cancel' => 1
+        ]);
+        
+        DB::table('hospital.jhay.orsched_actlog')
+        ->insert([
+            'act_details' => 'Cancel Patient Schedule', 
+            'employeeid' => $employeeid,
+            'patient_id' => $patID
+        ]);
+
+        return 0;
+    }
+
+    public function cancelRemarks(Request $r) {
+        $employee = Auth::user()->employeeid;
+        $today = Carbon\Carbon::now();
+        $hosp_id = $r->hospID;
+        $cancelRemarks = $r->cancelRemarks;
+
+        DB::TABLE('jhay.orsched_schedule')
+        ->where('patient_id', $hosp_id)
+        ->update([
+            'cancel_remarks'    => $cancelRemarks,
+            'cancel_remarks_by' => $employee,
+            'cancel_remarks_at' => $today
+        ]);
+        return redirect('/');
+
+    }
+
     public static function aneslist()
     {
         return DB::SELECT("SELECT hpersonal.employeeid, hpersonal.lastname, hpersonal.firstname, hpersonal.middlename, hprovider.empdegree, htypser.tsdesc, hprovider.licno from hpersonal 
