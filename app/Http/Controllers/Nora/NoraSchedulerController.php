@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Nora;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\LoggedUser;
 use App\Model\Nora\NoraSchedule;
 use App\Model\Nora\noraPatient;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ class NoraSchedulerController extends Controller
 {
     public function index(Request $request)
     {	//dd($request);
-		
+		$userRole = LoggedUser::user_role();
 		$enccode = $request->enccode;
 		
 		$patientDetails = noraPatient::where('enccode', $enccode)->get()->first();	
@@ -62,7 +62,7 @@ class NoraSchedulerController extends Controller
             return response()->json($events);
     	}
 		
-    	return view('nora.scheduler.noraScheduler',compact('patientName','enccode','patientRoom','patientAge','patientSex' , 'patientNoraHpercode'));
+    	return view('nora.scheduler.noraScheduler',compact('patientName','enccode','patientRoom','patientAge','patientSex' , 'patientNoraHpercode','userRole'));
     }
 
 	public static function anestheologistList()
@@ -100,7 +100,18 @@ class NoraSchedulerController extends Controller
     	{	
     		if($request->type == 'add')
     		{	
+				$serviceTypeId = 0;
+
+				if(substr( $request->title, 0, 4 )  === 'GI -'){					
+					$serviceTypeId = 1;
+				}else if (substr( $request->title, 0, 12 ) == 'RADIO/ONCO -'){					
+					$serviceTypeId = 2;
+				}else if (substr( $request->title, 0, 8 )  == 'BRACHY -'){					
+					$serviceTypeId = 3;
+				}
+
     			$event = NoraSchedule::create([
+					'service_type_id' => $serviceTypeId,
     				'title'		=>	$request->title,
     				'start'		=>	$request->start,
     				'end'		=>	$request->end,

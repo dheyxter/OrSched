@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Nora;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\LoggedUser;
 use App\Model\Nora\NoraSchedule;
 use App\Model\Nora\noraPatient;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +14,7 @@ class NoraHomeController extends Controller
 {
     public function index(Request $request)
     {	
-		
+		$userRole = LoggedUser::user_role();
 		$enccode = $request->enccode;
 		
 		$patientDetails = noraPatient::where('enccode', $enccode)->get()->first();	
@@ -62,7 +62,7 @@ class NoraHomeController extends Controller
             return response()->json($events);
     	}
 		
-    	return view('nora.scheduler.noraCalendar',compact('patientName','enccode','patientRoom','patientAge','patientSex','patientNoraHpercode'));
+    	return view('nora.scheduler.noraCalendar',compact('patientName','enccode','patientRoom','patientAge','patientSex','patientNoraHpercode','userRole'));
     }
 
 	public static function anestheologistList()

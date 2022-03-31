@@ -71,6 +71,23 @@
                                  Schedule Details: 
                               </b>
                            </legend>
+                           <div class="form-group row" >
+                              <label for="serviceType" class="col-sm-3 col-form-label">Service Type:</label>
+                              
+                              <div class="col-sm-9">
+                                @if($userRole == 1)
+                                    <input type="text" class="form-control" id="serviceType"  disabled>
+                                @else   
+                                <select class="form-control form-control-lg" id="serviceType"  required disabled>
+                                    <option value="" selected disabled hidden>Choose here</option>                               
+                                    <option value="GI" >GI</option>
+                                    <option value="RADIO/ONCO">RADIO/ONCO</option>
+                                    <option value="BRACHY">BRACHY</option>  
+                                </select>                           
+                                @endif
+                              </div>
+                             
+                           </div>
                            <div class="form-group row">
                               <label for="apptStartTime" class="col-sm-3 col-form-label">Start Schedule:
                               </label>
@@ -87,17 +104,7 @@
                               </div>
                               
                         </div>
-                           <div class="form-group row">
-                              <label for="serviceType" class="col-sm-3 col-form-label">Service Type:</label>
-                              <div class="col-sm-9">
-                                 <select class="form-control form-control-lg" id="serviceType" required disabled>                                    
-                                    <option value="GI" >GI</option>
-                                    <option value="RADIO/ONCO">RADIO/ONCO</option>
-                                    <option value="BRACHY">BRACHY</option>
-                                 </select>
-                              </div>
-                             
-                           </div>
+                           
                         </fieldset>
                         <div class="form-group row">
                            <label for="inductionTime" class="col-sm-3 col-form-label">Induction Time: </label>
@@ -446,6 +453,7 @@ $.ajaxSetup({
                     validReferralReceived ){
                         //alert("You will be safe here!!!");
                         doSubmitUpdate(eventId);
+                        
                         $("#toEditDiv :input").prop("disabled", false);
                          $('#ViewModal').modal('hide');
                         proceedSave = true;
@@ -485,7 +493,7 @@ $.ajaxSetup({
            eventOrder: 'title',
            slotDuration: '01:00:00',
            agendaEventMinHeight: 0,
-           defaultView:'listWeek',
+           defaultView:'agendaWeek',
            events:'/noraHome',
            selectable:false,
            selectHelper: true,        
@@ -666,7 +674,8 @@ $.ajaxSetup({
                        }   
                     })   
                                    
-                $( "#editScheduleButton" ).click(function() {                   
+                $( "#editScheduleButton" ).click(function() {
+                                       
                     $("#toEditDiv :input").prop("disabled", false);
                     $("#saveScheduleButton").prop("disabled",false);
                     validateInputs(eventId);

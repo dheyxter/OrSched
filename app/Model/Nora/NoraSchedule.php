@@ -13,6 +13,7 @@ class NoraSchedule extends Model
     public $incrementing = false;
     protected $table = 'nora.paul.nora_events';
     protected $fillable = [
+        'service_type_id',
         'title',
         'start',
         'end',

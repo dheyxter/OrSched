@@ -8,7 +8,7 @@
     
 
 <body>
-  
+
 <div class="container">
 <!--  -->
 <div id="createEventModal" class="modal fade">
@@ -17,24 +17,20 @@
             <div class="modal-header">
             <form>
                 <div class="form-group">
-            <h3 id="myModalLabel1"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
-            <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
-            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>
-            <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z"/>
-            </svg> <i><b> CREATE SCHEDULE </b></i></h3>
-            <p style="color:red" id="svc_pvt_validation">* Please fill out the required fields</p>
-            
-            <!-- <div class="control-group">
-                    <label class="control-label" for="when">When:</label>
-                    <div class="controls controls-row" id="when" style="margin-top:5px;">
-                    </div>
-            </div> -->
-                 </div>
+                    <h3 id="myModalLabel1"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
+                    <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
+                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>
+                    <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z"/>
+                    </svg> <i><b> CREATE SCHEDULE </b></i></h3>
+                    <p style="color:red" id="svc_pvt_validation">* Please fill out the required fields</p>
+
+                </div>
             </form>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
             </div>
             <div class="modal-body"> 
-                
+            <div id="liveAlertPlaceholder"></div>
+            
                 <form>
                     <div class="form-group row">
                         <label for="patientName" class="col-sm-3 col-form-label" >Patient Name:</label>
@@ -58,34 +54,19 @@
                     <div class="form-group row">
                         <label for="serviceType" class="col-sm-3 col-form-label">Service Type:</label>
                         <div class="col-sm-9">
+                            @if($userRole == 1)
+                                <input type="text" class="form-control" id="serviceType"  value="BRACHY" disabled>
+                            @else   
                             <select class="form-control form-control-lg" id="serviceType"  required>
-                                <option value="" selected disabled hidden>Choose here</option>
+                                <option value="" selected disabled hidden>Choose here</option>                               
                                 <option value="GI" >GI</option>
                                 <option value="RADIO/ONCO">RADIO/ONCO</option>
                                 <option value="BRACHY">BRACHY</option>  
-                            </select>
+                            </select>                           
+                            @endif
                         </div>
                         
                     </div>
-                    <!-- <div class ="form-group row">
-                        <label for="serviceType" class="col-sm-3 col-form-label" >Service Type:</label>
-                        <div class="col-sm-9">
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="GI" name="serviceType" class="custom-control-input">
-                                <label class="custom-control-label" for="GI">GI</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="RADIO/ONCO" name="serviceType" class="custom-control-input">
-                                <label class="custom-control-label" for="RADIO/ONCO">RADIO/ONCO</label>
-                            </div>   
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="BRACHY" name="serviceType" class="custom-control-input">
-                                <label class="custom-control-label" for="BRACHY">BRACHY</label>
-                            </div>   
-
-                        </div>
-                    </div> -->
-                    
                     <div class="form-group row">
                         <label for="apptStartTime" class="col-sm-3 col-form-label">Start Schedule:
                         </label>
@@ -156,17 +137,18 @@
                            <label for="svc_pvt" class="col-sm-3 col-form-label" >SVC/PVT:</label>
                            <div class="col-sm-9" id="svc_pvt_div" >
                                 <div class="custom-control custom-radio custom-control-inline" >
-                                 <input type="radio" id="SVC" name="svc_pvt" class="custom-control-input" checked value="SVC" >
-                                 <label class="custom-control-label" for="SVC">SVC</label>
+                                     <input type="radio" id="SVC" name="svc_pvt" class="custom-control-input" checked value="SVC" >
+                                     <label class="custom-control-label" for="SVC">SVC</label>
                                  </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                 <input type="radio" id="PVT" name="svc_pvt" class="custom-control-input"  value="PVT" >
-                                 <label class="custom-control-label" for="PVT">PVT</label>
+                                     <input type="radio" id="PVT" name="svc_pvt" class="custom-control-input"  value="PVT" >
+                                    <label class="custom-control-label" for="PVT">PVT</label>
                                 </div>
                                 <!-- <p style="color:red" id="svc_pvt_validation">Please choose if SVC or PVT</p> -->
                             </div>
-							</div>
 					</div>
+					
+                
                     
                 </form>
                
@@ -205,10 +187,29 @@
 </div>
 
 
+<!-- Booking not allowed -->
+<div class="modal" tabindex="-1" role="dialog" id="bookingModal" >
+  <div class="modal-dialog" role="document" >
+    <div class="modal-content">
+      <div class="modal-header alert-danger" >
+        <h3 class="modal-title" ><b>Alert!</b></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><b>You can not create schedule in this day!</b></p>
+      </div>
+      <div class="modal-footer">       
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-  
-</body>
+
+
 
 @endsection
 @section('script')
@@ -229,7 +230,7 @@
 $(document).ready(function () {
        
     function validateInputs(){
-        console.log("validate!!!");
+        //console.log("validate!!!");
         let validStartTime = !($('#apptStartTime').val().length === 0) ;
         let validEndTime = !($('#apptEndTime').val().length === 0) ;
         let validServiceType = !($('#serviceType').length === 0 || $('#serviceType').length === null);
@@ -286,7 +287,7 @@ $(document).ready(function () {
                 $('#apptStartTime').css( "border", "1px solid rgba(0,0,0,.2)");
                 validStartTime = true;
             }
-            console.log("apptStartTime: " + validStartTime);
+            //console.log("apptStartTime: " + validStartTime);
         });
         
         $("#apptEndTime").on("input", function() {
@@ -298,7 +299,7 @@ $(document).ready(function () {
                 $('#apptEndTime').css( "border", "1px solid rgba(0,0,0,.2)");
                 validEndTime = true;
             }
-            console.log("apptEndTime: " + validEndTime);
+            //console.log("apptEndTime: " + validEndTime);
         });
 
         $("#serviceType").on("input", function() {
@@ -310,7 +311,7 @@ $(document).ready(function () {
                 $('#serviceType').css( "border", "1px solid rgba(0,0,0,.2)");
                 validServiceType = true;
             }
-            console.log("serviceType: " + validServiceType);
+            //console.log("serviceType: " + validServiceType);
         });
 
         $("#inductionTime").on("input", function() {
@@ -322,7 +323,7 @@ $(document).ready(function () {
                 $('#inductionTime').css( "border", "1px solid rgba(0,0,0,.2)");
                 validInductionTime = true;
             }
-            console.log("inductionTime: " + validInductionTime);
+            //console.log("inductionTime: " + validInductionTime);
         });
 
         $("#durationTime").on("input", function() {
@@ -334,7 +335,7 @@ $(document).ready(function () {
                 $('#durationTime').css( "border", "1px solid rgba(0,0,0,.2)");
                 validDurationTime = true;
             }
-            console.log("durationTime: " + validDurationTime);
+            //console.log("durationTime: " + validDurationTime);
         });
 
         $("#referringAddPhysicianInput1").on("input", function() {
@@ -346,7 +347,7 @@ $(document).ready(function () {
                 $('#referringAddPhysicianInput1').css( "border", "1px solid rgba(0,0,0,.2)");
                 validReferPhysician = true;
             }
-            console.log("referringAddPhysicianInput1: " + validReferPhysician);
+            //console.log("referringAddPhysicianInput1: " + validReferPhysician);
         });
 
         $("#patientProcedure").on("input", function() {
@@ -358,7 +359,7 @@ $(document).ready(function () {
                 $('#patientProcedure').css( "border", "1px solid rgba(0,0,0,.2)");
                 validPatientProcedure = true;
             }
-            console.log("patientProcedure: " + validPatientProcedure);
+            //console.log("patientProcedure: " + validPatientProcedure);
         });
 
         $("#anesthesiologist").on("input", function() {
@@ -370,7 +371,7 @@ $(document).ready(function () {
                 $('#anesthesiologist').css( "border", "1px solid rgba(0,0,0,.2)");
                 validAnesthesiologist = true;
             }
-            console.log("anesthesiologist: " + validAnesthesiologist);
+            //console.log("anesthesiologist: " + validAnesthesiologist);
         });
 
         
@@ -384,23 +385,23 @@ $(document).ready(function () {
             var validSvcPvt = false;   
             if($('input[name="svc_pvt"]:checked').val()){
                 validSvcPvt = true;
-                console.log("svc_pvt  checked")
+                //console.log("svc_pvt  checked")
                 $('#svc_pvt_validation').removeAttr('hidden');
             }else{
                 validSvcPvt = false;
-                console.log("svc_pvt not  checked")
+                //console.log("svc_pvt not  checked")
                 $("#svc_pvt_validation").prop("hidden",true);
             }
-            console.log($('input[name="svc_pvt"]:checked').val());
-            // console.log('validSvcPvt: ' + validSvcPvt);
-            // console.log('validStartTime: ' + validStartTime)
-            // console.log('validEndTime: ' + validEndTime)
-            // console.log('validServiceType: ' + validServiceType)
-            // console.log('validInductionTime: ' +validInductionTime)
-            // console.log('validDurationTime: ' + validDurationTime)
-            // console.log('validPatientProcedure: ' + validPatientProcedure)
-            // console.log('validReferPhysician: ' + validReferPhysician)
-            // console.log('validAnesthesiologist: ' +validAnesthesiologist)
+            //console.log($('input[name="svc_pvt"]:checked').val());
+            // //console.log('validSvcPvt: ' + validSvcPvt);
+            // //console.log('validStartTime: ' + validStartTime)
+            // //console.log('validEndTime: ' + validEndTime)
+            // //console.log('validServiceType: ' + validServiceType)
+            // //console.log('validInductionTime: ' +validInductionTime)
+            // //console.log('validDurationTime: ' + validDurationTime)
+            // //console.log('validPatientProcedure: ' + validPatientProcedure)
+            // //console.log('validReferPhysician: ' + validReferPhysician)
+            // //console.log('validAnesthesiologist: ' +validAnesthesiologist)
             
              e.preventDefault();
              if(validStartTime &&
@@ -448,60 +449,55 @@ $(document).ready(function () {
         defaultView:'agendaWeek',
         events:'/noraScheduler',
         selectable:true,
-        selectHelper: true,        
-        select:function(start, end, allDay)
-        { 
-            var view = $('#calendar').fullCalendar('getView');
-            if(view.type == 'month'){
-                console.log('month');
-                endtime = $.fullCalendar.formatDate(start,'Y-MM-DD HH:mm:ss');
-            }else{
-                console.log(view.type);
-                endtime = $.fullCalendar.formatDate(end,'Y-MM-DD HH:mm:ss');
-            }            
-            starttime = $.fullCalendar.formatDate(start,'Y-MM-DD HH:mm:ss');
-            var mywhen = starttime + ' - ' + endtime;
-            console.log(starttime);
+        selectHelper: true,    
+        
+        select:function(start, end, allDay,event)
+        { var view = $('#calendar').fullCalendar('getView');
             
-            var startTimeParsed = starttime.split(' ').join('T');
-            var endTimeParsed = endtime.split(' ').join('T');
+            const today = new Date()
+            const tomorrow = new Date(today)
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            var tomorrowDate = tomorrow.getFullYear()+'-'+(tomorrow.getMonth()+1)+'-'+tomorrow.getDate();
 
-            var duration = (Date.parse(endTimeParsed)-Date.parse(startTimeParsed))/3600000
-
-            $('#createEventModal #apptStartTime').val(startTimeParsed);
-            $('#createEventModal #apptEndTime').val(endTimeParsed);
-            $('#createEventModal #apptAllDay').val(allDay);
-            $('#createEventModal #durationTime').val(duration);
-            console.log(duration);
-            // $('#createEventModal #when').text(mywhen);
-            $('#createEventModal').modal('show');
+            const tomDate = new Date(tomorrowDate);
+            const startEventDate = new Date(start-1);
+            
+            
            
-            // var title = prompt('Event Title:');
             
-            // if(title)
-            // {
-            //     var start = $.fullCalendar.formatDate(start, 'Y-MM-DD HH:mm:ss');
-
-            //     var end = $.fullCalendar.formatDate(end, 'Y-MM-DD HH:mm:ss');
-
-            //     $.ajax({
-            //         url:"/fullcalendar/action",
-            //         type:"POST",
-            //         data:{
-            //             title: title,
-            //             start: start,
-            //             end: end,
-            //             type: 'add'
-            //         },
-            //         success:function(data)
-            //         {
-            //             calendar.fullCalendar('refetchEvents');
-            //             displayMessage("Event Created Successfully");
-            //         }
-            //     })
-            // }
-            /////Validate inputs
+            if (startEventDate < tomDate ){
+                
+                $('#bookingModal').modal('show');
             
+
+            }
+            else
+            {                 
+                if(view.type == 'month'){
+                    //console.log('month');
+                    endtime = $.fullCalendar.formatDate(start,'Y-MM-DD HH:mm:ss');
+                }else{
+                    //console.log(view.type);
+                    endtime = $.fullCalendar.formatDate(end,'Y-MM-DD HH:mm:ss');
+                }            
+                starttime = $.fullCalendar.formatDate(start,'Y-MM-DD HH:mm:ss');
+                var mywhen = starttime + ' - ' + endtime;
+                //console.log(starttime);
+                
+                var startTimeParsed = starttime.split(' ').join('T');
+                var endTimeParsed = endtime.split(' ').join('T');
+
+                var duration = (Date.parse(endTimeParsed)-Date.parse(startTimeParsed))/3600000
+
+                $('#createEventModal #apptStartTime').val(startTimeParsed);
+                $('#createEventModal #apptEndTime').val(endTimeParsed);
+                $('#createEventModal #apptAllDay').val(allDay);
+                $('#createEventModal #durationTime').val(duration);
+                //console.log(duration);
+                // $('#createEventModal #when').text(mywhen);
+                $('#createEventModal').modal('show');
+             } 
+
         },
         editable:true,
         eventResize: function(event, delta)
@@ -555,9 +551,9 @@ $(document).ready(function () {
         // eventClick:function(event)
         // {
         //     var eventId = event.id;
-        //     console.log(JSON.stringify(eventId));
+        //     //console.log(JSON.stringify(eventId));
         //     $('#ViewModal').modal('show');
-        //     console.log("event id: " + eventId.toString());
+        //     //console.log("event id: " + eventId.toString());
         //      $.ajax({
         //         url:"/noraScheduler/action",
         //             type:"POST",
@@ -581,12 +577,12 @@ $(document).ready(function () {
                             
                                
         //             // $('#deleteScheduleButton').on('click', function(event){   
-        //             //     console.log("event id to be edited: " + id);
+        //             //     //console.log("event id to be edited: " + id);
         //             //     $('#deleteConfirmationModal').modal('show');        
                         
                         
         //             // $('#deleteConfirmed').on('click', function(event){ 
-        //             //     console.log("deleted!");
+        //             //     //console.log("deleted!");
         //             //     $.ajax({
         //             //                 url:"/noraScheduler/action",
         //             //                 type:"POST",
@@ -614,40 +610,41 @@ $(document).ready(function () {
     
 
     $(document).on('show.bs.modal', '#createEventModal', function (e) {
-        console.log("patientNoraHpercode: " + $('#patientNoraHpercode').val()); 
-        console.log('create modal open');
+        //console.log("patientNoraHpercode: " + $('#patientNoraHpercode').val()); 
+        //console.log('create modal open');
+        
         validateInputs();    
 
             
     });
 
 
-    console.log("check svc_pvt: " +$('input[name="svc_pvt"]:checked').val());    
+    //console.log("check svc_pvt: " +$('input[name="svc_pvt"]:checked').val());    
     
 
   function doSubmitCreate(){
     var eventId = event.id;
-      console.log("eventid: " + eventId);
+      //console.log("eventid: " + eventId);
     $("#createEventModal").modal('hide');
-    console.log($('#serviceType').val());
-    console.log($('#apptStartTime').val());
-    console.log($('#apptEndTime').val());
+    //console.log($('#serviceType').val());
+    //console.log($('#apptStartTime').val());
+    //console.log($('#apptEndTime').val());
     // var duration = (Date.parse($('#apptEndTime').val())-Date.parse($('#apptStartTime').val()))/360000
-    // console.log(duration);
-    console.log($('#patientName').val());
+    // //console.log(duration);
+    //console.log($('#patientName').val());
     const physicianElements = document.querySelectorAll(`[id^="referringAddPhysicianInput"]`);
     
     let physicianList =[]
     for (var i = 0; i < physicianElements.length; i++) {
         physicianList.push(physicianElements[i].value);
     }
-    console.log("induction time: " + $('#inductionTime').val());
-    console.log("duration time: " +  $('#createEventModal #durationTime').val());
+    //console.log("induction time: " + $('#inductionTime').val());
+    //console.log("duration time: " +  $('#createEventModal #durationTime').val());
     physicianListFinal = physicianList.join(", ");
-    console.log(physicianListFinal);   
-    console.log("anesthesiologist: " + $('#anesthesiologist').val());
-    console.log("svc_pvt :" + $("input[type=radio][name=svc_pvt]:checked").val());
-    
+    //console.log(physicianListFinal);   
+    //console.log("anesthesiologist: " + $('#anesthesiologist').val());
+    //console.log("svc_pvt :" + $("input[type=radio][name=svc_pvt]:checked").val());
+
             $.ajax({
                     url:"/noraScheduler/action",
                     type:"POST",
@@ -678,6 +675,44 @@ $(document).ready(function () {
    }
 });
 
+$("#serviceType").on("input", function() {
+    let listEvents = $('#calendar').fullCalendar('clientEvents');
+        for (const checkEvent of listEvents) {
+                startEvent = $('#apptStartTime').val().split('T').join(' ')
+               
+                console.log("startevent: " +startEvent);
+                console.log("data start: " +checkEvent.start._i);
+                if(Date.parse(startEvent) == Date.parse(checkEvent.start._i)){
+
+                   if(checkEvent.title.includes($('#serviceType').val())){
+                   
+                    alert($('#serviceType').val());
+                       $('#submitButton').prop('disabled',true);
+                       break;
+                   }
+                   
+                }else{
+                    $('#submitButton').prop('disabled',false);
+                }
+               
+        }
+});
+
+var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+//trigger alert when same service type
+function alert(message, type) {
+  var wrapper = document.createElement('div')
+  wrapper.innerHTML = '<div class="alert alert-danger alert-dismissible">' +
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+    '<strong>Danger!</strong> <br>You can not another schedule for ' + message +  ' during this time !!!'+
+  '</div>';
+
+  
+  alertPlaceholder.append(wrapper)
+}
+
+
+
 
 function displayMessage(message) {
     toastr.success(message, 'Event');
@@ -689,25 +724,25 @@ $("#durationTime").bind('keyup mouseup', function () {
         var durationTime = $('#durationTime').val();
         var startTime = Date.parse($('#apptStartTime').val());
         
-       // console.log("endTimeRaw:" + formatDate(endTimeRaw));        
-        //console.log("duration time: " + durationTime*3600000);
+       // //console.log("endTimeRaw:" + formatDate(endTimeRaw));        
+        ////console.log("duration time: " + durationTime*3600000);
 
         var finalEndTime = startTime + (durationTime*3600000)  ;
-        //console.log("end: " + formatDate(finalEndTime));
+        ////console.log("end: " + formatDate(finalEndTime));
         var formattedFinal = formatDate(finalEndTime).split(' ').join('T');
-        console.log(formattedFinal);
+        //console.log(formattedFinal);
         $('#createEventModal #apptEndTime').val(formattedFinal);
     });
 
 // $("#apptEndTime").bind('keyup mouseup', function () {
 //     var endTimeRaw = Date.parse($('#apptEndTime').val());
-//     console.log("endTimeRaw: "+ endTimeRaw);
+//     //console.log("endTimeRaw: "+ endTimeRaw);
 //     var startTimeRaw = Date.parse($('#apptStartTime').val());
-//     console.log("startTimeRaw: " + startTimeRaw);
+//     //console.log("startTimeRaw: " + startTimeRaw);
 
 //     var durationTimeChange = (endTimeRaw-startTimeRaw)/3600000
          
-//     console.log("durationTimeChange: " + durationTimeChange);
+//     //console.log("durationTimeChange: " + durationTimeChange);
 //     $('#createEventModal #durationTime').val(durationTimeChange);
 //     });    
 
@@ -716,11 +751,11 @@ $( "#apptEndTime" ).change(function() {
     var endTimeRaw = Date.parse($('#apptEndTime').val());
     //onsole.log("endTimeRaw: "+ endTimeRaw);
     var startTimeRaw = Date.parse($('#apptStartTime').val());
-    //console.log("startTimeRaw: " + startTimeRaw);
+    ////console.log("startTimeRaw: " + startTimeRaw);
 
     var durationTimeChange = (endTimeRaw-startTimeRaw)/3600000
          
-    //console.log("durationTimeChange: " + durationTimeChange);
+    ////console.log("durationTimeChange: " + durationTimeChange);
     $('#createEventModal #durationTime').val(durationTimeChange);
   
 });
@@ -728,13 +763,13 @@ $( "#apptEndTime" ).change(function() {
 $( "#apptStartTime" ).change(function() {
   //alert( "Handler for .change() called." );
     var endTimeRaw = Date.parse($('#apptEndTime').val());
-    //console.log("endTimeRaw: "+ endTimeRaw);
+    ////console.log("endTimeRaw: "+ endTimeRaw);
     var startTimeRaw = Date.parse($('#apptStartTime').val());
-    //console.log("startTimeRaw: " + startTimeRaw);
+    ////console.log("startTimeRaw: " + startTimeRaw);
 
     var durationTimeChange = (endTimeRaw-startTimeRaw)/3600000
          
-   //console.log("durationTimeChange: " + durationTimeChange);
+   ////console.log("durationTimeChange: " + durationTimeChange);
     $('#createEventModal #durationTime').val(durationTimeChange);
   
 });
@@ -805,6 +840,12 @@ function remove(physicianId) {
   $("#referringAddPhysician"+physicianId).remove();
 }
 
+
+
+
+
+
+/////////////////////////
 
 
 // function setStartDateTime() {

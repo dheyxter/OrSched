@@ -44,7 +44,7 @@ class HomeController extends Controller
         ->where('accept', '=', null)
         // ->orwhereDate('jhay.vw_toAccept.created_at','=', $today)
         ->get();
-
+        
         if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
             // ADMIN
             $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date)");
