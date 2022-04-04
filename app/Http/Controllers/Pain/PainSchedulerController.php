@@ -163,6 +163,11 @@ class PainSchedulerController extends Controller
 					]);
 				
     			//return response()->json($event);
+				$messageUpdate = "New Schedule has been created for : ".$request->title." <br> Time of schedule is:  ".$request->start." TO ".$request->end; 
+				$mesasgeToSend =[
+					'type'=> 'painAddSchedule',
+					'message' => $messageUpdate
+				];
 				return view('pain.layouts.master');
     		}
 

@@ -141,6 +141,12 @@ class PainHomeController extends Controller
 					
 				]);
 
+				$messageUpdate = "Schedule for : ".$request->title." is moved on ".$request->start." TO ".$request->end; 
+				$mesasgeToSend =[
+					'type'=> 'painUpdateTime',
+					'message' => $messageUpdate
+				];
+
     			return response()->json($event);
     		}
 			if($request->type == 'editUpdate')			
@@ -166,7 +172,11 @@ class PainHomeController extends Controller
 					
 					
     			]);
-
+				$messageUpdate = "Schedule details for ".$request->title." has been updated"; 
+				$mesasgeToSend =[
+					'type'=> 'painUpdateDetails',
+					'message' => $messageUpdate
+				];
     			return response()->json($event);
 				
     		}
