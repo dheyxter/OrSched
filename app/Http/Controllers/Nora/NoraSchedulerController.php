@@ -8,6 +8,7 @@ use App\Http\Controllers\LoggedUser;
 use App\Model\Nora\NoraSchedule;
 use App\Model\Nora\noraPatient;
 use Illuminate\Support\Facades\Auth;
+use App\Events\MyEvent;
 use DB;
 
 class NoraSchedulerController extends Controller
@@ -151,7 +152,13 @@ class NoraSchedulerController extends Controller
 						
 					]);
 				
+				$messageUpdate = "New Schedule has been created for : ".$request->title." <br> Time of schedule is:  ".$request->start." TO ".$request->end; 
+				$mesasgeToSend =[
+					'type'=> 'noraAddSchedule',
+					'message' => $messageUpdate
+				];
 				
+				event(new MyEvent($mesasgeToSend));
     			//return response()->json($event);
 				return view('nora.layouts.master');
     		}

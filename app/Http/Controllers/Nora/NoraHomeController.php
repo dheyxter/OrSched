@@ -8,6 +8,7 @@ use App\Http\Controllers\LoggedUser;
 use App\Model\Nora\NoraSchedule;
 use App\Model\Nora\noraPatient;
 use Illuminate\Support\Facades\Auth;
+use App\Events\MyEvent;
 use DB;
 
 class NoraHomeController extends Controller
@@ -144,6 +145,14 @@ class NoraHomeController extends Controller
 					'patient_id' => $event->patientNoraHpercode
 					
 				]);
+				
+				$messageUpdate = "Schedule for : ".$request->title." is moved on ".$request->start." TO ".$request->end; 
+				$mesasgeToSend =[
+					'type'=> 'noraUpdateTime',
+					'message' => $messageUpdate
+				];
+				
+				event(new MyEvent($mesasgeToSend));
 
     			return response()->json($event);
     		}
@@ -179,6 +188,13 @@ class NoraHomeController extends Controller
 					// 'patient_age' => $patientAgeAdd,
 					// 'patient_sex' => $patientSexAdd
     			]);
+				$messageUpdate = "Schedule details for ".$request->title." has been updated"; 
+				$mesasgeToSend =[
+					'type'=> 'noraUpdateDetails',
+					'message' => $messageUpdate
+				];
+				
+				event(new MyEvent($mesasgeToSend));
 
     			return response()->json($event);
 				
@@ -194,7 +210,10 @@ class NoraHomeController extends Controller
     		{
 
 			}	
+			
     	}
+
+		
     }
 
 	public static function destroy(Request $request){
@@ -238,10 +257,13 @@ class NoraHomeController extends Controller
 		
 				$eventLogDateTime = NoraSchedule::where('id', $request->id)->get();
 				//dd($event->all());
-    			dd(eventLogDateTime);
+    			//dd(eventLogDateTime);
 						
 				return $fullname;
 		//END OF FULL NAME RETRIEVAL
 			}
+			
+
+
 }
 ?>

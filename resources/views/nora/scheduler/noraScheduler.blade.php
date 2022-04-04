@@ -548,63 +548,7 @@ $(document).ready(function () {
             })
         },
 
-        // eventClick:function(event)
-        // {
-        //     var eventId = event.id;
-        //     //console.log(JSON.stringify(eventId));
-        //     $('#ViewModal').modal('show');
-        //     //console.log("event id: " + eventId.toString());
-        //      $.ajax({
-        //         url:"/noraScheduler/action",
-        //             type:"POST",
-        //             data:{
-        //             id:eventId,
-        //             type:'edit'
-        //             },
-        //             cache: false,
-        //             success:function(response)
-        //             {
-        //                 calendar.fullCalendar('refetchEvents');
-        //                 displayMessage("Schedule Edited Successfully");
-        //                 //location.reload();
-        //             }
-        //             })   
-                                
-        //          $( "#editScheduleButton" ).click(function() {
-                   
-        //                     $("#viewFormSchedule :input").prop("disabled", false);
-        //                     $("#saveScheduleButton").css('visibility','visible'); 
-                            
-                               
-        //             // $('#deleteScheduleButton').on('click', function(event){   
-        //             //     //console.log("event id to be edited: " + id);
-        //             //     $('#deleteConfirmationModal').modal('show');        
-                        
-                        
-        //             // $('#deleteConfirmed').on('click', function(event){ 
-        //             //     //console.log("deleted!");
-        //             //     $.ajax({
-        //             //                 url:"/noraScheduler/action",
-        //             //                 type:"POST",
-        //             //                 data:{
-        //             //                     id:id,
-        //             //                     type:"delete"
-        //             //                 },
-        //             //                 cache: false,
-        //             //                 success:function(response)
-        //             //                 {
-        //             //                     calendar.fullCalendar('refetchEvents');
-        //             //                     displayMessage("Schedule Deleted Successfully");
-        //             //                     location.reload();
-        //             //                 }
-        //             //             })                                
-        //             //              $('#deleteConfirmationModal').modal('hide');  
-        //             //          });              
-                          
-        //        //$('#ViewModal').modal('hide');  
-        //     });
-
-        // }
+      
         
     });
     
@@ -680,31 +624,34 @@ $("#serviceType").on("input", function() {
         for (const checkEvent of listEvents) {
                 startEvent = $('#apptStartTime').val().split('T').join(' ')
                
-                console.log("startevent: " +startEvent);
-                console.log("data start: " +checkEvent.start._i);
+                //console.log("startevent: " +startEvent);
+                //console.log("data start: " +checkEvent.start._i);
                 if(Date.parse(startEvent) == Date.parse(checkEvent.start._i)){
-
-                   if(checkEvent.title.includes($('#serviceType').val())){
-                   
-                    alert($('#serviceType').val());
+                    
+                   if(checkEvent.title.includes($('#serviceType').val()) &&
+                         $('#serviceType').val() != 'BRACHY'){       
+                            console.log("rdisabled save");            
+                        alert($('#serviceType').val());
                        $('#submitButton').prop('disabled',true);
                        break;
-                   }
-                   
-                }else{
+                   }else{
+                    console.log("remove disable");
                     $('#submitButton').prop('disabled',false);
+                }
+                   
                 }
                
         }
+        
 });
 
 var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 //trigger alert when same service type
 function alert(message, type) {
   var wrapper = document.createElement('div')
-  wrapper.innerHTML = '<div class="alert alert-danger alert-dismissible">' +
+  wrapper.innerHTML = '<div class="alert alert-warning alert-dismissible">' +
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
-    '<strong>Danger!</strong> <br>You can not another schedule for ' + message +  ' during this time !!!'+
+    '<strong>Alert!</strong> <br>You can not another schedule for ' + message +  ' during this time !!!'+
   '</div>';
 
   

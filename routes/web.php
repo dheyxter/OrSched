@@ -160,6 +160,7 @@ Route::middleware('auth')->group (function (){
         ->name('noraMyschedules');
     Route::any('/noraScheduler', 'Nora\NoraSchedulerController@index')->name('noraScheduler');
     Route::post('/noraScheduler/action', 'Nora\NoraSchedulerController@action');
+    Route::get('/noraReports','Nora\NoraReportsController@printReport')->name('noraReports');
     
     ///////////////////////////////PAIN ROUTES////////////////////////////////////////
     Route::any('/painHome', 'Pain\PainHomeController@index')->name('painHome');
@@ -171,5 +172,15 @@ Route::middleware('auth')->group (function (){
     Route::any('/painScheduler', 'Pain\PainSchedulerController@index')->name('painScheduler');
     Route::post('/painScheduler/action', 'Pain\PainSchedulerController@action');
     
+    // notification
+    // Route::get('/notification', function(){
+    //     return view('notification');
+    // });
+    // //////////// test notification
+    // // Route::get('/test', 'Nora\NoraHomeController@sendNotification');
 
+    // Route::get('test', function () {
+    //     event(new App\Events\MyEvent('{type:updateTime,message:"this is a test"}'));
+    //     return "Event has been sent!";
+    // });
 });

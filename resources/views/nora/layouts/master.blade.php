@@ -10,8 +10,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>BGHMC | NORA SCHEDULER</title>
+
     <link rel="icon" href="../img/bghmc.png" type="image/png">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+   
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="jquery3.5.1.js"></script>
     <link href="print-preview.css" rel='stylesheet'>
 
@@ -51,12 +53,12 @@
            
                    
             <!-- Right navbar links -->
+            
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle text-dark" href="#" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white;" v-pre>
-                        <i class="fas fa-user"></i> {{App\Http\Controllers\LoggedUser::getUser()}}<span
-                            class="caret"></span>
+                        <i class="fas fa-user"></i> {{App\Http\Controllers\LoggedUser::getUser()}}
                     </a>
                    
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -146,14 +148,22 @@
                             </a>
                         </li>
 
-
-
+                        <li class="nav-item">
+                            <a href="{{route('noraReports')}}" class="nav-link">
+                            <i class='fas fa-print fa-lg'></i>
+                                <p>
+                                    Generate Report
+                                </p>
+                            </a>
+                        </li>
+                        
                     </ul>
                 </nav>
+                <div id="liveAlertPlaceholder"></div>
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
-        </aside>=
+        </aside>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -180,7 +190,7 @@
         <!-- /.control-sidebar -->
 
         <!-- Main Footer -->
-        <footer class="main-footer" align="right">
+        <footer class="main-footer d-print-none" align="right">
             <span><b>NOTE:</b> For assistance, please call IHOMS at local 202 and look for <b>John Paul Arce</b></span>
         </footer>
     </div>
