@@ -164,7 +164,7 @@
 
                         
 
-                        @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 2 || App\Http\Controllers\LoggedUser::user_role()== 3)
+                        @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()== 2 || App\Http\Controllers\LoggedUser::user_role()== 3 || App\Http\Controllers\LoggedUser::user_role()== 5)
                         <li class="nav-item">
                             <a href="{{route('anesSched')}}" class="nav-link">
                                 <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-calendar3" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
