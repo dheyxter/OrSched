@@ -138,7 +138,25 @@
     <div id="calendar"></div>
 </div>
 
-
+<!-- Booking not allowed -->
+<div class="modal" tabindex="-1" role="dialog" id="bookingModal" >
+  <div class="modal-dialog" role="document" >
+    <div class="modal-content">
+      <div class="modal-header alert-danger" >
+        <h3 class="modal-title" ><b>Alert!</b></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><b>You can not create schedule in this day!</b></p>
+      </div>
+      <div class="modal-footer">       
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
   
@@ -296,7 +314,27 @@ $(document).ready(function () {
                 month: 'Month Calendar View'
            },
         select:function(start, end, allDay)
-        { 
+        { var view = $('#calendar').fullCalendar('getView');
+            
+            const today = new Date()
+            const tomorrow = new Date(today)
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            var tomorrowDate = tomorrow.getFullYear()+'-'+(tomorrow.getMonth()+1)+'-'+tomorrow.getDate();
+
+            const tomDate = new Date(tomorrowDate);
+            const startEventDate = new Date(start-1);
+            
+            
+           
+            
+            if (startEventDate < tomDate ){
+                
+                $('#bookingModal').modal('show');
+            
+
+            }
+            else
+            {   
             var start = $.fullCalendar.formatDate(start, 'Y-MM-DD HH:mm:ss');
 
             var end = $.fullCalendar.formatDate(end, 'Y-MM-DD HH:mm:ss');           
@@ -307,10 +345,9 @@ $(document).ready(function () {
             $('#submitButton').on('click', function(e){ 
                 e.preventDefault();
                 validateInputs(start,end);
-                
-                    
 
              });
+            }
                       
             
         },
@@ -335,7 +372,7 @@ $(document).ready(function () {
                 success:function(response)
                 {
                     calendar.fullCalendar('refetchEvents');
-                    displayMessage("Schedule Updated Successfully");
+                    //displayMessage("Schedule Updated Successfully");
                 }
             })
         },
@@ -358,7 +395,7 @@ $(document).ready(function () {
                 success:function(response)
                 {
                     calendar.fullCalendar('refetchEvents');
-                    displayMessage("Schedule Updated Successfully");
+                   // displayMessage("Schedule Updated Successfully");
                 }
             })
         },
@@ -473,7 +510,7 @@ $(document).ready(function () {
                     success:function(data)
                     {
                         calendar.fullCalendar('refetchEvents');
-                        displayMessage("Schedule Created Successfully");
+                        //displayMessage("Schedule Created Successfully");
                         $("#createEventModal").modal('hide');
                         window.location='painHome';
                     }

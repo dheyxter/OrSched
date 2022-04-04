@@ -10,6 +10,7 @@ use App\Model\Pain\PainPatient;
 use Illuminate\Support\Facades\Auth;
 use DB;
 use Carbon\Carbon;
+use App\Events\MyEvent;
 
 class PainSchedulerController extends Controller
 {
@@ -168,6 +169,7 @@ class PainSchedulerController extends Controller
 					'type'=> 'painAddSchedule',
 					'message' => $messageUpdate
 				];
+				event(new MyEvent($mesasgeToSend));
 				return view('pain.layouts.master');
     		}
 

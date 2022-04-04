@@ -102,7 +102,7 @@
                     </div>
                     
                     <div class="form-group row">
-                        <label for="referringAddPhysicianInput1" class="col-sm-3 col-form-label" id="addPhysicianLabelId">Referring Physician:
+                        <!-- <label for="referringAddPhysicianInput1" class="col-sm-3 col-form-label" id="addPhysicianLabelId">Referring Physician:
                         </label>
                             
                             <div class="col-sm-7">
@@ -114,7 +114,26 @@
                                 <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
                                 </svg>
                                 </button> 
-                            </div>
+                        </div> -->
+                        <label for="referringAddPhysicianInput1" class="col-sm-3 col-form-label" >Referring Physician:</label>
+                        <div class="col-sm-7">
+                            <select class="form-control form-control-lg" id="referringAddPhysicianInput1">
+                            <option value="" selected disabled hidden>Choose here</option>
+                            @foreach(\App\Http\Controllers\Nora\NoraSchedulerController::doclist() as $a)                                                                
+		                        <option value=" {{$a->firstname}} {{$a->middlename}} {{$a->lastname}}">
+                                    {{$a->lastname}}, {{$a->firstname}} {{$a->middlename}},
+                                    {{$a->empdegree}} | {{$a->tsdesc}}
+                                 </option>
+                             @endforeach
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                                <button type="button" class="btn btn-info" id="addPhysicianButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                                </svg>
+                                </button> 
+                        </div>
                             
                     </div>   
                     <div id="addPhysician">
@@ -192,7 +211,7 @@
   <div class="modal-dialog" role="document" >
     <div class="modal-content">
       <div class="modal-header alert-danger" >
-        <h3 class="modal-title" ><b>Alert!</b></h3>
+        <h3 class="modal-title" ><b>Warning!</b></h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -237,7 +256,7 @@ $(document).ready(function () {
         let validInductionTime = !($('#inductionTime').val().length === 0) ;
         let validDurationTime = !($('#durationTime').val().length === 0) ;
         let validPatientProcedure = !($('#patientProcedure').val().length === 0) ;
-        let validReferPhysician = !($('#referringAddPhysicianInput1').val().length === 0) ;
+        let validReferPhysician = !($('#referringAddPhysicianInput1').val() === null) ;
         let validAnesthesiologist = !($('#anesthesiologist').val() === null) ;
 
         
@@ -631,7 +650,7 @@ $("#serviceType").on("input", function() {
                    if(checkEvent.title.includes($('#serviceType').val()) &&
                          $('#serviceType').val() != 'BRACHY'){       
                             console.log("rdisabled save");            
-                        alert($('#serviceType').val());
+                            alertBooking($('#serviceType').val());
                        $('#submitButton').prop('disabled',true);
                        break;
                    }else{
@@ -647,11 +666,11 @@ $("#serviceType").on("input", function() {
 
 var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 //trigger alert when same service type
-function alert(message, type) {
+function alertBooking(message, type) {
   var wrapper = document.createElement('div')
   wrapper.innerHTML = '<div class="alert alert-warning alert-dismissible">' +
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
-    '<strong>Alert!</strong> <br>You can not another schedule for ' + message +  ' during this time !!!'+
+    '<strong>Alert!</strong> <br>You can not create another schedule for ' + message +  ' during this time !!!'+
   '</div>';
 
   
@@ -766,9 +785,17 @@ button.addEventListener('click', function() {
   const elements = ` 
   <div class="form-group row" id=referringAddPhysician${physicianId}>
   <label for="referPhysician" class="col-sm-3 col-form-label" >${physicianNumberLabel}</label>
-    <div class="col-sm-7">
-        <input type="text" class="form-control" id="referringAddPhysicianInput${physicianId}" >
-     </div>
+  <div class="col-sm-7">
+                            <select class="form-control form-control-lg" id="referringAddPhysicianInput${physicianId}">
+                            <option value="" selected disabled hidden>Choose here</option>
+                            @foreach(\App\Http\Controllers\Nora\NoraSchedulerController::doclist() as $a)                                                                
+		                        <option value=" {{$a->firstname}} {{$a->middlename}} {{$a->lastname}}">
+                                    {{$a->lastname}}, {{$a->firstname}} {{$a->middlename}},
+                                    {{$a->empdegree}} | {{$a->tsdesc}}
+                                 </option>
+                             @endforeach
+                            </select>
+                        </div>
      <div class="col-sm-2">
         <button type="button" class="btn btn-danger" id="deletePhysicianButton${physicianId}" onclick="remove(${physicianId})">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">

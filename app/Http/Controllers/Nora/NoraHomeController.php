@@ -217,7 +217,7 @@ class NoraHomeController extends Controller
     }
 
 	public static function destroy(Request $request){
-		//dd($request);
+		
 		$employeeid = Auth::user()->employeeid;
 		$enccode = $request->enccode;
 		
@@ -246,6 +246,13 @@ class NoraHomeController extends Controller
 			// $event = NoraSchedule::find($request->id);
 			$event = NoraSchedule::where('id', $request->id)->delete();
 			// dd($event);?
+			$messageUpdate = "Schedule for : ".$getHpercode->title." has been deleted"; 
+			$mesasgeToSend =[
+					'type'=> 'noraDelete',
+					'message' => $messageUpdate
+				];
+				
+			event(new MyEvent($mesasgeToSend));
 			return response()->json($event,200);
 		
 	}
@@ -254,11 +261,12 @@ class NoraHomeController extends Controller
 		//FULL NAME RETRIEVAL
 				$username = Auth::user()->employeeid;
 				
-		
+				
 				$eventLogDateTime = NoraSchedule::where('id', $request->id)->get();
 				//dd($event->all());
     			//dd(eventLogDateTime);
 						
+				
 				return $fullname;
 		//END OF FULL NAME RETRIEVAL
 			}

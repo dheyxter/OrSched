@@ -171,6 +171,7 @@ Route::middleware('auth')->group (function (){
     Route::post('/painPatientdetails', 'Pain\PainPatientsController@painPatientdetails');
     Route::any('/painScheduler', 'Pain\PainSchedulerController@index')->name('painScheduler');
     Route::post('/painScheduler/action', 'Pain\PainSchedulerController@action');
+    Route::get('/painReports','Pain\PainReportsController@printReport')->name('painReports');
     
     // notification
     // Route::get('/notification', function(){
@@ -179,8 +180,8 @@ Route::middleware('auth')->group (function (){
     // //////////// test notification
     // // Route::get('/test', 'Nora\NoraHomeController@sendNotification');
 
-    // Route::get('test', function () {
-    //     event(new App\Events\MyEvent('{type:updateTime,message:"this is a test"}'));
-    //     return "Event has been sent!";
-    // });
+    Route::get('test', function () {
+        event(new App\Events\MyEvent("test"));
+        return "Event has been sent!";
+    });
 });

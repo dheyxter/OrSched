@@ -286,6 +286,7 @@ var options = {
                 error: "https://res.cloudinary.com/dxfq3iotg/video/upload/v1557233574/error.mp3",
                 },
                 };
+
 var toast = new Toasty(options);
 toast.configure(options);
 // $('#successtoast').click(function() {toast.success("Schedule has been added");});
@@ -309,39 +310,65 @@ toast.configure(options);
         let notificationType = JSON.parse(JSON.stringify(data.message.type));
         var calendar = $('#calendar').fullCalendar({});
         if(notificationType == "noraUpdateTime"){
-            
+            changeTitle();
             alertToast(notificationMessage,"info");
             $('#infotoast').click();
             toast.info("Schedule Date and Time have been updated");
 
             calendar.fullCalendar('refetchEvents');     
         }else if(notificationType =="noraUpdateDetails"){
-            
+            changeTitle();
             alertToast(notificationMessage,"warning");
             $('#warningtoast').click();
             toast.warning("Schedule Details have been updated");
             calendar.fullCalendar('refetchEvents');
         }else if(notificationType =="noraAddSchedule"){
-            
+            changeTitle();
             alertToast(notificationMessage,"success");
             $('#successtoast').click();
             toast.success("Schedule has been added");
+            calendar.fullCalendar('refetchEvents');
+
+        }else if(notificationType =="noraDelete"){
+            changeTitle();
+            alertToast(notificationMessage,"error");
+            $('#errortoast').click();
+            toast.error("Schedule has been deleted");
             calendar.fullCalendar('refetchEvents');
         }
         
    
     });
     
+let countNotification = 0;
+	
+var title = document.title;
+function changeTitle() {
+    countNotification++;
+        var newTitle = '(' + countNotification + ') ' + title;
+        document.title = newTitle;
+}
 
-    var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 
 function alertToast(message, type) {
   var wrapper = document.createElement('div')
   wrapper.innerHTML = '<div class="alert alert-' + type +' alert-dismissible ">' +
-    '<a href="#" class="close" data-dismiss="alert" aria-label="close" "><button class="alert-danger" id="refetchCalendar">&times;</button></a>' +
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close" "><button class="alert-danger" onclick="removeNotification()">&times;</button></a>' +
     '<h4 class="blink_me"><strong>Alert!</strong></h4> <br><strong>' + message + '</strong</div>';
   alertPlaceholder.append(wrapper)
 
+}
+
+function removeNotification(){
+    countNotification--;
+        if(countNotification == 0){
+            var newTitle = title;
+        }else{
+            var newTitle = '(' + countNotification + ') ' + title;
+        }
+        
+        document.title = newTitle;
 }
 
 
@@ -1182,9 +1209,6 @@ $.ajaxSetup({
 
 
 
-.toast {
-    
-}
 .toast {
     transition: all 0.1s ease-in-out;
     position: relative;

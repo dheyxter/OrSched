@@ -10,6 +10,7 @@ use App\Model\Pain\PainPatient;
 use Illuminate\Support\Facades\Auth;
 use DB;
 use Carbon\Carbon;
+use App\Events\MyEvent;
 
 class PainHomeController extends Controller
 {
@@ -147,6 +148,8 @@ class PainHomeController extends Controller
 					'message' => $messageUpdate
 				];
 
+				event(new MyEvent($mesasgeToSend));
+
     			return response()->json($event);
     		}
 			if($request->type == 'editUpdate')			
@@ -177,6 +180,9 @@ class PainHomeController extends Controller
 					'type'=> 'painUpdateDetails',
 					'message' => $messageUpdate
 				];
+
+				event(new MyEvent($mesasgeToSend));
+
     			return response()->json($event);
 				
     		}

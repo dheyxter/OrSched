@@ -77,6 +77,17 @@ class NoraSchedulerController extends Controller
         ORDER BY hpersonal.lastname");
     }
 
+	public static function doclist()
+    {
+        return DB::SELECT("SELECT hpersonal.employeeid, hpersonal.lastname, hpersonal.firstname, hpersonal.middlename, hprovider.empdegree, htypser.tsdesc, hprovider.licno from hpersonal 
+        INNER JOIN hprovider 
+        ON hpersonal.employeeid = hprovider.employeeid
+        INNER JOIN htypser
+        ON hpersonal.deptcode = htypser.tscode
+        WHERE hprovider.empstat = 'A' AND htypser.tsdesc = 'SURGERY' OR htypser.tsdesc = 'ORTHOPEDICS' OR htypser.tsdesc = 'OPHTHALMOLOGY' OR htypser.tsdesc = 'OBSTETRICS' OR htypser.tsdesc = 'ENT-HNS'
+        ORDER BY htypser.tsdesc");
+    }
+
     public function action(Request $request)
     {	
 		$enccode = $request->enccode;
