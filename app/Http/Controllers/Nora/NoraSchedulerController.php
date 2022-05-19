@@ -4,17 +4,18 @@ namespace App\Http\Controllers\Nora;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\LoggedUser;
 use App\Model\Nora\NoraSchedule;
 use App\Model\Nora\noraPatient;
 use Illuminate\Support\Facades\Auth;
+use App\Events\MyEvent;
 use DB;
 
 class NoraSchedulerController extends Controller
 {
     public function index(Request $request)
     {	//dd($request);
-		
+		$userRole = LoggedUser::user_role();
 		$enccode = $request->enccode;
 		
 		$patientDetails = noraPatient::where('enccode', $enccode)->get()->first();	
@@ -62,7 +63,7 @@ class NoraSchedulerController extends Controller
             return response()->json($events);
     	}
 		
-    	return view('nora.scheduler.noraScheduler',compact('patientName','enccode','patientRoom','patientAge','patientSex' , 'patientNoraHpercode'));
+    	return view('nora.scheduler.noraScheduler',compact('patientName','enccode','patientRoom','patientAge','patientSex' , 'patientNoraHpercode','userRole'));
     }
 
 	public static function anestheologistList()
@@ -74,6 +75,17 @@ class NoraSchedulerController extends Controller
         ON hpersonal.deptcode = htypser.tscode
         WHERE hprovider.empstat = 'A' AND htypser.tsdesc = 'Pain Clinic/Anesthesia'
         ORDER BY hpersonal.lastname");
+    }
+
+	public static function doclist()
+    {
+        return DB::SELECT("SELECT hpersonal.employeeid, hpersonal.lastname, hpersonal.firstname, hpersonal.middlename, hprovider.empdegree, htypser.tsdesc, hprovider.licno from hpersonal 
+        INNER JOIN hprovider 
+        ON hpersonal.employeeid = hprovider.employeeid
+        INNER JOIN htypser
+        ON hpersonal.deptcode = htypser.tscode
+        WHERE hprovider.empstat = 'A' AND htypser.tsdesc = 'SURGERY' OR htypser.tsdesc = 'ORTHOPEDICS' OR htypser.tsdesc = 'OPHTHALMOLOGY' OR htypser.tsdesc = 'OBSTETRICS' OR htypser.tsdesc = 'ENT-HNS'
+        ORDER BY htypser.tsdesc");
     }
 
     public function action(Request $request)
@@ -100,7 +112,18 @@ class NoraSchedulerController extends Controller
     	{	
     		if($request->type == 'add')
     		{	
+				$serviceTypeId = 0;
+
+				if(substr( $request->title, 0, 4 )  === 'GI -'){					
+					$serviceTypeId = 1;
+				}else if (substr( $request->title, 0, 12 ) == 'RADIO/ONCO -'){					
+					$serviceTypeId = 2;
+				}else if (substr( $request->title, 0, 8 )  == 'BRACHY -'){					
+					$serviceTypeId = 3;
+				}
+
     			$event = NoraSchedule::create([
+					'service_type_id' => $serviceTypeId,
     				'title'		=>	$request->title,
     				'start'		=>	$request->start,
     				'end'		=>	$request->end,
@@ -140,7 +163,13 @@ class NoraSchedulerController extends Controller
 						
 					]);
 				
+				$messageUpdate = "New Schedule has been created for : ".$request->title." <br> Time of schedule is:  ".$request->start." TO ".$request->end; 
+				$mesasgeToSend =[
+					'type'=> 'noraAddSchedule',
+					'message' => $messageUpdate
+				];
 				
+				event(new MyEvent($mesasgeToSend));
     			//return response()->json($event);
 				return view('nora.layouts.master');
     		}

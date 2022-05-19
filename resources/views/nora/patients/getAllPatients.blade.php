@@ -122,7 +122,11 @@
                                             <input type="text" value="{{$pat->enccode}}" name="enccode" hidden>
                                             <input name="patientNoraHpercode" type="hidden" value="patientNoraHpercode" hidden>
                                             <input type="text" value="{{$pat->hpercode}}" name="patientNoraHpercode" hidden>
-                                            <button class=" ml-1 mx-auto btn btn-outline-primary btn-sm">Create Schedule</button>
+                                            @if(Carbon\Carbon::now()->format('H:i') > '16:00' || Carbon\Carbon::now()->format('H:i') < '07:00')
+                                            <span class="badge badge-danger" >Scheduling is locked</span>
+                                            @else
+                                            <button class=" ml-1 mx-auto btn btn-outline-primary btn-sm">Create Schedule </button>
+                                            @endif
                                         </form>
                                         @endif
                                     </div>
@@ -136,7 +140,12 @@
                                         <input type="text" value="{{$pat->enccode}}" name="enccode" hidden>
                                         <input name="patientNoraHpercode" type="hidden" value="patientNoraHpercode" hidden>
                                         <input type="text" value="{{$pat->hpercode}}" name="patientNoraHpercode" hidden>
+                                        @if(Carbon\Carbon::now()->format('H:i') > '16:00' || Carbon\Carbon::now()->format('H:i') < '07:00')
+                                        <span class="badge badge-danger" >Scheduling is locked</span>
+                                        @else
                                         <button class=" ml-1 mx-auto btn btn-outline-danger btn-sm">Create Another Schedule</button>
+                                        @endif
+                                       
                                     </form>
                                     @endif
                                     @endif

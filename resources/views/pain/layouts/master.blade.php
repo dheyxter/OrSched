@@ -144,15 +144,23 @@
                                 </p>
                             </a>
                         </li>
-
+                        <li class="nav-item">
+                            <a href="{{route('painReports')}}" class="nav-link">
+                            <i class='fas fa-print fa-lg'></i>
+                                <p>
+                                    Generate Report
+                                </p>
+                            </a>
+                        </li>
 
 
                     </ul>
                 </nav>
+                <div id="liveAlertPlaceholder"></div>
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
-        </aside>=
+        </aside>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -179,7 +187,7 @@
         <!-- /.control-sidebar -->
 
         <!-- Main Footer -->
-        <footer class="main-footer" align="right">
+        <footer class="main-footer d-print-none"  align="right">
             <span><b>NOTE:</b> For assistance, please call IHOMS at local 202 and look for <b>John Paul Arce</b></span>
         </footer>
     </div>

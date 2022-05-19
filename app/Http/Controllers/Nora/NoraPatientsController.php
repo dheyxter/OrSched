@@ -17,6 +17,7 @@ class NoraPatientsController extends Controller
 
     public function getAllPatients(Request $r)
     {
+        $userRole = LoggedUser::user_role();
         $employee = Auth::user()->employeeid;
         
         if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 1) {
@@ -41,7 +42,8 @@ class NoraPatientsController extends Controller
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
         return view('nora.patients.getAllPatients', compact(
             'hpersonal',
-             'patients'
+             'patients',
+             'userRole'
             // 'count',
             // 'histo'
         )); 
@@ -101,7 +103,7 @@ class NoraPatientsController extends Controller
 
     public function Nora_JS_GenEncounterList(request $request)
     {
-        $enctrs = DB::SELECT("SELECT * from dex.AllEncounters('$request->hpercode') order by admdate desc");
+        $enctrs = DB::SELECT("SELECT * from dex.AllPatEncounters('$request->hpercode') order by admdate desc");
         return response()->json($enctrs);
     }
 }

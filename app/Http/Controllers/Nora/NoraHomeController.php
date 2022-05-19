@@ -4,17 +4,18 @@ namespace App\Http\Controllers\Nora;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\LoggedUser;
 use App\Model\Nora\NoraSchedule;
 use App\Model\Nora\noraPatient;
 use Illuminate\Support\Facades\Auth;
+use App\Events\MyEvent;
 use DB;
 
 class NoraHomeController extends Controller
 {
     public function index(Request $request)
     {	
-		
+		$userRole = LoggedUser::user_role();
 		$enccode = $request->enccode;
 		
 		$patientDetails = noraPatient::where('enccode', $enccode)->get()->first();	
@@ -62,7 +63,7 @@ class NoraHomeController extends Controller
             return response()->json($events);
     	}
 		
-    	return view('nora.scheduler.noraCalendar',compact('patientName','enccode','patientRoom','patientAge','patientSex','patientNoraHpercode'));
+    	return view('nora.scheduler.noraCalendar',compact('patientName','enccode','patientRoom','patientAge','patientSex','patientNoraHpercode','userRole'));
     }
 
 	public static function anestheologistList()
@@ -144,6 +145,14 @@ class NoraHomeController extends Controller
 					'patient_id' => $event->patientNoraHpercode
 					
 				]);
+				
+				$messageUpdate = "Schedule for : ".$request->title." is moved on ".$request->start." TO ".$request->end; 
+				$mesasgeToSend =[
+					'type'=> 'noraUpdateTime',
+					'message' => $messageUpdate
+				];
+				
+				event(new MyEvent($mesasgeToSend));
 
     			return response()->json($event);
     		}
@@ -179,6 +188,13 @@ class NoraHomeController extends Controller
 					// 'patient_age' => $patientAgeAdd,
 					// 'patient_sex' => $patientSexAdd
     			]);
+				$messageUpdate = "Schedule details for ".$request->title." has been updated"; 
+				$mesasgeToSend =[
+					'type'=> 'noraUpdateDetails',
+					'message' => $messageUpdate
+				];
+				
+				event(new MyEvent($mesasgeToSend));
 
     			return response()->json($event);
 				
@@ -194,11 +210,14 @@ class NoraHomeController extends Controller
     		{
 
 			}	
+			
     	}
+
+		
     }
 
 	public static function destroy(Request $request){
-		//dd($request);
+		
 		$employeeid = Auth::user()->employeeid;
 		$enccode = $request->enccode;
 		
@@ -227,6 +246,13 @@ class NoraHomeController extends Controller
 			// $event = NoraSchedule::find($request->id);
 			$event = NoraSchedule::where('id', $request->id)->delete();
 			// dd($event);?
+			$messageUpdate = "Schedule for : ".$getHpercode->title." has been deleted"; 
+			$mesasgeToSend =[
+					'type'=> 'noraDelete',
+					'message' => $messageUpdate
+				];
+				
+			event(new MyEvent($mesasgeToSend));
 			return response()->json($event,200);
 		
 	}
@@ -235,13 +261,17 @@ class NoraHomeController extends Controller
 		//FULL NAME RETRIEVAL
 				$username = Auth::user()->employeeid;
 				
-		
+				
 				$eventLogDateTime = NoraSchedule::where('id', $request->id)->get();
 				//dd($event->all());
-    			dd(eventLogDateTime);
+    			//dd(eventLogDateTime);
 						
+				
 				return $fullname;
 		//END OF FULL NAME RETRIEVAL
 			}
+			
+
+
 }
 ?>

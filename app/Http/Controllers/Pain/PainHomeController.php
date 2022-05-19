@@ -10,6 +10,7 @@ use App\Model\Pain\PainPatient;
 use Illuminate\Support\Facades\Auth;
 use DB;
 use Carbon\Carbon;
+use App\Events\MyEvent;
 
 class PainHomeController extends Controller
 {
@@ -141,6 +142,14 @@ class PainHomeController extends Controller
 					
 				]);
 
+				$messageUpdate = "Schedule for : ".$request->title." is moved on ".$request->start." TO ".$request->end; 
+				$mesasgeToSend =[
+					'type'=> 'painUpdateTime',
+					'message' => $messageUpdate
+				];
+
+				event(new MyEvent($mesasgeToSend));
+
     			return response()->json($event);
     		}
 			if($request->type == 'editUpdate')			
@@ -166,6 +175,13 @@ class PainHomeController extends Controller
 					
 					
     			]);
+				$messageUpdate = "Schedule details for ".$request->title." has been updated"; 
+				$mesasgeToSend =[
+					'type'=> 'painUpdateDetails',
+					'message' => $messageUpdate
+				];
+
+				event(new MyEvent($mesasgeToSend));
 
     			return response()->json($event);
 				

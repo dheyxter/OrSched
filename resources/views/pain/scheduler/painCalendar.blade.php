@@ -3,8 +3,29 @@
 <head>
    <title>PAIN CALENDAR</title>
 </head>
-<body>
+<body id='painBody'>
+<link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/toasty.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/toasty.js"></script>
    <div class="container">
+<link href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/toasty.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/toasty.js"></script>
+
+
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center"> 
+            <button type="button" id="successtoast" class="btn btn-success btn-icon-text" hidden> 
+                <i class="fa fa-check btn-icon-prepend"></i>Toast Notification success</button> 
+            <button type="button" id="infotoast" class="btn btn-info btn-icon-text" hidden> 
+                <i class="fa fa-check btn-icon-prepend"></i>Toast Notification info</button> 
+            <button type="button" id="warningtoast" class="btn btn-warning btn-icon-text" hidden> 
+                <i class="fa fa-check btn-icon-prepend"></i>Toast Notification warning</button>
+            <button type="button" id="errortoast" class="btn btn-primary btn-icon-text" hidden> 
+                <i class="fa fa-check btn-icon-prepend"></i>Toast Notification error</button>
+         </div>
+    </div>
+</div>
+
       <!--  -->
       <!-- VIEW SCHEDULE MODAL -->
       <div id="ViewModal" class="modal fade">
@@ -187,12 +208,113 @@
 @endsection
 @section('script')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+  <script>
+var options = {
+
+                autoClose: true,
+                progressBar: true,
+                enableSounds: true,
+                sounds: {
+
+                info: "https://res.cloudinary.com/dxfq3iotg/video/upload/v1557233294/info.mp3",
+                // path to sound for successfull message:
+                success: "https://res.cloudinary.com/dxfq3iotg/video/upload/v1557233524/success.mp3",
+                // path to sound for warn message:
+                warning: "https://res.cloudinary.com/dxfq3iotg/video/upload/v1557233563/warning.mp3",
+                // path to sound for error message:
+                error: "https://res.cloudinary.com/dxfq3iotg/video/upload/v1557233574/error.mp3",
+                },
+                };
+var toast = new Toasty(options);
+toast.configure(options);
+// $('#successtoast').click(function() {toast.success("Schedule has been added");});
+// $('#infotoast').click(function() {toast.info("Schedule Date and Timehave been updated");});
+// $('#warningtoast').click(function() {toast.warning("Schedule Details have been updated");});
+// $('#errortoast').click(function() {toast.error("This toast notification with sound");});
+
+    // Enable pusher logging - don't include this in production
+    
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('10e718234a044bf1887b', {
+      cluster: 'ap1'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+
+
+        let notificationMessage = JSON.parse(JSON.stringify(data.message.message));
+        let notificationType = JSON.parse(JSON.stringify(data.message.type));
+        var calendar = $('#calendar').fullCalendar({});
+        if(notificationType == "painUpdateTime"){
+            changeTitle();
+            alertToast(notificationMessage,"info");
+            $('#infotoast').click();
+            toast.info("Schedule Date and Time have been updated");
+
+            calendar.fullCalendar('refetchEvents');     
+        }else if(notificationType =="painUpdateDetails"){
+            changeTitle();
+            alertToast(notificationMessage,"warning");
+            $('#warningtoast').click();
+            toast.warning("Schedule Details have been updated");
+            calendar.fullCalendar('refetchEvents');
+
+        }else if(notificationType =="painAddSchedule"){
+            changeTitle();
+            alertToast(notificationMessage,"success");
+            $('#successtoast').click();
+            toast.success("Schedule has been added");
+            calendar.fullCalendar('refetchEvents');
+        }else{
+            changeTitle();
+            calendar.fullCalendar('refetchEvents');
+        }
+        
+
+    
+    });
+    
+let countNotification = 0;
+	
+var title = document.title;
+function changeTitle() {
+    countNotification++;
+        var newTitle = '(' + countNotification + ') ' + title;
+        document.title = newTitle;
+}
+var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+
+function alertToast(message, type) {
+  var wrapper = document.createElement('div')
+  wrapper.innerHTML = '<div class="alert alert-' + type +' alert-dismissible ">' +
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close" "><button class="alert-danger" onclick="removeNotification()">&times;</button></a>' +
+    '<h4 class="blink_me"><strong>Alert!</strong></h4> <br><strong>' + message + '</strong</div>';
+  alertPlaceholder.append(wrapper)
+
+}
+function removeNotification(){
+    countNotification--;
+        if(countNotification == 0){
+            var newTitle = title;
+        }else{
+            var newTitle = '(' + countNotification + ') ' + title;
+        }
+        
+        document.title = newTitle;
+}
+
+</script>
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>       
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.5/dist/bootstrap-validate.js" ></script>
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script>
    $(document).ready(function () {
     
@@ -334,7 +456,7 @@ function validateInputs(eventId){
             },
             slotDuration: '01:00:00',
             agendaEventMinHeight: 0,
-            defaultView:'listMonth',
+            defaultView:'month',
             events:'/painScheduler',
             selectable:true,
             selectHelper: true,      
@@ -367,7 +489,7 @@ function validateInputs(eventId){
                    success:function(response)
                    {
                        calendar.fullCalendar('refetchEvents');
-                       displayMessage("Schedule Updated Successfully");
+                       //displayMessage("Schedule Updated Successfully");
                    }
                })
            },
@@ -391,7 +513,7 @@ function validateInputs(eventId){
                    success:function(response)
                    {
                        calendar.fullCalendar('refetchEvents');
-                       displayMessage("Schedule Updated Successfully");
+                      // displayMessage("Schedule Updated Successfully");
                    }
                })
            },
@@ -503,9 +625,9 @@ function validateInputs(eventId){
                                         $('#ViewModal').modal('hide');   
                                     
                                         console.log("deleted!");
-                                        displayMessage("Schedule Deleted Successfully");
+                                        //displayMessage("Schedule Deleted Successfully");
                                         calendar.fullCalendar('refetchEvents');
-                                        location.reload();        
+                                        //location.reload();        
                                     },
                                     208: function (data) {
                                         consle.log('208: Error');
@@ -558,9 +680,9 @@ function validateInputs(eventId){
                     success:function(data)
                     {
                         calendar.fullCalendar('refetchEvents');
-                        displayMessage("Schedule Created Successfully");
-                        $("#createEventModal").modal('hide');
-                        window.location='painHome';
+                        //displayMessage("Schedule Created Successfully");
+                        $("#ViewModal").modal('hide');
+                        //window.location='painHome';
                     }
                 })
       };
@@ -572,6 +694,10 @@ function validateInputs(eventId){
        toastr.success(message, 'Event');
    } 
    
+   	
+
+
+
 </script>  
 @endsection
 @section('style')
@@ -581,6 +707,8 @@ function validateInputs(eventId){
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	
+
 <style>
    /* label {
    display: inline-block;
@@ -595,6 +723,35 @@ function validateInputs(eventId){
    transform: scale(2); 
    
    }
+
+   .blink_me {
+  animation: blinker 2s step-start infinite;
+}
+
+    @keyframes blinker {
+    30% {
+        opacity: 0;
+    }
+    }
+    .btn {
+    margin-right: 0.5rem !important
+}
+
+
+
+.toast {
+    transition: all 0.1s ease-in-out;
+    position: relative;
+    padding: 16px;
+    border: 5px solid;
+    font-size: large;
+
+}
+.toast-container--fade {
+    right: 0;
+    top: 0
+}
+
    
 </style>
 @endsection
