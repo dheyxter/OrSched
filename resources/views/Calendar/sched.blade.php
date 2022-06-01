@@ -13,7 +13,7 @@
             <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z" />
             <path fill-rule="evenodd" d="M3.5 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5zm9 0a.5.5 0 0 1 .5.5V1a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5z" />
             <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
-        </svg> View Elective Final Schedule</h2>
+        </svg> View Final Schedule</h2>
 </div>
 <hr>
 <div class="container-fluid">
@@ -64,12 +64,11 @@
                 
                 <table class="table table-sm table-striped table-hover table-bordered">
                     <thead>
-                        <th>Room</th>
-                        <th>Case #</th>
                         <th>Hosp. #</th>
                         <th>Patient</th>
                         <th>Ward</th>
                         <th>Type</th>
+                        <th>Room</th>
                         <th>Duration</th>
                         <th>SVC/PAY</th>
                         <th>Surgeon</th>
@@ -79,6 +78,16 @@
                     <tbody>
                         @foreach($scheds as $s)
                         <tr>
+                            <td><small>{{$s->shortcode}}</small></td>
+                            <td><b>{{$s->patlast}}</b>, {{$s->patfirst}} <small class="text-muted">{{$s->patmiddle}}</small></td>
+                            <td><small>{{$s->patward}}</small></td>
+                            <td>
+                                @if($s->type == 0)
+                               <span class="badge badge-warning"> Elective</span>
+                                @else
+                                <span class="badge badge-danger"> Emergent</span>
+                                @endif
+                            </td>
                             <td>
                                 <small> 
                                     @if($s->annex == 1)
@@ -101,17 +110,33 @@
                                     
                                     @endif
                                 </small>
-                            </td>
-                            <td><small>Case {{$s->case_num}}</small></td>
-                            <td><small>{{$s->shortcode}}</small></td>
-                            <td><b>{{$s->patlast}}</b>, {{$s->patfirst}} <small class="text-muted">{{$s->patmiddle}}</small></td>
-                            <td><small>{{$s->patward}}</small></td>
-                            <td>
-                                @if($s->type == 0)
-                               <span class="badge badge-warning"> Elective</span>
-                                @else
-                                <span class="badge badge-danger"> Emergent</span>
-                                @endif
+                                {{-- @if($s->annex == 1)
+                                    <small>Annex 1</small>
+                                    @elseif($s->annex == 2)
+                                    <small>Annex 2</small>
+                                    @elseif($s->annex == 3)
+                                    <small>Annex 3</small>
+                                    @elseif($s->annex == 4)
+                                    <small>Room 1</small>
+                                    @elseif($s->annex == 5)
+                                    <small>Room 2</small>
+                                    @elseif($s->annex == 6)
+                                    <small>Room 3</small>
+                                    @elseif($s->annex == 7)
+                                    <small>Room 4</small>
+                                    @elseif($s->annex == 8)
+                                    <small>Room 5</small>
+                                    @elseif($s->annex == 9)
+                                    <small>Room 6</small>
+                                    @elseif($s->annex == 10)
+                                    <small>Room 7</small>
+                                    @elseif($s->annex == 11)
+                                    <small>Room 8</small>
+                                    @elseif($s->annex == 12)
+                                    <small>Covid Room</small>
+                                    @else
+                                    <small>No Room Indicate</small>
+                                @endif --}}
                             </td>
                             <td><small>{{$s->timeDuration}}</small></td>
                             <td><small> {{$s->adm_tacode == 'SERVI' ? "Service" : "Pay"}} </small></td>

@@ -48,5 +48,4 @@ class UserController extends Controller
         ->orderby('id', 'DESC')
         ->get();
     }
-
 }

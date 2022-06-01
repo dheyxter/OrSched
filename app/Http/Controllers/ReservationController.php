@@ -25,7 +25,7 @@ class ReservationController extends Controller
             where re.created_at  = getdate()
             ");
         
-        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY annex, case_num");   
+        $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY patlast");   
         
         $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid");
         
@@ -45,12 +45,11 @@ class ReservationController extends Controller
     public function anesSched2(Request $r)
     {
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
-        $employeeid = $hpersonal[0]->employeeid;
         $datetoday = $r->selectdate;   
         if(LoggedUser::user_role() == 0) {
             $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND entry_by = '$employeeid' AND cancel is null ORDER BY patlast" );     
         } else {
-            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY annex");   
+            $scheds = DB::SELECT( "SELECT * from jhay.vw_toAccept where date_of_sched = '$datetoday' AND accept = '1' AND cancel is null ORDER BY patlast");   
         }
         
         $schedcount = count($scheds);
