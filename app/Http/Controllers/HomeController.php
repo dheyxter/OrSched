@@ -34,12 +34,9 @@ class HomeController extends Controller
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
         ->whereYear('jhay.vw_toAccept.created_at', '=', $today)
         ->where('accept', NULL)
-        ->whereNull('cancel_remarks_by')
         ->orderBy('type', 'DESC')
         // ->whereMonth('jhay.vw_toAccept.created_at', '=', $today)
         ->get();
-
-        // dd($patients);
 
         $patients1 = toAccept::with('reservation')
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
@@ -181,55 +178,6 @@ class HomeController extends Controller
         return 0;
     }
 
-    public function cancel(Request $request) {
-        $id = $request->id;
-        $patID = $request->patient_id;
-        $employeeid = $request->name;
-        $namePat = $request->namePat;
-        $nameEmp = $request->nameEmp;
-        // dd($patID);
-
-        DB::TABLE('jhay.orsched_reservations')
-        ->where('patient_id', $id)
-        ->update([
-            'deleted_at'    => Carbon\Carbon::now()
-        ]);
-
-        DB::TABLE('jhay.orsched_schedule')
-        ->where('patient_id', $id)
-        ->update([
-            'deleted_at'    => Carbon\Carbon::now(),
-            'cancel_by' => $nameEmp,
-            'cancel' => 1
-        ]);
-        
-        DB::table('hospital.jhay.orsched_actlog')
-        ->insert([
-            'act_details' => 'Cancel Patient Schedule', 
-            'employeeid' => $employeeid,
-            'patient_id' => $patID
-        ]);
-
-        return 0;
-    }
-
-    public function cancelRemarks(Request $r) {
-        $employee = Auth::user()->employeeid;
-        $today = Carbon\Carbon::now();
-        $hosp_id = $r->hospID;
-        $cancelRemarks = $r->cancelRemarks;
-
-        DB::TABLE('jhay.orsched_schedule')
-        ->where('patient_id', $hosp_id)
-        ->update([
-            'cancel_remarks'    => $cancelRemarks,
-            'cancel_remarks_by' => $employee,
-            'cancel_remarks_at' => $today
-        ]);
-        return redirect('/');
-
-    }
-
     public static function aneslist()
     {
         return DB::SELECT("SELECT hpersonal.employeeid, hpersonal.lastname, hpersonal.firstname, hpersonal.middlename, hprovider.empdegree, htypser.tsdesc, hprovider.licno from hpersonal 
@@ -288,24 +236,6 @@ class HomeController extends Controller
        $updt = DB::UPDATE("UPDATE jhay.orsched_user SET is_confirm = '1' WHERE employeeid = '$empid'");
 
        return redirect('/');
-    }
-
-    public function display() {
-        $today = Carbon\Carbon::now();
-        $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) AND accept is not null ORDER BY created_at desc ");
-        $patients = toAccept::with('reservation')
-        ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
-        ->whereYear('jhay.vw_toAccept.created_at', '=', $today)
-        ->where('accept', NULL)
-        ->whereNull('cancel_remarks_by')
-        ->orderBy('type', 'DESC')
-        ->get();
-
-
-        return view('admin.display', compact(
-            'pat',
-            'patients'
-        ));
     }
 
 
