@@ -36,6 +36,8 @@ Route::middleware('auth')->group (function (){
     Route::get('/orScheduler', 'HomeController@index')->name('home');
     Route::GET('/selectAnes', 'HomeController@index')->name('selectAnes');
     Route::get('/accept','HomeController@accept');
+    Route::get('/cancel','HomeController@cancel');
+    Route::post('/cancelRemarks','HomeController@cancelRemarks');
     // Route::post('/', 'HomeController@index')->name('home');
 
     // Route::get('/', 'HomeController@patNoRsrv')->name('patNoRserve');
@@ -142,8 +144,7 @@ Route::middleware('auth')->group (function (){
     Route::get('/ChartReport', 'HomeController@ChartReport')->name('ChartReport');
     Route::post('/Charts', 'HomeController@Charts')->name('Charts');
 
-
-
+    Route::get('/display', 'HomeController@display')->name('display'); 
     Route::post('/isConfirm','HomeController@is_confirm');
 
     /////////////////////////////// /NORA ROUTES ////////////////////////////////////////
@@ -185,3 +186,5 @@ Route::middleware('auth')->group (function (){
         return "Event has been sent!";
     });
 });
+
+Route::get('/monitor', 'Auth\LoginCtr@display')->name('monitor');
