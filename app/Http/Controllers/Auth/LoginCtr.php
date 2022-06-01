@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CheckCtr;
 use Illuminate\Support\Facades\Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
+use App\Model\toAccept;
+use Carbon;
 
 class LoginCtr extends Controller
 {
@@ -53,4 +55,23 @@ class LoginCtr extends Controller
         return redirect('/');
     
       }
+
+      public function display() {
+        $today = Carbon\Carbon::now();
+        $pat_scheduled = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) AND accept is not null AND type = 1 ORDER BY created_at desc");
+         $patients = toAccept::with('reservation')
+        ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
+        ->whereYear('jhay.vw_toAccept.created_at', '=', $today)
+        ->where('accept', NULL)
+        ->where('type', 1)
+        ->whereNull('cancel_remarks_by')
+        ->orderBy('type', 'DESC')
+        ->get();
+
+
+        return view('admin.display', compact(
+            'pat_scheduled',
+            'patients'
+        ));
+    }
 }

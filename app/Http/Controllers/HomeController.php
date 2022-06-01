@@ -290,5 +290,23 @@ class HomeController extends Controller
        return redirect('/');
     }
 
+    public function display() {
+        $today = Carbon\Carbon::now();
+        $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) AND accept is not null ORDER BY created_at desc ");
+        $patients = toAccept::with('reservation')
+        ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
+        ->whereYear('jhay.vw_toAccept.created_at', '=', $today)
+        ->where('accept', NULL)
+        ->whereNull('cancel_remarks_by')
+        ->orderBy('type', 'DESC')
+        ->get();
+
+
+        return view('admin.display', compact(
+            'pat',
+            'patients'
+        ));
+    }
+
 
 }

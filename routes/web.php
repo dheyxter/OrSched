@@ -144,8 +144,7 @@ Route::middleware('auth')->group (function (){
     Route::get('/ChartReport', 'HomeController@ChartReport')->name('ChartReport');
     Route::post('/Charts', 'HomeController@Charts')->name('Charts');
 
-
-
+    Route::get('/display', 'HomeController@display')->name('display'); 
     Route::post('/isConfirm','HomeController@is_confirm');
 
     /////////////////////////////// /NORA ROUTES ////////////////////////////////////////
@@ -175,3 +174,5 @@ Route::middleware('auth')->group (function (){
     
 
 });
+
+Route::get('/monitor', 'Auth\LoginCtr@display')->name('monitor');
