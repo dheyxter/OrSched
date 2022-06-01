@@ -67,7 +67,7 @@
                     <table class="table table-sm table-hover table-striped" id="myTable1">
                         <thead>
                             <th>Patient Name</th>
-                            <th>Date and Time Accepted</th>
+                            <th>Date Scheduled</th>
                             <th>Type</th>
                             <th>Room</th>
                             <th>Accepted By</th>
@@ -78,14 +78,16 @@
                             <tr>
                                 <td>
                                     <input type="text" data-id="{{$p->id}}" hidden>
-                                    <a class="btnpatientdetails" data-toggle="tooltip" data-placement="top"
-                                        title="Click to View Details" style="color: black" data-id="{{$p->id}}"><img
-                                            class="mr-1" src="../img/plastic-surgery.png" height="30" width="30"
-                                            alt=""><b class="font-weight-bold">{{$p->patlast}},</b> {{$p->patfirst}}
-                                        <small class="text-muted">{{$p->patmiddle}}</small></a>
+                                   <small> <a class="btnpatientdetails" data-toggle="tooltip" data-placement="top"
+                                    title="Click to View Details" style="color: black" data-id="{{$p->id}}"><img
+                                        class="mr-1" src="../img/plastic-surgery.png" height="30" width="30"
+                                        alt=""><b class="font-weight-bold">{{$p->patlast}},</b> {{$p->patfirst}}
+                                    <small class="text-muted">{{$p->patmiddle}}</small></a></small>
                                 </td>
+                               
                                 <td>
-                                    {{date('F j, Y, g:i a', strtotime($p->created_at))}}
+                                    <small>{{date('F j, Y, g:i a', strtotime($p->created_at))}}</small>
+                                </td>
                                 <td>
                                     @if($p->type == 0)
                                     <span class="badge badge-warning">Elective</span>
@@ -94,26 +96,23 @@
                                     @endif
                                 </td>
                                 <td>
+                                   <small> 
                                     @if($p->annex == 1)
-                                    Room 1 - MIS
+                                        Room 1 - MIS
                                     @elseif($p->annex == 2)
-                                    Room 2 - ER
+                                        Room 2 - ER
                                     @elseif($p->annex == 3)
-                                    Room 3 - Surgery
+                                        Room 3 - Surgery
                                     @elseif($p->annex == 4)
-                                    Room 4 - OB Gyne
+                                        Room 4 - OB Gyne
                                     @elseif($p->annex == 5)
-                                    Room 5 - ENT
+                                        Room 5 - ENT
                                     @elseif($p->annex == 6)
-                                    Room 6 - Ortho
+                                        Room 6 - Ortho
                                     @elseif($p->annex == 7)
-                                    Room 7 - Ophtha
+                                        Room 7 - Ophtha
                                     @elseif($p->annex == 8)
-                                    Room 8 - Surgery
-                                    {{-- @elseif($p->annex == 9)
-                                    Room 6
-                                    @elseif($p->annex == 10)
-                                    Room 7 --}}
+                                        Room 8 - Surgery</small>
                                     @else
                                     
                                     @endif
@@ -752,6 +751,9 @@
             <div class="modal-body bg-danger text-center">
                 <h1 class="blinking2">New Emergent Case! </h1> <br>
                 <h2 class="blinking2">Check patient list to accept patient schedule</h2> <br>
+                <audio loop autoplay>
+                    <source src="../alert.mp3" type="audio/mp3">
+                  </audio>
 
                 <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
 
