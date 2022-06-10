@@ -50,7 +50,7 @@
                                 <th>Admission Date and Time</th>
                                 <th># of Schedules</th>
                                 <th>Action</th>
-                                @if(App\Http\Controllers\LoggedUser::user_role() == 1)
+                                @if(App\Http\Controllers\LoggedUser::user_role() == 1 || App\Http\Controllers\LoggedUser::user_role() == 4)
                                 <th>Entry by</th>
                                 @else
                                 {{-- <th></th> --}}
@@ -149,7 +149,7 @@
                                     @endif
                                     @endif
                                 </td>
-                                @if(App\Http\Controllers\LoggedUser::user_role() == 1)
+                                @if(App\Http\Controllers\LoggedUser::user_role() == 1 || App\Http\Controllers\LoggedUser::user_role() == 4)
                                 <td>
                                     <small>{{$pat->lastname}}, {{$pat->firstname}} {{$pat->middlename}}</small>
                                 </td>
