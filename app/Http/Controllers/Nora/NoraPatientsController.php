@@ -20,7 +20,7 @@ class NoraPatientsController extends Controller
         $userRole = LoggedUser::user_role();
         $employee = Auth::user()->employeeid;
         
-        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 1) {
+        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 4) {
         $patients = noraPatient::with('reservation')
         ->join('hospital.dbo.hpersonal', 'nora.paul.nora_patients.entry_by', '=', 'dbo.hpersonal.employeeid')
         ->leftJoin('nora.paul.nora_schedule', 'nora.paul.nora_patients.id', '=', 'nora.paul.nora_schedule.patient_id')
