@@ -290,22 +290,49 @@ class HomeController extends Controller
        return redirect('/');
     }
 
-    public function display() {
-        $today = Carbon\Carbon::now();
-        $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) AND accept is not null ORDER BY created_at desc ");
-        $patients = toAccept::with('reservation')
-        ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
-        ->whereYear('jhay.vw_toAccept.created_at', '=', $today)
-        ->where('accept', NULL)
-        ->whereNull('cancel_remarks_by')
-        ->orderBy('type', 'DESC')
-        ->get();
+    public function comments() {
+        $feedback = DB::SELECT("SELECT * FROM jhay.orsched_feedback ORDER BY created_at");
 
-
-        return view('admin.display', compact(
-            'pat',
-            'patients'
+        return view('admin.comments', compact(
+            'feedback'
         ));
+    }
+
+
+    public function save_comments(Request $r) {
+
+        $employee =Auth::user()->employeeid;
+        $message = $r->message;
+
+            DB::TABLE('jhay.orsched_feedback')
+            ->insert([
+                'username'     => $employee,
+                'message'      => $message,
+                'status'       => 1,
+                'created_at'   => Carbon\Carbon::now(),
+ 
+            ]);
+
+        return redirect()->back()->with('status', 'Feedback / Comment Saved Successfully!');
+
+    }
+
+    public function prog_remarks(Request $r) {
+        $id             = $r->feedback_id;
+        $prog_message   = $r->prog_message;
+        $employee       = Auth::user()->employeeid;
+
+            DB::TABLE('jhay.orsched_feedback')
+            ->where('id', $id)
+            ->update([
+                'remarks'       => $prog_message,
+                'remarks_by'    => $employee,
+                'status'        => 2,
+                'updated_at'    => Carbon\Carbon::now(),
+            ]);
+        
+        return redirect()->back()->with('status', 'Programmer Feedback Successfully!');
+
     }
 
 

@@ -114,6 +114,8 @@ Route::middleware('auth')->group (function (){
 
     //LOGS
     Route::get('/translog','ReportsController@trans_log')->name('translog');
+    Route::post('/message','HomeController@save_comments')->name('save_comments');
+    Route::post('/prog_remarks','HomeController@prog_remarks')->name('prog_remarks');
     
     // UPDATES HERE
     Route::get('/remarks', 'ReservationController@remarks');
@@ -144,7 +146,7 @@ Route::middleware('auth')->group (function (){
     Route::get('/ChartReport', 'HomeController@ChartReport')->name('ChartReport');
     Route::post('/Charts', 'HomeController@Charts')->name('Charts');
 
-    Route::get('/display', 'HomeController@display')->name('display'); 
+    Route::get('/comments', 'HomeController@comments')->name('comments'); 
     Route::post('/isConfirm','HomeController@is_confirm');
 
     /////////////////////////////// /NORA ROUTES ////////////////////////////////////////
