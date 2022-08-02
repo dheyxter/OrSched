@@ -190,6 +190,11 @@
             border-color: #dbdad5 !important;
             color: black !important;
         }
+        img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
     </style>
 </head>
@@ -198,7 +203,7 @@
     <div class="container-fluid">
         <div class="row body-container">
             <div class="col-5">
-                <span class="h1" style="color: #232a36">Select Category</span>
+                <span class="h1" style="color: #232a36; font-size: ">Select Category</span>
                 <br>
                 <span style="font-size: 20px;">Select from the category where you want to proceed.</span>
             </div>
@@ -208,12 +213,12 @@
                 <div class="card">
                     <div class="card-body">
                         <img src="../img/doctor.png" alt="" width="130" height="130" class="img-circle elevation-3"
-                            style="margin-left: 125px; margin-top: 25px;">
+                            style="margin-top: 25px;">
                         <br>
                         <center style="border: none !important;">
-                            <p class="h3" style="border:none !important; margin-top: 15px !important;">OR Scheduler</p>
+                            <p class="h3" style="border:none !important; margin-top: 10px !important;">Operating Room Scheduler</p>
                         </center>
-                        <center style="border: none !important;"><a href="/orScheduler" class="btn" style="margin-top: 40px !important;">Proceed</a></center>
+                        <center style="border: none !important;"><a href="/orScheduler" class="btn" style="margin-top: 70px !important;">Proceed</a></center>
                     </div>
                 </div>
             </div>
@@ -221,12 +226,12 @@
                 <div class="card">
                     <div class="card-body">
                         <img src="../img/medical-appointment.png" alt="" width="130" height="130"
-                            class="img-circle elevation-3" style="margin-left: 110px; margin-top: 25px;">
+                            class="img-circle elevation-3" style="margin-top: 25px;">
                             <br>
                         <center style="border: none !important;">
-                            <p class="h3" style="border:none !important; margin-top: 15px !important;">NORA Scheduler</p>
+                            <p class="h3" style="border:none !important; margin-top: 10px !important;">NORA Scheduler</p>
                         </center>
-                        <center style="border: none !important;"><a href="/noraHome" class="btn" style="margin-top: 40px !important;">Proceed</a></center>
+                        <center style="border: none !important;"><a href="/noraHome" class="btn" style="margin-top: 70px !important;">Proceed</a></center>
                     </div>
                 </div>
             </div>
@@ -234,12 +239,12 @@
                 <div class="card">
                     <div class="card-body">
                         <img src="../img/doctor_1.png" alt="" width="130" height="130" class="img-circle elevation-3"
-                            style="margin-left: 110px; margin-top: 25px;">
+                            style="margin-top: 25px;">
                               <br>
                         <center style="border: none !important;">
-                            <p class="h3" style="border:none !important; margin-top: 15px !important;">Pain Logbook</p>
+                            <p class="h3" style="border:none !important; margin-top: 10px !important;">Pain Logbook</p>
                         </center>
-                        <center style="border: none !important;"><a href="painHome" class="btn" style="margin-top: 40px !important;">Proceed</a></center>
+                        <center style="border: none !important;"><a href="painHome" class="btn" style="margin-top: 70px !important;">Proceed</a></center>
                             
                     </div>
                 </div>
@@ -247,9 +252,9 @@
           
         </div>
     </div>
-      <div class="col-md-12" style="background: rgb(238,174,202);
-background: linear-gradient(344deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%); width: auto; height: 350px; margin-top: -150px; z-index: -1;">
-            </div>
+      <footer style="background: rgb(238,174,202);
+background: linear-gradient(344deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%); width: auto; height: 400px; margin-top: -150px; z-index: -1; position:static">
+            </footer>
 </body>
 
 </html>
