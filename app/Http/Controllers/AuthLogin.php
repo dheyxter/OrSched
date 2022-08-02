@@ -57,6 +57,7 @@ class AuthLogin extends Controller
                     ->withInput()
                     ->with('wrong', 'Invalid username or password for CDOE' );
             }
+            
             $emp = $data[0]->empid;    
 
             $check = DB::TABLE("hospital.jhay.orsched_user")

@@ -2,7 +2,7 @@
 @section('content')
 
 <head>
-    <title>PAIN SCHEDULER</title>
+    <title>PAIN LOGBOOK</title>
 
 </head>
     

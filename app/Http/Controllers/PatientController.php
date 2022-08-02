@@ -29,7 +29,7 @@ class PatientController extends Controller
     {
         $employee = Auth::user()->employeeid;
 
-        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 1) {
+        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 4) {
         $patients = patient::with('reservation')
         ->join('hospital.dbo.hpersonal', 'jhay.orsched_patients.entry_by', '=', 'dbo.hpersonal.employeeid')
         ->leftJoin('hospital.jhay.orsched_schedule', 'jhay.orsched_patients.id', '=', 'jhay.orsched_schedule.patient_id')

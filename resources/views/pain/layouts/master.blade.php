@@ -9,7 +9,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>BGHMC | PAIN SCHEDULER</title>
+    <title>BGHMC | PAIN LOGBOOK</title>
     <link rel="icon" href="../img/bghmc.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="jquery3.5.1.js"></script>
@@ -47,7 +47,7 @@
                 </li>
             </ul>
             <div class="page-header" >
-                <h2>Pain Scheduler</h2>      
+                <h2>Pain Logbook</h2>      
             </div>
            
                    
@@ -75,7 +75,7 @@
             <!-- Brand Logo -->
             <a onclick="window.location = '{{route('painHome')}}' " href="#" class="brand-link">
                 <img src="../img/BGHMC_LOGO.gif" alt="" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">PAIN <br> SCHEDULER</span>
+                <span class="brand-text font-weight-light">PAIN <br> LOGBOOK</span>
             </a>
 
             <!-- Sidebar -->
