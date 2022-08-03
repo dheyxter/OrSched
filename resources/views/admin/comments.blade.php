@@ -44,9 +44,9 @@
                             <td>{{date('F Y h:i:s A', strtotime($f->created_at))}}</td>
                             <td class="text-center">
                                 @if ($f->status == 1)
-                                <span class="badge badge-pill badge-primary">To be reviewed by Programmer</span>
+                                <span class="badge badge-pill badge-danger">To be reviewed by Programmer</span>
                                 @elseif($f->status == 2)
-                                <span class="badge badge-pill badge-success mb-2">Reviewed by Programmer</span>
+                                <span class="badge badge-pill badge-primary mb-2">Reviewed by Programmer</span>
                                 <button class="btn btn-sm btn-info" data-toggle="modal"
                                     data-target="#progRemarks{{$f->id}}"><i class="fa-solid fa-eye"></i> View
                                     Remarks</button>
@@ -71,12 +71,15 @@
                             <small class="float-left"><b>Updated at:</b> {{date('F Y h:i:s A', strtotime($f->updated_at))}}</small>
                         </div>
                         <div class="modal-footer">
+                        <input type="text" value="{{$f->id}}" id="f_id" hidden>
+                            <button type="button" class="btn btn-primary" id="thisResolve">Resolve</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
-
+            @elseif($f->status == 3)
+                    <span class="badge badge-pill badge-success">RESOLVED</span>
             @endif
             
             </td>
@@ -178,6 +181,47 @@
 
     $(document).ready(function () {
         $('#myTable1').DataTable();
+    });
+
+    $('#thisResolve').on('click', function() {
+        var id = $(this).siblings('#f_id').val();
+
+            Swal.fire({
+            title: 'Resolved Concern?',
+            // text: "Do you want to save the status?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Yes',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Back'
+        }).then((result) => {
+            if (result.value) {
+                // IF CONFIRMED DO SOMETHING
+               $.ajax({
+                   type: 'POST',
+                   url: '/resolved',
+                   data: {
+                       'id' : id,
+                   },
+                   beforeSend: function(){
+                        Swal.fire({
+                            title: '<div style="width: 7rem; height: 7rem;" class="spinner-border text-info" role="status"><span class="sr-only">Loading...</span></div>',
+                            showConfirmButton : false,
+                        });
+                   },
+                   success: function(data){
+                        Swal.fire({
+                            title: 'Resolved Successfully!',
+                            showConfirmButton : false,
+                            timer: 1000,
+                            icon: 'success'
+                        });
+                        location.reload();
+                   }
+               });
+            };
+        });
     });
 
 </script>

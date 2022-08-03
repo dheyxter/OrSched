@@ -768,14 +768,14 @@
 <!-- Button trigger modal -->
 @foreach($mydata as $a)
 @if($a->is_confirm == NULL)
-<button type="button" class="btn btn-sm btn-primary invisible" id="trigg1" data-toggle="modal"
+<button type="button" class="btn btn-sm btn-primary invisible" id="trigg1" data-backdrop="static" data-keyboard="false" data-toggle="modal"
     data-target="#Updates"></button>
 @endif
 @endforeach
 <!-- Modal -->
-<div class="modal fade" id="Updates" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+<div class="modal fade" id="Updates"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
     data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-transparent border-bottom-0">
                 <h3 class="text-dark">New Updates!</h3>
@@ -786,29 +786,28 @@
                     <p class="text-muted">
                         We're constantly working to improve your experience, here's a summary of what has changed...
                     </p>
-                    <span class="badge badge-pill badge-success h1">IMPROVEMENTS</span>
+                    <span class="badge badge-pill badge-success">IMPROVEMENTS</span>
                     @foreach($mydata as $a)
                     <input type="text" hidden name="employeeid" id="" value="{{$a->employeeid}}">
                     <input type="text" hidden name="" id="is_id" value="{{$a->is_confirm}}">
                     @endforeach
-                    <div class="col-12"><b>- General UX improvements</b></div>
                     <div class="row">
-                        <div class="col-4">
-                            <span class="ml-3 mb-2"><b>- Updates on Schedule Tab</b></span>
-                            <img src="./img/updt.png" alt="" class="img-thumbnail">
+                        <div class="col-12">
+                            <span class="ml-3 mb-2 font-weight-bold">- Creation of Feedback / Comments Suggestions</span>
+                            <img src="./img/feedback_orsched.png" alt="" class="img-thumbnail">
                         </div>
-                        <div class="col-8">
-                            <ul class="mt-4">
-                                <li>You may now <span class="text-success text-bold">view</span> your patients scheduled on a specific date.</li>
-                                <li>On date area, please select date, then all your patient list will be loaded.</li>
-                                <li>If there are some discrepancies on your entry regarding the schedule, you have the access now to <span class="text-bold">CANCEL SCHEDULE</span> of your patient and re-schedule it.</li>
-                                <li>For RE-SCHEDULE, please proceed to PATIENT tab on your side panel and select your patient to re-schedule.</li>
+                        <div class="col-12">
+                            <ul class="mt-3">
+                                <li>You may now <span class="text-success text-bold">send feedback / comments / suggestions </span> to the programmer for any improvements you want to be shown on next updates.</li>
+                                <li>You can <span class="text-primary text-bold">monitor</span> all send comments in this tab and also will be able to know if programmer respond to your request</li>
+                                <li>You can also tag programmer feedback if requests has been resolved</li>
+                                
                             </ul>
                         </div>
-                        <div class="w-100"></div>
+                        {{-- <div class="w-100"></div>
                         <div class="col-12">
                             <span class="h5 text-danger">Reminder: <br>Starting next week our new Address for OR Scheduler is: <b>192.168.7.17:84</b></span>
-                        </div>
+                        </div> --}}
                     </div>
                     <center><button type="submit" class="btn btn-outline-primary mt-4">Acknowledge</button></center>
                 </form>

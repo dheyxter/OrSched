@@ -287,7 +287,7 @@ class HomeController extends Controller
        $empid = $r->employeeid;
        $updt = DB::UPDATE("UPDATE jhay.orsched_user SET is_confirm = '1' WHERE employeeid = '$empid'");
 
-       return redirect('/');
+       return redirect('/orScheduler');
     }
 
     public function comments() {
@@ -333,6 +333,18 @@ class HomeController extends Controller
         
         return redirect()->back()->with('status', 'Programmer Feedback Successfully!');
 
+    }
+
+    public function resolved(Request $r) {
+        $id = $r->id;
+        DB::TABLE('jhay.orsched_feedback')
+        ->where('id', $id)
+        ->update([
+            'status'        => 3,
+            'updated_at'    => Carbon\Carbon::now(),
+        ]);
+
+        return redirect()->back();
     }
 
 

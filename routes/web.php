@@ -116,6 +116,7 @@ Route::middleware('auth')->group (function (){
     Route::get('/translog','ReportsController@trans_log')->name('translog');
     Route::post('/message','HomeController@save_comments')->name('save_comments');
     Route::post('/prog_remarks','HomeController@prog_remarks')->name('prog_remarks');
+    Route::post('/resolved','HomeController@resolved')->name('resolved');
     
     // UPDATES HERE
     Route::get('/remarks', 'ReservationController@remarks');
