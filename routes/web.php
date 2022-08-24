@@ -1,5 +1,7 @@
 <?php
-use App\Http\Controllers\Nora\NoraSchedulerController;
+
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -151,20 +153,9 @@ Route::middleware('auth')->group (function (){
     Route::post('/isConfirm','HomeController@is_confirm');
 
     /////////////////////////////// /NORA ROUTES ////////////////////////////////////////
-    Route::any('/noraHome', 'Nora\NoraHomeController@index')->name('noraHome');
-    Route::post('/noraHome/action', 'Nora\NoraHomeController@action')->name('noraHome/action');
-    Route::post('/noraHome/action/delete', 'Nora\NoraHomeController@destroy');
-
-    
-    Route::get('/noraPatients', 'Nora\NoraPatientsController@getAllPatients')->name('noraPatients');
-    Route::post('/noraPatientdetails', 'Nora\NoraPatientsController@noraPatientdetails');
-    Route::post('/JS/noraGenpatientlist', 'Nora\NoraPatientsController@Nora_JS_GenPatientList');
-    Route::post('/JS/noraGenenclist', 'Nora\NoraPatientsController@Nora_JS_GenEncounterList');
-    Route::any('/noraMyschedules', 'Nora\NoraReservationController@noraMyschedules')
-        ->name('noraMyschedules');
-    Route::any('/noraScheduler', 'Nora\NoraSchedulerController@index')->name('noraScheduler');
-    Route::post('/noraScheduler/action', 'Nora\NoraSchedulerController@action');
-    Route::get('/noraReports','Nora\NoraReportsController@printReport')->name('noraReports');
+    Route::any('/noraHome', function(Request $request) {
+        return \Redirect::to('http://192.168.7.230:10031/auth?employeeid=' . $request->user()->employeeid);
+    })->name('noraHome');
     
     ///////////////////////////////PAIN ROUTES////////////////////////////////////////
     Route::any('/painHome', 'Pain\PainHomeController@index')->name('painHome');
