@@ -24,7 +24,7 @@ class AuthLogin extends Controller
 
     public static function authCDOEAccount(Request $request)
     {
-        $username = $request->username;
+         $username = $request->username;
         $password = $request->password;
         
         //do the moves
@@ -32,7 +32,8 @@ class AuthLogin extends Controller
 
         if(!empty($cdoe)) {
             if(!Hash::check($password, $cdoe->password)) { return false; } 
-            else { return DB::select("SELECT TOP 1 * from webapp.dbo.user_account where username = '$username' "); }
+            else { 
+                return DB::select("SELECT TOP 1 * from webapp.dbo.user_account where username = '$username' "); }
         }
 
     }
@@ -58,7 +59,7 @@ class AuthLogin extends Controller
                     ->with('wrong', 'Invalid username or password for CDOE' );
             }
             
-            $emp = $data[0]->empid;    
+            $emp = $data[0]->empid;   
 
             $check = DB::TABLE("hospital.jhay.orsched_user")
             ->where('employeeid', $emp)    

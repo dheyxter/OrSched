@@ -594,7 +594,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
             <div class="modal-body">
                 <div class="row" align="center">
                     <div class="col-12">
-                        @if(Carbon\Carbon::now()->format('H:i') > '17:00' || Carbon\Carbon::now()->format('H:i')
+                        @if(Carbon\Carbon::now()->format('H:i') > '16:00' || Carbon\Carbon::now()->format('H:i')
                         < '07:00' ) @else <a href="" data-dismiss="modal" data-toggle="modal" data-id="elec"
                             value="{{$elec}}" data-target="#addsched1"
                             class="btn btn-lg shadow btn-warning btn-block elec">Elective</a>
