@@ -231,7 +231,7 @@
                         <center style="border: none !important;">
                             <p class="h3" style="border:none !important; margin-top: 10px !important;">NORA Scheduler</p>
                         </center>
-                        <center style="border: none !important;"><a href="/noraHome" class="btn" style="margin-top: 70px !important;">Proceed</a></center>
+                        <center style="border: none !important;"><a href="/noraHome" target="_blank" class="btn" style="margin-top: 70px !important;">Proceed</a></center>
                     </div>
                 </div>
             </div>
@@ -244,7 +244,7 @@
                         <center style="border: none !important;">
                             <p class="h3" style="border:none !important; margin-top: 10px !important;">Pain Logbook</p>
                         </center>
-                        <center style="border: none !important;"><a href="painHome" class="btn" style="margin-top: 70px !important;">Proceed</a></center>
+                        <center style="border: none !important;"><a href="painHome" target="_blank" class="btn" style="margin-top: 70px !important;">Proceed</a></center>
                             
                     </div>
                 </div>
