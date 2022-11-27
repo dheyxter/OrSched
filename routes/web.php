@@ -1,5 +1,7 @@
 <?php
-use App\Http\Controllers\Nora\NoraSchedulerController;
+
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -151,7 +153,10 @@ Route::middleware('auth')->group (function (){
     Route::post('/isConfirm','HomeController@is_confirm');
 
     /////////////////////////////// /NORA ROUTES ////////////////////////////////////////
-    Route::any('/noraHome', 'Nora\NoraHomeController@index')->name('noraHome');
+    Route::any('/noraHome', function(Request $request) {
+        return \Redirect::to('http://192.168.7.230:10031/auth?employeeid=' . $request->user()->employeeid);
+    })->name('noraHome');
+
     Route::post('/noraHome/action', 'Nora\NoraHomeController@action')->name('noraHome/action');
     Route::post('/noraHome/action/delete', 'Nora\NoraHomeController@destroy');
 

@@ -18,7 +18,7 @@ class ReportsController extends Controller
     // VIEWING FUNCTIONS
     public function r1() {
         
-        $total = DB::SELECT("SELECT * FROM jhay.vw_TotEmergent where year(created_at) = year(getdate())");
+        $total = DB::SELECT("SELECT * FROM jhay.vw_TotEmergent where year(created_at) = year(getdate()) ORDER BY created_at desc");
         return view('reports.r1', [
             'total'  => $total
         ]);

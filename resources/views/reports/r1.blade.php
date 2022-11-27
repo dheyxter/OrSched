@@ -62,6 +62,7 @@
                 <th>Age/Sex</th>
                 <th>Procedure/s</th>
                 <th>Surgeon</th>
+                <th>Type Of Anesthesia</th>
                 <th>Ward Nurse on Duty</th>
             </thead>
             <tbody>
@@ -93,7 +94,8 @@
                     <td width="20%"><small>{{$t->patlast}}, {{$t->patfirst}} {{$t->patmiddle}}</small></td>
                     <td width="5%"><small>{{$t->patage}} / {{$t->patsex}}</small></td>
                     <td width="20%"><small>{{$t->procedures}}</small></td>
-                    <td width="15%"><small class="text-uppercase">DR. {{$t->surgeon}}</small></td>
+                    <td width="15%"><small class="text-uppercase">{{$t->surgeon}}</small></td>
+                    <td width="15%"><small class="text-uppercase">{{$t->typeAnes}}</small></td>
                     <td width="13%"><small>{{$t->entry_by}}</small></td>
                 </tr>
                 @endforeach

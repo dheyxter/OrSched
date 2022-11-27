@@ -21,10 +21,16 @@
             <tbody>
                 @foreach($logs as $l)
                 <tr>
-                    <td>{{date('F j, Y, g:i a', strtotime($l->created_at))}}</td>
+                    <td><small>{{date('F j, Y, g:i a', strtotime($l->created_at))}}</small></td>
                     <td><small>{{$l->patient_id}}</small></td>
                     <td>{{$l->patient_name}}</td>
-                    <td>{{$l->act_details}}</td>
+                    <td>
+                        @if ($l->act_details == "Add New Patient")
+                            <span class="badge badge-primary">Add New Patient</span>
+                        @else
+                            <span class="badge badge-success">Accept Patient Reservation</span>
+                        @endif
+                    </td>
                     <td>{{$l->full_name}}</td>
                 </tr>
                 @endforeach
