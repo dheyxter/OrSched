@@ -14,24 +14,29 @@ use App\Events\MyEvent;
 
 class PainHomeController extends Controller
 {
-    public function index(Request $request)
-    {	
-		
+    public function index(Request $request) {	
 		$enccode = $request->enccode;
-		
 		$patientDetails = painPatient::where('enccode', $enccode)->get()->first();	
-		$patientPainHpercode = $patientDetails['hpercode'];
-		$patientLastName = $patientDetails['patlast'];
-		$patientFirstName = $patientDetails['patfirst'];
-		$patientMiddleName = $patientDetails['patmiddle'];
-		$patientName = $patientLastName.", ".$patientFirstName." ".$patientMiddleName;
-		$patientRoom= $patientDetails['patward'];
-		$patientAge = $patientDetails['patage'];
-		$patientSex = $patientDetails['patsex'];
+		if($patientDetails) {
+			$patientPainHpercode = $patientDetails['hpercode'];
+			$patientLastName = $patientDetails['patlast'];
+			$patientFirstName = $patientDetails['patfirst'];
+			$patientMiddleName = $patientDetails['patmiddle'];
+			$patientName = $patientLastName.", ".$patientFirstName." ".$patientMiddleName;
+			$patientRoom= $patientDetails['patward'];
+			$patientAge = $patientDetails['patage'];
+			$patientSex = $patientDetails['patsex'];
+			} else {
+				$patientName=  '';
+				$patientRoom=  '';
+				$patientAge=  '';
+				$patientSex=  '';
+				$patientPainHpercode=  '';
+		}
+		
 		
 		$events = array();
-    	if($request->ajax())
-    	{ 
+    	if($request->ajax()) { 
 				
 			
     		$data = PainSchedule::whereDate('start', '>=', $request->start)

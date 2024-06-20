@@ -25,34 +25,56 @@ class PatientController extends Controller
         ));
     }
 
-    public function mypatients(Request $r)
-    {
+    public function mypatients(Request $r) {
+        // dd($r->all());
         $employee = Auth::user()->employeeid;
-
-        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 4) {
-        $patients = patient::with('reservation')
-        ->join('hospital.dbo.hpersonal', 'jhay.orsched_patients.entry_by', '=', 'dbo.hpersonal.employeeid')
-        ->leftJoin('hospital.jhay.orsched_schedule', 'jhay.orsched_patients.id', '=', 'jhay.orsched_schedule.patient_id')
-        ->whereYear('created_at', Carbon::now())
-        ->get();
-        } 
-        else
-        $patients = patient::with('reservation')
-        ->where('entry_by', Auth::user()->employeeid)
-        ->get();
-
-        $patID = $r->patient_id;
-  
-        $histo = DB::SELECT("SELECT a.id, a.act_details, a.patient_id, a.created_at, b.lastname,b.firstname, b.middlename from jhay.orsched_actlog a INNER JOIN dbo.hpersonal b
-            ON a.employeeid = b.employeeid ORDER BY created_at DESC");
-
-        $count = $patients ->count();
+    
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
+        $getid = DB::SELECT("SELECT TOP 1 * FROM jhay.orsched_user WHERE employeeid = '$employee'");
+        $user_role = $getid[0]->user_role;
+
+        if($user_role == 1 || $user_role == 4) {
+            $patients = DB::SELECT("SELECT * from jhay.orsched_patients as a with (nolock)
+                INNER JOIN jhay.orsched_reservations as b with (nolock) ON a.id = b.patient_id
+                INNER JOIN dbo.hpersonal as c with (nolock) ON a.entry_by = c.employeeid
+                INNER JOIN jhay.orsched_schedule as d with (nolock) ON a.id = d.patient_id
+                where a.entry_by = '$employee'
+                order by a.created_at desc
+            ");
+
+            // $patients = patient::with('reservation')
+            // ->join('hospital.dbo.hpersonal', 'jhay.orsched_patients.entry_by', '=', 'dbo.hpersonal.employeeid')
+            // ->leftJoin('hospital.jhay.orsched_schedule', 'jhay.orsched_patients.id', '=', 'jhay.orsched_schedule.patient_id')
+            // ->whereYear('jhay.orsched_patients.created_at', Carbon::now())
+            // ->orderBy('jhay.orsched_patients.created_at', 'DESC')
+            // ->get();
+        } 
+
+        else {
+            $patients = DB::TABLE('jhay.orsched_patients as a')
+            ->leftJoin('jhay.orsched_reservations as b', 'a.id', '=', 'b.patient_id')
+            ->leftJoin('jhay.orsched_schedule as c', 'a.id', '=', 'c.patient_id')
+            ->where('a.entry_by', $employee)
+            ->whereYear('a.created_at', now())
+            ->orderBy('a.created_at', 'DESC')
+            ->get();
+        }
+
+
+        // $patID = $r->patient_id;
+  
+        // $histo = DB::SELECT("SELECT a.id, a.act_details, a.patient_id, a.created_at, b.lastname,b.firstname, b.middlename from jhay.orsched_actlog a INNER JOIN dbo.hpersonal b
+        //     ON a.employeeid = b.employeeid ORDER BY created_at DESC");
+
+        // $count = $patients ->count();
+    
+
         return view('Patients.mypatients', compact(
             'hpersonal',
             'patients',
-            'count',
-            'histo'
+            // 'count',
+            // 'histo',
+            'user_role'
         )); 
     }
 

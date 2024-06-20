@@ -13,10 +13,9 @@ class AuthLogin extends Controller
         $username = $data->username;
         $password = $data->password;
 
-        return  DB::select("
-          Select top 1 * from hospital.dbo.user_acc
-          where  user_name = '$username'
-          and user_pass = webapp.dbo.ufn_crypto('$password',1)
+        return  DB::SELECT("SELECT * from hospital.dbo.user_acc INNER JOIN hospital.dbo.hpersonal on hospital.dbo.user_acc.employeeid = hospital.dbo.hpersonal.employeeid
+        where hospital.dbo.hpersonal.empstat = 'A' and hospital.dbo.user_acc.user_name = '$username'
+        and hospital.dbo.user_acc.user_pass = webapp.dbo.ufn_crypto('$password',1)
         ");
        
 
@@ -38,8 +37,9 @@ class AuthLogin extends Controller
 
     }
 
-    public function login_api(Request $request)
-    {
+    public function login_api(Request $request) {
+
+        
         $username = $request->username;
         $password = $request->password;
         $authAccount = $request->account;

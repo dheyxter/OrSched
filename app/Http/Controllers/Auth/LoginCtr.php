@@ -24,8 +24,7 @@ class LoginCtr extends Controller
         $username = $request->user_name;
         $password = $request->user_pass;
 
-        return  DB::select("
-                select top 1 * from hospital.dbo.user_acc
+        return  DB::select("SELECT top 1 * from hospital.dbo.user_acc
                 where  user_name = '$username'
                 and user_pass = webapp.dbo.ufn_crypto('$password',1)
             ");
