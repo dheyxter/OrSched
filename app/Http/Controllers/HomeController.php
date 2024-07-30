@@ -59,11 +59,11 @@ class HomeController extends Controller
         
         if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
             // ADMIN
-            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(accepted_at as date)  = cast(getdate() as date)");
+            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date)");
         }
         else
         // WARD
-            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(accepted_at as date)  = cast(getdate() as date) AND entry_by = '$employee'");      
+            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) AND entry_by = '$employee'");      
             
 
         $emer = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 1 AND b.accept = 1 and year(b.created_at) = year(getdate())");
