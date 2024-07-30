@@ -16,7 +16,7 @@
                 <div class="col-6">
                     <div class="card">
                         <div class="card-header bg-danger" align="center">
-                            <h4>Total Emergent Cases</h4>
+                            <h5>Total Emergent Cases</h5>
                         </div>
                         <div class="card-body" align="center">
                             <h1 class="num">
@@ -25,8 +25,7 @@
                                 @endforeach
                             </h1>
                         </div>
-                        @if(App\Http\Controllers\LoggedUser::user_role()==1 ||
-                        App\Http\Controllers\LoggedUser::user_role()==2)
+                        @if(App\Http\Controllers\LoggedUser::user_role()== 1 || App\Http\Controllers\LoggedUser::user_role()== 2)
                         <div class="card-footer">
                             <a href="{{route('emergent')}}" class="btn btn-primary btn-sm float-right" type="button">See
                                 more <i class="fas fa-angle-double-right"></i></a>
@@ -37,7 +36,7 @@
                 <div class="col-6">
                     <div class="card">
                         <div class="card-header bg-warning" align="center">
-                            <h4>Total Elective Cases</h4>
+                            <h5>Total Elective Cases</h5>
                         </div>
                         <div class="card-body" align="center">
                             <h1 class="num">
@@ -73,55 +72,42 @@
                             <th>Accepted By</th>
                         </thead>
                         <tbody>
-                            @foreach ($pat as $p)
-                            @if($p->accept != NULL)
+                            @foreach ($pat as $pat)
+                            @if($pat->accept != NULL)
                             <tr>
                                 <td>
-                                    <input type="text" data-id="{{$p->id}}" hidden>
-                                   <small> <a class="btnpatientdetails" data-toggle="tooltip" data-placement="top"
-                                    title="Click to View Details" style="color: black" data-id="{{$p->id}}"><img
-                                        class="mr-1" src="../img/plastic-surgery.png" height="30" width="30"
-                                        alt=""><b class="font-weight-bold">{{$p->patlast}},</b> {{$p->patfirst}}
-                                    <small class="text-muted">{{$p->patmiddle}}</small></a></small>
+                                    <input type="text" data-id="{{$pat->id}}" hidden>
+                                   <small> 
+                                    <button class="btn btn-sm" data-toggle="modal" data-target="#btnPatDetails{{$pat->id}}">
+                                        <small data-toggle="tooltip" data-placement="top" title="Click to View Details">
+                                            <img class="mr-1" src="../img/plastic-surgery.png" height="30" width="30" alt="">
+                                            <b class="font-weight-bold">{{$pat->patlast}},</b> {{$pat->patfirst}}
+                                                <small class="text-muted">{{$pat->patmiddle}}</small>
+                                        </small>
+                                      </button>
+                                    {{-- <a class="btnpatientdetails" data-toggle="tooltip" data-placement="top" title="Click to View Details" style="color: black" data-id="{{$pat->id}}">
+                                    <img class="mr-1" src="../img/plastic-surgery.png" height="30" width="30" alt=""><b class="font-weight-bold">{{$pat->patlast}},</b> {{$pat->patfirst}}
+                                    <small class="text-muted">{{$pat->patmiddle}}</small></a> --}}
+                                </small>
                                 </td>
                                
                                 <td>
-                                    <small>{{date('F j, Y, g:i a', strtotime($p->created_at))}}</small>
+                                    <small>{{date('F j, Y, g:i a', strtotime($pat->created_at))}}</small>
                                 </td>
                                 <td>
-                                    @if($p->type == 0)
+                                    @if($pat->type == 0)
                                     <span class="badge badge-warning">Elective</span>
                                     @else
                                     <span class="badge badge-danger">Emergent</span>
                                     @endif
                                 </td>
                                 <td>
-                                   <small> 
-                                    @if($p->annex == 1)
-                                        Room 1 - MIS
-                                    @elseif($p->annex == 2)
-                                        Room 2 - ER
-                                    @elseif($p->annex == 3)
-                                        Room 3 - Surgery
-                                    @elseif($p->annex == 4)
-                                        Room 4 - OB Gyne
-                                    @elseif($p->annex == 5)
-                                        Room 5 - ENT
-                                    @elseif($p->annex == 6)
-                                        Room 6 - Ortho
-                                    @elseif($p->annex == 7)
-                                        Room 7 - Ophtha
-                                    @elseif($p->annex == 8)
-                                        Room 8 - Surgery</small>
-                                    @else
-                                    
-                                    @endif
+                                    {{ $roomNames[$pat->annex] ?? 'Unknown Room' }}
                                 </td>
-                                @if(App\Http\Controllers\LoggedUser::user_role()==1 ||
-                                App\Http\Controllers\LoggedUser::user_role()==2)
+                                @if(App\Http\Controllers\LoggedUser::user_role()== 1 || App\Http\Controllers\LoggedUser::user_role()== 2)
                                 <td>
                                     {{-- <a href="{{route('myschedules')}}" class="btn btn-sm btn-primary">See Details</a> --}}
-                                    <small>{{$p->accept_by}}</small>
+                                    <small>{{$pat->accept_by}}</small>
                                 </td>
                                 @endif
                             </tr>
@@ -137,70 +123,10 @@
                 @endif
             </div>
         </div>
+        
         <div class="w-100"></div>
         <div class="col-md-5 mt-3">
-            <div class="row">
-                <div class="col-6">
-                    <div class="card">
-                        <div class="card-header bg-secondary" align="center">
-                            <h4>Total Operations Done</h4>
-                        </div>
-                        <div class="card-body" align="center">
-                            <form action="/" method="GET">
-                                @csrf
-                                @if(App\Http\Controllers\LoggedUser::user_role()==1 ||
-                                App\Http\Controllers\LoggedUser::user_role()==2)
-                                <div class="col-auto form-inline">
-                                    <label for="month" class="font-weight-bold">SELECT MONTH</label>
-                                    <select name="month" id="month" class="form-control ml-1" value="">
-                                        <option value="">-- View All --</option>
-                                        <option value="1">January</option>
-                                        <option value="2">February</option>
-                                        <option value="3">March</option>
-                                        <option value="4">April</option>
-                                        <option value="5">May</option>
-                                        <option value="6">June</option>
-                                        <option value="7">July</option>
-                                        <option value="8">August</option>
-                                        <option value="9">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
-                                    </select>
-                                    <button type="submit" name="submit" class="btn btn-primary btn-sm ml-1"><i
-                                            class="fas fa-arrow-right"></i></button>
-                                </div>
-
-                                <h1 class="num">
-                                    @foreach($tot as $e)
-                                    {{$e->tot}}
-                                    @endforeach
-                                    @else
-                                    <h1 class="num">
-                                        @foreach($tot as $e)
-                                        {{$e->tot}}
-                                        @endforeach
-                                        @endif
-                                    </h1>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="card">
-                        <div class="card-header bg-dark" align="center">
-                            <h5>Total Operations Done for Today</h5>
-                        </div>
-                        <div class="card-body" align="center">
-                            <h1 class="num">
-                                @foreach($tot1 as $e)
-                                {{$e->tot}}
-                                @endforeach
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
         <div class="col-md-7 mt-3">
             <div class="card">
@@ -217,18 +143,19 @@
                             <th>Type</th>
                             <th><center>Action</center></th>
                         </thead>
-                        {{-- @if(App\Http\Controllers\LoggedUser::getUser() && App\Http\Controllers\LoggedUser::user_role()==0 ) --}}
-                        @if(App\Http\Controllers\LoggedUser::user_role()==0 ||
-                        App\Http\Controllers\LoggedUser::user_role()==4 )
+                        @if(App\Http\Controllers\LoggedUser::user_role()== 0 || App\Http\Controllers\LoggedUser::user_role()== 4 )
                         @foreach($patients1 as $pat)
                         <tbody>
                             <tr>
                                 <td>
-                                    <input type="text" data-id="{{$pat->id}}" hidden>
-                                    <a class="btnpatientdetails" style="color: black" data-id="{{$pat->id}}"><img
-                                            class="mr-1" src="../img/plastic-surgery.png" height="30" width="30"
-                                            alt=""><b class="font-weight-bold">{{$pat->patlast}},</b> {{$pat->patfirst}}
-                                        <small class="text-muted">{{$pat->patmiddle}}</small></a></td>
+                                    <button class="btn btn-sm" data-toggle="modal" data-target="#btnPatDetails{{$pat->id}}">
+                                        <small data-toggle="tooltip" data-placement="top" title="Click to View Details">
+                                            <img class="mr-1" src="../img/plastic-surgery.png" height="30" width="30" alt="">
+                                            <b class="font-weight-bold">{{$pat->patlast}},</b> {{$pat->patfirst}}
+                                                <small class="text-muted">{{$pat->patmiddle}}</small>
+                                        </small>
+                                        </button>
+                                    </td>
                                 <td><small>{{$pat->patward}}</small></td>
                                 <td>
                                     @if(substr($pat->enccode, 0,2) == 'ER' )
@@ -269,23 +196,7 @@
                                                     <h5>Patient: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
                                                     <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
                                                     <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
-                                                        @if($pat->annex == 1)
-                                                        Room 1 - MIS
-                                                        @elseif($pat->annex == 2)
-                                                        Room 2 - ER
-                                                        @elseif($pat->annex == 3)
-                                                        Room 3 - Surgery
-                                                        @elseif($pat->annex == 4)
-                                                        Room 4 - OB Gyne
-                                                        @elseif($pat->annex == 5)
-                                                        Room 5 - ENT
-                                                        @elseif($pat->annex == 6)
-                                                        Room 6 - Ortho
-                                                        @elseif($pat->annex == 7)
-                                                        Room 7 - Ophtha
-                                                        @elseif($pat->annex == 8)
-                                                        Room 8 - Surgery
-                                                        @endif
+                                                        {{ $roomNames[$pat->annex] ?? 'Unknown Room' }}
                                                     </h5>
                                                 </div>
                                               <div class="form-group">
@@ -294,10 +205,6 @@
                                               </div>
                                                 <small class="text-muted">Entry by: {{$pat->cancel_lname}}, {{$pat->cancel_fname}} - {{date('F j, Y h:m a', strtotime($pat->cancel_remarks_at))}}</small>
                                             </div>
-                                            {{-- <div class="modal-footer">
-                                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                              <button type="button" class="btn btn-primary">Save changes</button>
-                                            </div> --}}
                                           </div>
                                         </div>
                                       </div>
@@ -347,10 +254,6 @@
                                         @if($pat->accept == 1)
                                         <span class="text-success font-weight-bold">Accepted
                                             <small>{{$pat->accept_by}}</small></span>
-                                        {{-- @elseif($pat->scheduled == 1)
-                                            <span>Scheduled</span>
-                                        @else --}}
-                                        {{-- @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2) --}}
                                         @elseif($pat->cancel == 1) 
                                             <span data-toggle="tooltip" data-placement="left" title="Remarks for Cancellation">
                                                 <button class="btn btn-sm btn-danger ml-5"  data-toggle="modal" data-target="#cancelSched{{$pat->id}}"><i class="fa-solid fa-notes-medical"></i></button>
@@ -371,23 +274,7 @@
                                                             <h5>Patient: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
                                                             <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
                                                             <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
-                                                                @if($pat->annex == 1)
-                                                                Room 1 - MIS
-                                                                @elseif($pat->annex == 2)
-                                                                Room 2 - ER
-                                                                @elseif($pat->annex == 3)
-                                                                Room 3 - Surgery
-                                                                @elseif($pat->annex == 4)
-                                                                Room 4 - OB Gyne
-                                                                @elseif($pat->annex == 5)
-                                                                Room 5 - ENT
-                                                                @elseif($pat->annex == 6)
-                                                                Room 6 - Ortho
-                                                                @elseif($pat->annex == 7)
-                                                                Room 7 - Ophtha
-                                                                @elseif($pat->annex == 8)
-                                                                Room 8 - Surgery
-                                                                @endif
+                                                                {{ $roomNames[$pat->annex] ?? 'Unknown Room' }}
                                                             </h5>
                                                         </div>
                                                         <div class="form-group">
@@ -420,7 +307,6 @@
                                         <button class="ml-3 btn btn-secondary btn-sm btnCancel"
                                             type="submit" data-toggle="tooltip" data-placement="top"
                                             title="Cancel"><i class="fa-solid fa-xmark"></i></button>
-                                        {{-- @endif --}}
                                         @endif
                                     </div>
                                 </td>
@@ -438,285 +324,10 @@
                 </div>
             </div>
         </div>
-        {{-- @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==3)
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header bg-primary">
-                    <div class="row">
-                        <div class="col-6"><h4>For Anesthesiologist</h4></div>
-                        <div class="col-6">
-                            <form action="{{route('selectAnes')}}" method="GET">
-                                @csrf
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-secondary text-light mr-2" id="basic-addon1">Select
-                                        Date - <i class="fa fa-calendar-day"></i></span>
-                                    <input type="date" class="form-control mr-3" id="selectdate" name="selectdate"
-                                        value="{{$datetoday}}">
-                                    <button type="submit" class="btn btn-success" type="button" id="button-addon2">Generate
-                                        List</button>
-                                </div>
-                            </form>
-                        </div>
-              
-                    </div>
-                </div>
-                <div class="card-body" style="width: 100%; height: 500px; overflow: auto;">
-                    <div class="row">
-                        
-                    </div>
-                    <div class="row mt-4">
-                        @if($schedcount>0)
-                        <div class="w-100"></div>
-                        <div class="col">
-                            <div class="">
-                                <div class="card-body">
-                                    <table class="table-sm table-striped table-hover">
-                                        <thead class="bg-dark text-white">
-                                            <tr>
-                                                <th width="15%">Patient</th>
-                                                <th width="5%">Type</th>
-                                                <th width="5%">Room</th>
-                                                <th width="5%">Ward</th>
-                                                <th width="15%">Surgeon</th>
-                                                <th width="10%" >Anesthesiologist</th>
-                                                <th width="15%">Procedure</th>
-                                                <th width="11%" class="text-center">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($scheds as $sched)
-                                                @if($sched->defer == 1)
-                                                <tr class="text-danger font-weight-bold">
-                                                    <td>
-                                                        <input type="text" class="inpPatID" value="{{$sched->patient_id}}" hidden>
-                                                        <a class="btnpatdetails" data-toggle="tooltip" data-placement="top"
-                                                            title="Click to View Details" style="color: black" value="{{$sched->patient_id}}">
-                                                            <b class="font-weight-bold">{{$sched->patlast}},</b> {{$sched->patfirst}}
-                                                            <small class="text-muted">{{$sched->patmiddle}}</small></a>
-                                                    </td>
-                                                    <td>
-                                                        @if($sched->type == 0)
-                                                        <span class="badge badge-primary">Elective</span>
-                                                        @else
-                                                        <span class="badge badge-danger">Emergent</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if($sched->room_id == 1)
-                                                        Annex 1
-                                                        @elseif($sched->room_id == 2)
-                                                        Annex 2
-                                                        @elseif($sched->room_id == 3)
-                                                        Annex 3
-                                                        @elseif($sched->room_id == 4)
-                                                        Room 1
-                                                        @elseif($sched->room_id == 5)
-                                                        Room 2
-                                                        @elseif($sched->room_id == 6)
-                                                        Room 3
-                                                        @elseif($sched->room_id == 7)
-                                                        Room 4
-                                                        @elseif($sched->room_id == 8)
-                                                        Room 5
-                                                        @elseif($sched->room_id == 9)
-                                                        Room 6
-                                                        @elseif($sched->room_id == 10)
-                                                        Room 7
-                                                        @elseif($sched->room_id == 11)
-                                                        Room 8
-                                                        @elseif($sched->room_id == 12)
-                                                        Covid Room
-                                                        @else
-                                                        No Room Indicate
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        Dr. {{$sched->surgeon}}
-                                                    </td>
-                                                    <td>
-                                                        {{$sched->patward}}
-                                                    </td>
-                                                    <td>
-                                                        @if($sched->anes == NULL)
-                                                        @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==3)
-                                                            <select class="selectpicker form-control" id="anes" name="anes[]" multiple data-live-search="true" required>
-                                                                <option disabled>--Select Anes--</option>
-                                                                @foreach(\App\Http\Controllers\HomeController::aneslist() as $a)
-                                                                <option value=" {{$a->firstname}} {{$a->middlename}} {{$a->lastname}}">
-                                                                    {{$a->lastname}}, {{$a->firstname}} {{$a->middlename}},
-                                                                    {{$a->empdegree}} | {{$a->tsdesc}}
-                                                                </option>
-                                                                @endforeach
-                                                                <input class="patInfo" type="text" name="patient_name" value="{{$sched->patlast}}, {{$sched->patfirst}} {{$sched->patmiddle}}" hidden>
-                                                                <input name="hpercode" type="hidden" value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                                                                <input class="idAnes" name="patient_id" type="text" value="{{$sched->patient_id}}" hidden>
-                                                                <input type="hidden" class="hpercode" name="hpercode" value="{{$sched->hpercode}}" hidden>
-                                                                <span id="anesInput" class="anesInput" hidden></span>
-                                                                <button class="btn shadow btn-success btn-sm btn-block btnAnes1 mt-1"><i class="fas fa-save"></i> Add
-                                                                </button>
-                                                            </select>
-                                                        @endif
-                                                        @else
-                                                        Dr. {{$sched->anes}}
-                                                        @endif
-                                                    </td>
-                        
-                                                    <td>
-                                                        {{$sched->procedures}}
-                                                    </td>
-                                                    @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2)
-                                                    <td>
-                                                        @if($sched->defer == 1)
-                                                            <input class="patId" type="hidden" value="{{ $sched->patient_id }}">
-                                                            <input type="text" class="hpercode" value="{{$sched->hpercode}}" hidden>
-                                                            <button type="button" class="btn shadow btn-outline-danger btnUndoDefer"> Undo Defer</button>
-                                                            <button type="button" class="btn shadow btn-outline-secondary btnCancel" title="Cancel schedule"> Cancel</button>
-                                                        @else
-                                                            <input class="patId" type="text" value="{{ $sched->patient_id }}">
-                                                            <input type="text" class="hpercode" value="{{$sched->hpercode}}" hidden>
-                                                            <button type="button" class="btn shadow btn-outline-danger btnDefer1"> Defer</button>
-                                                            <button type="button" class="btn shadow btn-outline-secondary btnCancel" title="Cancel schedule"> Cancel</button>
-                                                        @endif
-                                                       
-                                                    </td>
-                                                    @else
-                                                    <td>
-                                                        <input class="patId" type="hidden" value="{{ $sched->patient_id }}">
-                                                        <input type="text" class="hpercode" value="{{$sched->hpercode}}" hidden>
-                                                        <span>Deferred</span>
-                                                        <button type="button" class="btn shadow btn-outline-secondary btnCancel"
-                                                            title="Cancel schedule"> Cancel</button>
-                                                    </td>
-                                                    @endif
-                                                </tr>
-                                                @else
-                                                <tr>
-                                                    
-                                                    <td>
-                                                        
-                                                        <input type="text" class="inpPatID" value="{{$sched->patient_id}}" hidden>
-                                                        <a class="btnpatdetails" data-toggle="tooltip" data-placement="top"
-                                                            title="Click to View Details" style="color: black" value="{{$sched->patient_id}}">
-                                                            
-                                                                <b class="font-weight-bold">{{$sched->patlast}},</b> {{$sched->patfirst}}
-                                                            <small class="text-muted">{{$sched->patmiddle}}</small></a>
-                                                    </td>
-                                                    <td>
-                                                        @if($sched->type == 0)
-                                                        <span class="badge badge-primary">Elective</span>
-                                                        @else
-                                                        <span class="badge badge-danger">Emergent</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if($sched->room_id == 1)
-                                                        Annex 1
-                                                        @elseif($sched->room_id == 2)
-                                                        Annex 2
-                                                        @elseif($sched->room_id == 3)
-                                                        Annex 3
-                                                        @elseif($sched->room_id == 4)
-                                                        Room 1
-                                                        @elseif($sched->room_id == 5)
-                                                        Room 2
-                                                        @elseif($sched->room_id == 6)
-                                                        Room 3
-                                                        @elseif($sched->room_id == 7)
-                                                        Room 4
-                                                        @elseif($sched->room_id == 8)
-                                                        Room 5
-                                                        @elseif($sched->room_id == 9)
-                                                        Room 6
-                                                        @elseif($sched->room_id == 10)
-                                                        Room 7
-                                                        @elseif($sched->room_id == 11)
-                                                        Room 8
-                                                        @elseif($sched->room_id == 12)
-                                                        Covid Room
-                                                        @else
-                                                        No Room Indicate
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        {{$sched->patward}}
-                                                    </td>
-                                                    <td>
-                                                        Dr. {{$sched->surgeon}}
-                                                    </td>
-                                                    
-                                                    <td>
-                                                        @if($sched->anes == NULL)
-                                                        @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==3)
-                                                            <select class="selectpicker form-control" id="anes" name="anes[]" multiple data-live-search="true" required>
-                                                                <option disabled>--Select Anes--</option>
-                                                                @foreach(\App\Http\Controllers\HomeController::aneslist() as $a)
-                                                                <option value=" {{$a->firstname}} {{$a->middlename}} {{$a->lastname}}">
-                                                                    {{$a->lastname}}, {{$a->firstname}} {{$a->middlename}},
-                                                                    {{$a->empdegree}} | {{$a->tsdesc}}
-                                                                </option>
-                                                                @endforeach
-                                                                <input class="patInfo" type="text" name="patient_name" value="{{$sched->patlast}}, {{$sched->patfirst}} {{$sched->patmiddle}}" hidden>
-                                                                <input name="hpercode" type="hidden" value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                                                                <input class="idAnes" name="patient_id" type="text" value="{{$sched->patient_id}}" hidden>
-                                                                <input type="hidden" class="hpercode" name="hpercode" value="{{$sched->hpercode}}" hidden>
-                                                                <span id="anesInput" class="anesInput" hidden></span>
-                                                                <button class="btn shadow btn-success btn-sm btn-block btnAnes1 mt-1"><i class="fas fa-save"></i> Add
-                                                                </button>
-                                                            </select>
-                                                        @endif
-                                                        @else
-                                                        Dr. {{$sched->anes}}
-                                                        @endif
-                                                    </td>
-                        
-                                                    <td>
-                                                        {{$sched->procedures}}
-                                                    </td>
-                                                    @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2 )
-
-                                                    <td>
-                                                        <input class="patId" type="text" value="{{ $sched->patient_id }}" hidden>
-                                                        <input type="text" class="hpercode" value="{{$sched->hpercode}}" hidden>
-                                                        <button type="button" class="btn shadow btn-outline-danger btnDefer1"> Defer</button>
-                                                        <button type="button" class="btn shadow btn-outline-secondary btnCancel" title="Cancel schedule"> Cancel</button>
-                                                       
-                                                    </td>
-                                                    @else
-                                                    <td>
-                                                        <input class="patId" type="hidden" value="{{ $sched->patient_id }}" hidden>
-                                                        <input type="text" class="hpercode" value="{{$sched->hpercode}}" hidden>
-                                                        <button type="button" class="btn shadow btn-block btn-outline-secondary btnCancel"
-                                                            title="Cancel schedule"> Cancel</button>
-                                                    </td>
-                                                    @endif
-                                                </tr>
-                                                @endif
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        @else
-                        <div class="col">
-                            <h2>No scheduled patient/s </h2>
-                        </div>
-                        @endif 
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-8"></div>
-                        <div class="col-4"><a href="{{route('anesSched')}}" class="btn btn-primary float-right">View All List</a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif --}}
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="patModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="patModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header shadow bg-secondary">
@@ -733,7 +344,81 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
+
+<div class="modal fade" id="btnPatDetails{{$pat->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel"><i class="fas fa-hospital-user"></i> Patient Details</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-dark">
+            <div class="container-fluid font-weight-bold">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="font-weight-normal">Hospital Number</span> <br>
+                        <span class="font-weight-normal">Patient Name</span> <br>
+                        <span class="font-weight-normal">Age</span> <br>
+                        <span class="font-weight-normal">Gender</span> <br>
+                        <span class="font-weight-normal">Department</span> <br>
+                        <span class="font-weight-normal">Ward</span> <br>
+                        <span class="font-weight-normal">Admitted Date and Time</span> <br>
+                        <span class="font-weight-normal">Date of Schedule</span> <br>
+                        <span class="font-weight-normal">Time Start</span> <br>
+                        <span class="font-weight-normal">Time Duration</span> <br>
+                        <span class="font-weight-normal">Surgeon/s</span> <br>
+                        <span class="font-weight-normal">Type of Anesthesia</span> <br>
+                        <span class="font-weight-normal">Procedure</span> <br>
+                        <span class="font-weight-normal">Instrument/s Needed</span> <br>
+                        <span class="font-weight-normal">Entry By and Date</span> <br>
+                    </div>
+                    <div class="col-md-8">
+                        <span>{{$pat->hpercode}}</span> <br>
+                        <span>{{$pat->patlast}}, {{$pat->patfirst}} <small>{{$pat->patmiddle}}</small></span> <br>
+                        <span>{{$pat->patage}} year/s old</span> <br>
+                        <span>{{$pat->patsex == 'M' ? 'Male' : 'Female'}}</span> <br>
+                        <span>{{$pat->tsdesc}} </span> <br>
+                        <span>{{$pat->patward}} </span> <br>
+                        <span>{{date('F d,Y h:i A', strtotime($pat->adm_date))}}</span> <br>
+                        <span>{{date('F d,Y h:i A', strtotime($pat->date_of_sched))}}</span> <br>
+                        <span>{{$pat->timeStart ? date('h:i A', strtotime($pat->timeStart)) : 'no time entered'}}</span> <br>
+                        <span>{{$pat->timeDuration}}</span><br>
+                        <span>
+                            @php
+                            $doctors = \App\Http\Controllers\ReservationController::doclist();
+                            $surgeonIds = json_decode($pat->surgeon, true);
+                            @endphp
+
+                            @if ($surgeonIds)
+                            @foreach ($surgeonIds as $surgeonId)
+                                @foreach ($doctors as $doctor)
+                                    @if ($doctor->employeeid == $surgeonId)
+                                    DR. {{ $doctor->firstname }} {{ $doctor->lastname }} ;
+                                    @endif
+                                @endforeach
+                            @endforeach
+                            @else
+                                {{$pat->surgeon}}
+                            @endif
+                        </span> <br>
+                        <span>{{$pat->anesname}}</span> <br>
+                        <span>{{$pat->procedures}}</span> <br>
+                        <span>{{$pat->instru}}</span> <br>
+                        <span>{{$pat->accept_by}} - <small>{{date('F d,Y h:i A', strtotime($pat->created_at))}}</small></span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {{-- trigger button if emergency --}}
 @if(App\Http\Controllers\LoggedUser::user_role()==2 || App\Http\Controllers\LoggedUser::user_role()==3  )
@@ -818,6 +503,7 @@
         </div>
     </div>
 </div> 
+
 @endsection
 
 @section('script')
@@ -850,54 +536,6 @@
         } else {
 
         }
-    });
-
-    $(document).on('click', '.btnpatientdetails', function () {
-
-        var patient_id = $(this).attr('data-id');
-        var template = '';
-        $.ajax({
-            type: "POST",
-            url: '/JSON/patdetails',
-            data: {
-                patient_id: patient_id
-            },
-            dataType: 'json',
-            success: function (data) {
-                if (data != null) {
-                    $('#patModalBody').empty();
-                    template += '<table class="table table-hover table-borderless table-sm">' +
-                        '<tr><td>Hospital #: </td><td>' + data.hpercode + '</td></tr>' +
-                        '<tr><td>Patient Name: </td><td>' + '<h5>' + data.patlast + ', ' + data
-                        .patfirst +
-                        ' ' + data.patmiddle + '</h5>' + '</td></tr>' +
-                        '<tr><td>Age: </td><td>' + data.patage + ' ' + 'year/s old' + '</td></tr>' +
-                        '<tr><td>Gender: </td><td>' + data.patsex + '</td></tr>' +
-                        '<tr><td>Department: </td><td>' + data.tsdesc + '</td></tr>' +
-                        '<tr><td>Ward: </td><td>' + data.patward + '</td></tr>' +
-                        '<tr><td>Admitted Date and Time: </td><td>' + moment(data.adm_date).format(
-                            'LLL') + '</td></tr>' +
-                        '<tr><td colspan="2" style="margin-top: -5rem;"><h3 style="color: #38c172"><center>--- SCHEDULE DETAILS ---</center></h3></td></tr>' +
-                        '<tr><td>Date of Schedule: </td><td>' + moment(data.date_of_sched).format(
-                            'LL') + '</td></tr>' +
-                        '<tr><td>Time Start: </td><td>' + moment(data.timeStart).format('LT') +
-                        '</td></tr>' +
-                        '<tr><td>Time Duration: </td><td>' + data.timeDuration + ' hour/s' +
-                        '</td></tr>' +
-                        '<tr><td>Surgeon/s: </td><td>' + 'Dr.' + ' ' + data.surgeon + '</td></tr>' +
-                        '<tr><td>Type of Anesthesia: </td><td>' + data.anesname + '</td></tr>' +
-                        '<tr><td>Procedure: </td><td>' + data.procedures + '</td></tr>' +
-                        '<tr><td>Instrument/s Needed: </td><td>' + data.instru + '</td></tr>' +
-                        '<tr><td>Entry By and Date: </td><td>' + data.firstname + ' ' + data
-                        .middlename + ' ' + data.lastname + ', ' + ' ' + moment(data.created_at)
-                        .format('LLL') + '</td></tr>';
-                    template += '</table>';
-
-                    $('#patModalBody').append(template);
-                    $('#patModal').modal('show');
-                }
-            },
-        });
     });
 
 </script>

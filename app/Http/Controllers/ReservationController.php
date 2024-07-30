@@ -109,8 +109,7 @@ class ReservationController extends Controller
         // return redirect('/anesSched2');    
     }
 
-    public function myschedules(request $request)
-    {
+    public function myschedules(request $request) {
         $timeStart = '07:00:00';
         $timeEnd = '16:00:00';
         $elec = 0;
@@ -119,6 +118,8 @@ class ReservationController extends Controller
         $time = DB::SELECT("SELECT GETDATE() as datetoday");
         $datetoday = Carbon::now()->format('Y-m-d');
         $available_time = $this->time_available($request);
+        $hpercode = $request->hpercode;
+      
         $roomtoday = 1;
 
         $scheds = DB::SELECT(
@@ -128,6 +129,8 @@ class ReservationController extends Controller
             where re.created_at  = getdate()
             ");
 
+        
+
         $count = DB::SELECT(
             "SELECT COUNT (re.id) as total
             FROM jhay.orsched_reservations AS re 
@@ -136,13 +139,15 @@ class ReservationController extends Controller
             WHERE room_id = '$roomtoday' and accept = '1'");
 
         $res = DB::SELECT("SELECT * FROM jhay.orsched_reservations");
-        if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
-            // $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid");
-            $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid WHERE a.entry_by = '$employee'");
-        }
-        else {
-            $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid WHERE a.entry_by = '$employee'");
-        }
+            $pat = DB::SELECT("SELECT top 1 * FROM jhay.orsched_patients WHERE hpercode = '$hpercode' ORDER BY id desc");
+        // if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
+        //     // $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid");
+        //     // $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid WHERE a.entry_by = '$employee'");
+        //     $pat = DB::SELECT("SELECT top 1 * FROM jhay.orsched_patients WHERE hpercode = '$hpercode' ORDER BY id desc");
+        // }
+        // else {
+        //     $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid WHERE a.entry_by = '$employee'");
+        // }
 
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '$employee'");
         $schedcount = count($scheds);
@@ -175,8 +180,7 @@ class ReservationController extends Controller
         ));
     }
 
-    public function schedlist(request $request)
-    {
+    public function schedlist(request $request) {
         $timeStart = '07:00:00';
         $timeEnd = '16:00:00';
         $elec = 0;
@@ -189,9 +193,11 @@ class ReservationController extends Controller
 
         $scheds = DB::SELECT(
             "SELECT * FROM jhay.orsched_reservations AS re 
-            INNER JOIN jhay.orsched_patients pa 
-            ON re.patient_id = pa.id      
-            where re.created_at  = getdate()
+            INNER JOIN jhay.orsched_patients pa ON re.patient_id = pa.id      
+            INNER JOIN dcc.or_lib_anesthesia an ON re.typeAnes = an.shortcode
+            INNER JOIN jhay.orsched_schedule sc ON re.patient_id = sc.patient_id
+            INNER JOIN dbo.hpersonal as hos ON re.entry_by = hos.employeeid
+            WHERE year(re.created_at) = year(getdate()) AND re.entry_by = '$employee'
             ");
 
         $count = DB::SELECT(
@@ -220,6 +226,17 @@ class ReservationController extends Controller
         }else{
             $getTrigger = '';
         }
+
+        $roomNames = [
+            1 => 'Room 1 - MIS',
+            2 => 'Room 2 - ER',
+            3 => 'Room 3 - Surgery',
+            4 => 'Room 4 - OB Gyne',
+            5 => 'Room 5 - ENT',
+            6 => 'Room 6 - Ortho',
+            7 => 'Room 7 - Ophtha',
+            8 => 'Room 8 - Surgery',
+        ];
         
         return view('Calendar.schedlist', compact(
             'hpersonal',
@@ -236,7 +253,8 @@ class ReservationController extends Controller
             'timeStart',
             'timeEnd',
             'elec',
-            'emer'
+            'emer',
+            'roomNames'
             
         ));
     }
@@ -339,12 +357,12 @@ class ReservationController extends Controller
 
     public static function doclist()
     {
-        return DB::SELECT("SELECT hpersonal.employeeid, hpersonal.lastname, hpersonal.firstname, hpersonal.middlename, hprovider.empdegree, htypser.tsdesc, hprovider.licno from hpersonal 
+        return DB::SELECT("SELECT DISTINCT hpersonal.employeeid, hpersonal.lastname, hpersonal.firstname, hpersonal.middlename, hprovider.empdegree, htypser.tsdesc, hprovider.licno from hpersonal 
         INNER JOIN hprovider 
-        ON hpersonal.employeeid = hprovider.employeeid
+        ON hpersonal.employeeid = hprovider.employeeid AND hprovider.empstat = 'A'
         INNER JOIN htypser
         ON hpersonal.deptcode = htypser.tscode
-        WHERE hprovider.empstat = 'A' AND htypser.tsdesc = 'SURGERY' OR htypser.tsdesc = 'ORTHOPEDICS' OR htypser.tsdesc = 'OPHTHALMOLOGY' OR htypser.tsdesc = 'OBSTETRICS' OR htypser.tsdesc = 'ENT-HNS'
+        WHERE htypser.tsdesc = 'SURGERY' OR htypser.tsdesc = 'ORTHOPEDICS' OR htypser.tsdesc = 'OPHTHALMOLOGY' OR htypser.tsdesc = 'OBSTETRICS' OR htypser.tsdesc = 'ENT-HNS'
         ORDER BY htypser.tsdesc");
     }
 
@@ -510,12 +528,8 @@ class ReservationController extends Controller
         }
     }
 
-    public function addschedule(request $request)
-    {
-        // $t = $request->surgeon;
-        // dd($t);
-        // $timein = $request->date.' '.$request->time.':00.000';
-        // $timeout = $request->date.' '.$request->timeout.':00.000';
+    public function addschedule(request $request) {
+        dd($request->all());
         $patID = $request->patID;
         $type = $request->type;
         $room = $request->room;
@@ -529,15 +543,6 @@ class ReservationController extends Controller
         $typeAnes = $request->typeAnes;
         $instru = $request->instru;
         $procedures = $request->procedures;
-        // $time1 = $request->time;
-        // $time2 = $request->timeout;
-
-        // $timex1 = Carbon::createFromFormat('H:i', $time1);
-        // $timex2 = Carbon::createFromFormat('H:i', $time2);
-
-        // $op_duration = $timex2->diffInMinutes($timex1);  
-
-        // dd($request->all());
 
         DB::table('hospital.jhay.orsched_reservations')->insert([  
             'patient_id'=>$patid,
@@ -560,22 +565,17 @@ class ReservationController extends Controller
             ->update([
                 'scheduled' => '1'
             ]);
-
-        // DB::UPDATE("insert into jhay.orsched_reservations (date_from, date_to, patient_id, room_id, entry_by, reservation_status, created_at)
-        // values ('$timein', '$timeout', '$request->patient', '$request->room', '".Auth::user()->employeeid."', '1', cast(getdate() as date))");
-
+      
         DB::table('hospital.jhay.orsched_actlog')->insert([
             'act_details'=>'Add New Reservations',
             'employeeid'=>$emp,
             'patient_id'=>$patID
         ]);
-
-        // DB::UPDATE("insert into jhay.orsched_actlog (act_details, employeeid)
-        // values ('Add New Reservations', '".Auth::user()->employeeid."')");
         $time = DB::SELECT("SELECT GETDATE() as datetoday");
         $datetoday = $request->selectdate;
         $roomtoday = $request->selectroom;
-        $pat = DB::SELECT("SELECT * FROM [jhay].[orsched_patients] where entry_by = '$emp'");
+        // $pat = DB::SELECT("SELECT * FROM [jhay].[orsched_patients] where entry_by = '$emp'");
+        $pat = DB::SELECT("SELECT * FROM jhay.orsched_patients as a INNER JOIN hpersonal as b ON a.entry_by = b.employeeid WHERE a.entry_by = '$emp'");
         $scheds = DB::SELECT("SELECT * FROM jhay.orsched_reservations AS re INNER JOIN jhay.orsched_patients pa ON re.patient_id = pa.id WHERE room_id = '$roomtoday'");
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '$emp'");
 
@@ -586,10 +586,6 @@ class ReservationController extends Controller
         $schedule_date =Carbon::parse($request->date);
         $schedule_annex = $request->room;
         $schedule_surgeon = $request->surgeon;
-        // $schedule_patient = $request->patname;
-        // $schedule_timeout = $request->timeout;
-        // $schedule_timeout = Carbon::parse($request->timeout)->format('H:i');
-        // dd($schedule_surgeon);
         DB::table('jhay.orsched_schedule')
         ->insert([
             'annex' => $schedule_annex,
@@ -601,13 +597,22 @@ class ReservationController extends Controller
             'patient_id' => $patid
         ]);
 
+        $roomNames = [
+            1 => 'Room 1 - MIS',
+            2 => 'Room 2 - ER',
+            3 => 'Room 3 - Surgery',
+            4 => 'Room 4 - OB Gyne',
+            5 => 'Room 5 - ENT',
+            6 => 'Room 6 - Ortho',
+            7 => 'Room 7 - Ophtha',
+            8 => 'Room 8 - Surgery',
+        ];
+
         return redirect()->route('myschedules');
     }
 
 
-    public function emerSchedule(Request $request)
-    {
-
+    public function emerSchedule(Request $request) {
         $patID = $request->patID;
         $type = $request->type;
         $room = $request->room;
@@ -622,11 +627,13 @@ class ReservationController extends Controller
         $instru = $request->instru;
         $procedures = $request->procedures;
 
+        $surgeonJson = json_encode($surgeon);
+
         DB::table('hospital.jhay.orsched_reservations')->insert([  
             'patient_id'=>$patid,
             'room_id'=>$room,
             'type'=>$type,
-            'surgeon'=>$surgeon,
+            'surgeon'=>$surgeonJson,
             'procedures'=>$procedures,
             'entry_by'=> $emp,
             'reservation_status'=> '1',
@@ -644,8 +651,6 @@ class ReservationController extends Controller
                 'scheduled' => '1'
             ]);
 
-        // DB::UPDATE("insert into jhay.orsched_reservations (date_from, date_to, patient_id, room_id, entry_by, reservation_status, created_at)
-        // values ('$timein', '$timeout', '$request->patient', '$request->room', '".Auth::user()->employeeid."', '1', cast(getdate() as date))");
 
         DB::table('hospital.jhay.orsched_actlog')->insert([
             'act_details'=>'Add New Reservations',
@@ -653,8 +658,6 @@ class ReservationController extends Controller
             'patient_id'=>$patID
         ]);
 
-        // DB::UPDATE("insert into jhay.orsched_actlog (act_details, employeeid)
-        // values ('Add New Reservations', '".Auth::user()->employeeid."')");
         $time = DB::SELECT("SELECT GETDATE() as datetoday");
         $datetoday = $request->selectdate;
         $roomtoday = $request->selectroom;
@@ -679,7 +682,7 @@ class ReservationController extends Controller
             'type' =>$type,
             'date_of_sched' => $schedule_date,
             // 'latest_sched' => $schedule_timeout,
-            'surgeons_name' => $schedule_surgeon,
+            'surgeons_name' => $surgeonJson,
             // 'scheduled_patient' => $schedule_patient,
             'patient_id' => $patid
         ]);

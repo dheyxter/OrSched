@@ -1,8 +1,6 @@
 @extends('layouts.master')
 @section('content')
 
-<div class="col-12"></div>
-<div class="w-100"></div>
 <div class="mt-3">
     <h2 class=""> Patients</h2>
 </div>
@@ -91,6 +89,7 @@
                                         <form action="{{route('myschedules')}}" method="POST">
                                             @csrf
                                             <input name="myTrigger" type="hidden" value="test" hidden>
+                                            <input type="text" value="{{$pat->hpercode}}" name="hpercode" hidden>
                                             <button class=" ml-1 mx-auto btn btn-outline-primary btn-sm">Create Schedule</button>
                                         </form>
                                         @endif
@@ -103,6 +102,7 @@
                                     <form action="{{route('myschedules')}}" method="POST">
                                         @csrf
                                         <input name="myTrigger" type="hidden" value="test" hidden>
+                                        <input type="text" value="{{$pat->hpercode}}" name="hpercode" hidden>
                                         <button class=" ml-1 mx-auto btn btn-outline-danger btn-sm">Create Another Schedule</button>
                                     </form>
                                     @endif

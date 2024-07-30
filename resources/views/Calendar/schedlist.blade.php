@@ -29,7 +29,6 @@
                     d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z" />
                 <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z" />
             </svg>
-            {{-- <i class="fa fa-plus"></i> --}}
         </button>
     </div>
     <div class="col float-right">
@@ -65,24 +64,16 @@
     <div class="col">
         <div class="">
             <div class="card-body" style="width: 100%; height: 600px; overflow: auto;">
-                <table class="table-sm table-striped table-hover" >
+                <table class="table-sm table-striped table-hover">
                     <thead class="bg-dark text-white">
                         <tr>
-                            {{-- <th width="5%">Case #</th> --}}
                             <th width="10%">Patient Name</th>
-                            {{-- <th>Date and Time of Operation</th> --}}
                             <th width="5%">Type</th>
                             <th width="5%">Room</th>
                             <th width="15%">Surgeon</th>
                             <th width="10%">Anesthesiologist</th>
                             <th width="15%">Procedure</th>
                             <th width="10%">Remarks</th>
-                            {{-- @if(App\Http\Controllers\LoggedUser::user_role()==1)
-                            <th></th>
-                            <th>Action</th>
-                            @else
-                            <th>Action</th>
-                            @endif --}}
                             <th width="11%" class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -91,8 +82,8 @@
                         @if($sched->defer == 1)
                         <tr class="text-danger font-weight-bold">
                             <td>
-                                <button type="button" class="btn mb-2 btnpatientdetails" style="color: black !important"
-                                    data-patient_id="{{ $sched->id }}"><i class="fas fa-file-alt"></i>
+                                <button type="button" class="btn mb-2 btnpatientdetails{{$sched->id}}"
+                                    style="color: black !important">
                                     <b>{{$sched->patlast}}</b>, {{$sched->patfirst}}
                                     <small>{{$sched->patmiddle}}</small>
                                 </button>
@@ -105,66 +96,28 @@
                                 @endif
                             </td>
                             <td>
-                               <small> @if($sched->room_id == 1)
-                                Room 1 - MIS
-                                @elseif($sched->room_id == 2)
-                                Room 2 - ER
-                                @elseif($sched->room_id == 3)
-                                Room 3 - Surgery
-                                @elseif($sched->room_id == 4)
-                                Room 4 - OB Gyne
-                                @elseif($sched->room_id == 5)
-                                Room 5 - ENT
-                                @elseif($sched->room_id == 6)
-                                Room 6 - Ortho
-                                @elseif($sched->room_id == 7)
-                                Room 7 - Ophtha
-                                @elseif($sched->room_id == 8)
-                                Room 8 - Surgery
-                                {{-- @elseif($sched->room_id == 9)
-                                Room 6
-                                @elseif($sched->room_id == 10)
-                                Room 7 --}}
-                                @else
-                                
-                                @endif</small>
-                                {{-- @if($sched->room_id == 1)
-                                Annex 1
-                                @elseif($sched->room_id == 2)
-                                Annex 2
-                                @elseif($sched->room_id == 3)
-                                Annex 3
-                                @elseif($sched->room_id == 4)
-                                Room 1
-                                @elseif($sched->room_id == 5)
-                                Room 2
-                                @elseif($sched->room_id == 6)
-                                Room 3
-                                @elseif($sched->room_id == 7)
-                                Room 4
-                                @elseif($sched->room_id == 8)
-                                Room 5
-                                @elseif($sched->room_id == 9)
-                                Room 6
-                                @elseif($sched->room_id == 10)
-                                Room 7
-                                @elseif($sched->room_id == 11)
-                                Room 8
-                                @elseif($sched->room_id == 12)
-                                Covid Room
-                                @else
-                                No Room Indicate
-                                @endif --}}
+                                {{ $roomNames[$sched->room_id] ?? 'Unknown Room' }}
+                                </small>
                             </td>
                             <td>
-                                Dr. {{$sched->surgeon}}
+                                <small class="text-uppercase">
+                                    @php
+                                    $doctors = \App\Http\Controllers\ReservationController::doclist();
+                                    $surgeonIds = json_decode($sched->surgeon, true);
+                                    @endphp
+                                    @foreach ($surgeonIds as $surgeonId)
+                                        @foreach ($doctors as $doctor)
+                                        @if ($doctor->employeeid == $surgeonId)
+                                        DR. {{ $doctor->firstname }} {{ $doctor->lastname }} <br>
+                                        @endif
+                                        @endforeach
+                                    @endforeach
+                                </small>
                             </td>
 
                             <td>
                                 @if($sched->anes == NULL)
-                                @if(App\Http\Controllers\LoggedUser::user_role()==1 ||
-                                App\Http\Controllers\LoggedUser::user_role()==3)
-                                {{-- <form action="{{route('addAnes')}}" method="POST"> --}}
+                                @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==3)
                                 @csrf
                                 <select class="selectpicker" id="anes" name="anes[]" multiple data-live-search="true"
                                     required>
@@ -188,20 +141,16 @@
                                             class="fas fa-save"></i> Add
                                     </button>
                                 </select>
-                                {{-- </form> --}}
                                 @endif
                                 @else
                                 Dr. {{$sched->anes}}
                                 @endif
                             </td>
-
                             <td>
                                 {{$sched->procedures}}
                             </td>
                             <td>
-                                @if(App\Http\Controllers\LoggedUser::user_role()==1 ||
-                                App\Http\Controllers\LoggedUser::user_role()==2 ||
-                                App\Http\Controllers\LoggedUser::user_role()==3)
+                                @if(App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2 || App\Http\Controllers\LoggedUser::user_role()==3)
                                 <input class="nameRemarks" type="hidden"
                                     value="{{$sched->patlast}}, {{$sched->patfirst}} {{$sched->patmiddle}} ">
                                 <input class="idRemarks" type="hidden" value="{{$sched->id}}">
@@ -246,8 +195,8 @@
                         @else
                         <tr>
                             <td>
-                                <button type="button" class="btn mb-2 btnpatientdetails" style="color: black !important"
-                                    data-patient_id="{{ $sched->id }}"><i class="fas fa-file-alt"></i>
+                                <button type="button" class="btn btn-sm" data-toggle="modal"
+                                    data-target="#btnPatDetails{{$sched->id}}">
                                     <b>{{$sched->patlast}}</b>, {{$sched->patfirst}}
                                     <small>{{$sched->patmiddle}}</small>
                                 </button>
@@ -260,67 +209,28 @@
                                 @endif
                             </td>
                             <td>
-
-                               <small> @if($sched->room_id == 1)
-                                Room 1 - MIS
-                                @elseif($sched->room_id == 2)
-                                Room 2 - ER
-                                @elseif($sched->room_id == 3)
-                                Room 3 - Surgery
-                                @elseif($sched->room_id == 4)
-                                Room 4 - OB Gyne
-                                @elseif($sched->room_id == 5)
-                                Room 5 - ENT
-                                @elseif($sched->room_id == 6)
-                                Room 6 - Ortho
-                                @elseif($sched->room_id == 7)
-                                Room 7 - Ophtha
-                                @elseif($sched->room_id == 8)
-                                Room 8 - Surgery
-                                {{-- @elseif($sched->room_id == 9)
-                                Room 6
-                                @elseif($sched->room_id == 10)
-                                Room 7 --}}
-                                @else
-                                
-                                @endif</small>
-                                {{-- @if($sched->room_id == 1)
-                                Annex 1
-                                @elseif($sched->room_id == 2)
-                                Annex 2
-                                @elseif($sched->room_id == 3)
-                                Annex 3
-                                @elseif($sched->room_id == 4)
-                                Room 1
-                                @elseif($sched->room_id == 5)
-                                Room 2
-                                @elseif($sched->room_id == 6)
-                                Room 3
-                                @elseif($sched->room_id == 7)
-                                Room 4
-                                @elseif($sched->room_id == 8)
-                                Room 5
-                                @elseif($sched->room_id == 9)
-                                Room 6
-                                @elseif($sched->room_id == 10)
-                                Room 7
-                                @elseif($sched->room_id == 11)
-                                Room 8
-                                @elseif($sched->room_id == 12)
-                                Covid Room
-                                @else
-                                No Room Indicate
-                                @endif --}}
+                                <small>{{ $roomNames[$sched->room_id] ?? 'Unknown Room' }}</small>
                             </td>
                             <td>
-                               <small class="text-uppercase"> {{$sched->surgeon}}</small>
+                                <small class="text-uppercase">
+                                    @php
+                                    $doctors = \App\Http\Controllers\ReservationController::doclist();
+                                    $surgeonIds = json_decode($sched->surgeon, true);
+                                    @endphp
+                                    @foreach ($surgeonIds as $surgeonId)
+                                    @foreach ($doctors as $doctor)
+                                    @if ($doctor->employeeid == $surgeonId)
+                                    DR. {{ $doctor->firstname }} {{ $doctor->lastname }} <br>
+                                    @endif
+                                    @endforeach
+                                    @endforeach
+                                </small>
                             </td>
 
                             <td>
                                 @if($sched->anes == NULL)
                                 @if(App\Http\Controllers\LoggedUser::user_role()==1 ||
                                 App\Http\Controllers\LoggedUser::user_role()==3)
-                                {{-- <form action="{{route('addAnes')}}" method="POST"> --}}
                                 @csrf
                                 <select class="selectpicker" id="anes" name="anes[]" multiple data-live-search="true"
                                     required>
@@ -331,7 +241,6 @@
                                         {{$a->empdegree}} | {{$a->tsdesc}}
                                     </option>
                                     @endforeach
-                                    {{-- <input type="text" class="form-control" id="anesInput" > --}}
                                     <input class="patInfo" type="text" name="patient_name"
                                         value="{{$sched->patlast}}, {{$sched->patfirst}} {{$sched->patmiddle}}" hidden>
                                     <input name="hpercode" type="hidden"
@@ -345,7 +254,6 @@
                                             class="fas fa-save"></i> Add
                                     </button>
                                 </select>
-                                {{-- </form> --}}
                                 @endif
                                 @else
                                 Dr. {{$sched->anes}}
@@ -389,8 +297,81 @@
                                     title="Cancel schedule"> Cancel</button>
                             </td>
                             @endif
+
+                          
                         </tr>
                         @endif
+                        <div class="modal fade" id="btnPatDetails{{$sched->id}}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{$sched->patlast}}
+                                            {{$sched->patfirst}} {{$sched->patmiddle}} | {{$sched->hpercode}}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-dark">
+                                        <div class="container-fluid font-weight-bold" style="color: black;">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <span class="font-weight-normal">Age</span> <br>
+                                                    <span class="font-weight-normal">Gender</span> <br>
+                                                    <span class="font-weight-normal">Department / Ward</span> <br>
+                                                    <span class="font-weight-normal">Admitted Date and Time</span>
+                                                    <br>
+                                                    <span class="font-weight-normal">Date Schedule</span> <br>
+                                                    <span class="font-weight-normal">Time Start</span> <br>
+                                                    <span class="font-weight-normal">Time Duration</span> <br>
+                                                    <span class="font-weight-normal">Surgeon/s</span> <br>
+                                                    <span class="font-weight-normal">Type of Anesthesia</span> <br>
+                                                    <span class="font-weight-normal">Procedure</span> <br>
+                                                    <span class="font-weight-normal">Instruments Needed</span> <br>
+                                                    <span class="font-weight-normal">Entry by (with date and
+                                                        time)</span> <br>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <span>{{$sched->patage}} year/s old</span> <br>
+                                                    <span>{{$sched->patsex == 'M' ? 'Male' : 'Female'}}</span> <br>
+                                                    <span>{{$sched->patward}}</span> <br>
+                                                    <span>{{date('F d,Y h:i A', strtotime($sched->adm_date))}}</span>
+                                                    <br>
+                                                    <span>{{date('F d,Y h:i A', strtotime($sched->date_of_sched))}}</span>
+                                                    <br>
+                                                    <span>{{$sched->timeStart ? date('h:i A', strtotime($sched->timeStart)) : 'no time entered'}}</span>
+                                                    <br>
+                                                    <span>{{$sched->timeDuration}}</span><br>
+                                                    <span>
+                                                        @php
+                                                        $doctors =
+                                                        \App\Http\Controllers\ReservationController::doclist();
+                                                        $surgeonIds = json_decode($sched->surgeon, true);
+                                                        @endphp
+                                                        @foreach ($surgeonIds as $surgeonId)
+                                                        @foreach ($doctors as $doctor)
+                                                        @if ($doctor->employeeid == $surgeonId)
+                                                        DR. {{ $doctor->firstname }} {{ $doctor->lastname }} ;
+                                                        @endif
+                                                        @endforeach
+                                                        @endforeach
+                                                    </span> <br>
+                                                    <span>{{$sched->anesname}}</span> <br>
+                                                    <span>{{$sched->procedures}}</span> <br>
+                                                    <span>{{$sched->instru}}</span> <br>
+                                                    <span>{{$sched->firstname}} {{$sched->lastname}} -
+                                                        <small>{{date('F d,Y h:i A', strtotime($sched->created_at))}}</small></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         @endforeach
                     </tbody>
                 </table>
@@ -511,28 +492,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
     </div>
 </div>
 @endforeach
-
-
 @endif
-
-<!-- Modal -->
-<div class="modal fade" id="patientdetails" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-secondary shadow">
-                <h4 class="modal-title"><i class="fas fa-hospital-user"></i> Patient Details</h4>
-                <button type="button" class="close btn btn-danger" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body" id="patdetailsbody">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <!-- Modal -->
 <div class="modal fade" id="addschedule" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -562,31 +522,6 @@ App\Http\Controllers\LoggedUser::user_role()==2)
         </div>
     </div>
 </div>
-
-{{-- @if(Carbon\Carbon::now()->format('h:i:s') > $timeEnd && Carbon\Carbon::now()->format('h:i:s') < $timeStart ) 
-<div class="modal fade" id="addsched1" name="" value{{$elec}} role="dialog">
-<div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header shadow-sm bg-danger">
-            <h4 class="modal-title">Warning !!</h4>
-            <button type="button" class="close btn F-danger" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <center>
-                        <h2>No adding of schedule before 8:00 AM and beyond 4:00 PM.</h2>
-                    </center>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn shadow btn-lg btn-block btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-    </div>
-</div>
-</div>
-@else --}}
 
 <div class="modal fade" id="addsched1" name="" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-scrollable modal-lg ">
@@ -632,77 +567,25 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="room" class="col-sm-3 col-form-label">Annex / Room:</label>
                         <div class="col-sm-9">
+                            @php
+                            $rooms = [
+                            1 => 'Room 1 - MIS',
+                            2 => 'Room 2 - ER',
+                            3 => 'Room 3 - Surgery',
+                            4 => 'Room 4 - OB Gyne',
+                            5 => 'Room 5 - ENT',
+                            6 => 'Room 6 - Ortho',
+                            7 => 'Room 7 - Ophtha',
+                            8 => 'Room 8 - Surgery',
+                            ];
+                            @endphp
+
                             <select name="room" id="room" class="form-control is-invalid">
-                                <option value="0" disabled>Select Room</option>
-
-                                @if ($roomtoday == 1)
-                                <option value="1" selected>Room 1- MIS</option>
-                                @else
-                                <option value="1">Room 1- MIS</option>
-                                @endif
-
-                                @if ($roomtoday == 2)
-                                <option value="2" selected>Room 2 - ER</option>
-                                @else
-                                <option value="2">Room 2 - ER</option>
-                                @endif
-
-                                @if ($roomtoday == 3)
-                                <option value="3" selected>Room 3 - Surgery</option>
-                                @else
-                                <option value="3">Room 3 - Surgery</option>
-                                @endif
-                                @if ($roomtoday == 4)
-                                <option value="4" selected>Room 4 - OB Gyne</option>
-                                @else
-                                <option value="4">Room 4 - OB Gyne</option>
-                                @endif
-
-                                @if ($roomtoday == 5)
-                                <option value="5" selected>Room 5 - ENT</option>
-                                @else
-                                <option value="5">Room 5 - ENT</option>
-                                @endif
-
-                                @if ($roomtoday == 6)
-                                <option value="6" selected>Room 6 - Ortho</option>
-                                @else
-                                <option value="6">Room 6 - Ortho</option>
-                                @endif
-
-                                @if ($roomtoday == 7)
-                                <option value="7" selected>Room 7 - Ophtha</option>
-                                @else
-                                <option value="7">Room 7 - Ophtha</option>
-                                @endif
-
-                                @if ($roomtoday == 8)
-                                <option value="8" selected>Room 8 - Surgery</option>
-                                @else
-                                <option value="8">Room 8 - Surgery</option>
-                                @endif
-
-                                {{-- @if ($roomtoday == 9)
-                                <option value="9" selected>Room 6</option>
-                                @else
-                                <option value="9">Room 6</option>
-                                @endif
-
-                                @if ($roomtoday == 10)
-                                <option value="10" selected>Room 7 - Optha</option>
-                                @else
-                                <option value="10">Room 7 - Optha</option>
-                                @endif
-                                @if ($roomtoday == 11)
-                                <option value="11" selected>Room 8 </option>
-                                @else
-                                <option value="11">Room 8 </option>
-                                @endif
-                                @if ($roomtoday == 12)
-                                <option value="12" selected>Covid Room </option>
-                                @else
-                                <option value="12">Covid Room </option>
-                                @endif --}}
+                                <option value="0" disabled>Select Annex / Room</option>
+                                @foreach ($rooms as $key => $room)
+                                <option value="{{ $key }}" {{ $roomtoday == $key ? 'selected' : '' }}>{{ $room }}
+                                </option>
+                                @endforeach
                             </select>
                             <div class="invalid-feedback">
                                 required
@@ -737,12 +620,12 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                         <div class="col-sm-9">
                             {{-- <input type="text" value="{{$get_schedule}}"> --}}
                             <span id="full_time"><span id="show_time"></span>
-                            <input type="text" id="show_time" hidden>
-                            {{-- <span id="full_time">
+                                <input type="text" id="show_time" hidden>
+                                {{-- <span id="full_time">
                                     <span id="show_time"></span>
                                 </span>
                                  --}}
-                            {{-- <input hidden id="time_in"
+                                {{-- <input hidden id="time_in"
                                     type="time" value="{{$available_time}}"> --}}
                         </div>
                     </div>
@@ -782,32 +665,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="surgeon" class="col-sm-3 col-form-label">Surgeon:</label>
                         <div class="col-sm-9">
-                            {{-- <select name="surgeon" class="custom-select">
-                                <option selected disabled value="">-- Select Surgeon --</option>
-                                @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
-                                <option
-                                    value="{{$doclist->lastname}}, {{$doclist->firstname}} {{$doclist->middlename}}">
-                            {{$doclist->lastname}}, {{$doclist->firstname}} {{$doclist->middlename}}
-                            {{$doclist->empdegree}} | {{$doclist->tsdesc}}
-                            </option>
-                            @endforeach
-                            <input name="surgeon_name" type="hidden"
-                                value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                            </select> --}}
-                            {{-- <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple
-                                data-live-search="true" required>
-                                <option disabled value="">-- Select Surgeon --</option>
-                                @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
-                                <option value="{{$doclist->firstname}} {{$doclist->middlename}} {{$doclist->lastname}}">
-                                    {{$doclist->lastname}}, {{$doclist->firstname}} {{$doclist->middlename}}
-                                    {{$doclist->empdegree}} | {{$doclist->tsdesc}}
-                                </option>
-                                @endforeach
-                                <input name="entry_by" type="hidden"
-                                    value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                            </select> --}}
-                            <input name="entry_by" type="hidden"
-                                    value="{{App\Http\Controllers\LoggedUser::getUser()}}">
+                            <input name="entry_by" type="hidden" value="{{App\Http\Controllers\LoggedUser::getUser()}}">
                             <input type="text" class="form-control col-sm-12 is-invalid" name="surgeon" required>
                             <div class="invalid-feedback">
                                 required
@@ -826,21 +684,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                                     {{$pats->patmiddle}} | Entry by - {{$pats->lastname}}, {{$pats->firstname}}</option>
                                 @endif
                                 @endforeach
-
-                                {{-- @foreach($pat1 as $pats)
-                                 <input type="text" name="patID" value="{{$pats->hpercode}}" hidden>
-                                @endforeach
-                                @else
-                                @foreach($pat as $pats)
-                                <input type="text" name="patID" value="{{$pats->hpercode}}" hidden>
-                                @if(empty($pats->scheduled))
-                                <option value="{{$pats->id}}"> {{$pats->patlast}}, {{$pats->patfirst}}
-                                    {{$pats->patmiddle}}</option>
-                                @endif
-                                @endforeach
-                                @foreach ($pat as $pats)
-                                <input type="text" name="patID" value="{{$pats->hpercode}}" hidden>
-                                @endforeach --}}
+                              
                             </select>
                             <div class="invalid-feedback">
                                 required
@@ -865,34 +709,6 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                             <textarea id="instru" name="instru" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
-
-                    {{-- <div class="form-group row">
-                        <label for="" class="col-sm-3 col-form-label">Time Taken</label>
-                        <div class="col-sm-9">
-                            @foreach($scheds as $sched)
-                            <span class="text-primary">{{date('h:i A', strtotime($sched->date_from))}} to
-                    {{date('h:i A', strtotime($sched->date_to))}}</span> - <i class="fa fa-user"></i>
-                    {{$sched->patlast}}, {{$sched->patfirst}} {{$sched->patmiddle}} <br>
-                    @endforeach
-                </div>
-            </div> --}}
-
-            {{--   <div class="form-group row">
-                        <label for="time" class="col-sm-3 col-form-label">Suggested time:</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-5">
-                                    <input type="time" id="time" name="time" class="form-control" required>
-                                </div>
-                                <div class="col-2">
-                                    <label for="timeout" class="text-center">TO</label>
-                                </div>
-                                <div class="col-5">
-                                    <input type="time" id="timeout" name="timeout" class="form-control" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
 
     </div>
     <div class="modal-footer">
@@ -919,7 +735,8 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="date" class="col-sm-3 col-form-label">Date of Operation:</label>
                         <div class="col-sm-9">
-                            <input type="date" id="date" name="date" class="form-control is-invalid font-weight-bold" required>
+                            <input type="date" id="date" name="date" class="form-control is-invalid font-weight-bold"
+                                required>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -1063,20 +880,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="surgeon" class="col-sm-3 col-form-label">Surgeon:</label>
                         <div class="col-sm-9">
-                            {{-- <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple data-live-search="true"
-                                required>
-                                <option disabled value="">-- Select Surgeon --</option>
-                                @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
-                                <option value="{{$doclist->firstname}} {{$doclist->middlename}} {{$doclist->lastname}}">
-                                    {{$doclist->lastname}}, {{$doclist->firstname}} {{$doclist->middlename}}
-                                    {{$doclist->empdegree}} | {{$doclist->tsdesc}}
-                                </option>
-                                @endforeach
-                                <input name="entry_by" type="hidden"
-                                    value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                            </select> --}}
-                            <input name="entry_by" type="hidden"
-                                    value="{{App\Http\Controllers\LoggedUser::getUser()}}">
+                            <input name="entry_by" type="hidden" value="{{App\Http\Controllers\LoggedUser::getUser()}}">
                             <input type="text" class="form-control col-sm-12 is-invalid" name="surgeon" required>
                             <div class="invalid-feedback">
                                 required
@@ -1106,16 +910,17 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                         <div class="col-sm-9">
                             <textarea id="procedures" name="procedures" class="form-control is-invalid" rows="3"
                                 required></textarea>
-                                <div class="invalid-feedback">
-                                    required
-                                </div>
+                            <div class="invalid-feedback">
+                                required
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Instruments Needed:</label>
                         <div class="col-sm-9">
-                            <textarea id="instru" name="instru" class="form-control is-invalid" rows="2" required></textarea>
+                            <textarea id="instru" name="instru" class="form-control is-invalid" rows="2"
+                                required></textarea>
                         </div>
                     </div>
                 </div>
@@ -1127,7 +932,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
         </form>
     </div>
 </div>
-{{-- @endif --}}
+
 @endsection
 
 @section('script')
@@ -1154,91 +959,10 @@ App\Http\Controllers\LoggedUser::user_role()==2)
         }
     });
 
-    $(document).on('click', '.btnpatientdetails', function () {
-        var patient_id = $(this).attr('data-patient_id');
-        var template = '';
-        $.ajax({
-            type: "POST",
-            url: '/JSON/patdetails',
-            data: {
-                patient_id: patient_id
-            },
-            dataType: 'json',
-            success: function (data) {
-                if (data != null) {
-                    $('#patdetailsbody').empty();
-                    template += '<table class="table table-hover table-borderless table-sm">' +
-                        '<tr><td>Hospital #: </td><td>' + data.hpercode + '</td></tr>' +
-                        '<tr><td>Patient Name: </td><td>' + '<h5>' + data.patlast + ', ' + data
-                        .patfirst +
-                        ' ' + data.patmiddle + '</h5>' + '</td></tr>' +
-                        '<tr><td>Age: </td><td>' + data.patage + ' ' + 'year/s old' + '</td></tr>' +
-                        '<tr><td>Gender: </td><td>' + data.patsex + '</td></tr>' +
-                        '<tr><td>Department: </td><td>' + data.tsdesc + '</td></tr>' +
-                        '<tr><td>Ward: </td><td>' + data.patward + '</td></tr>' +
-                        '<tr><td>Admitted Date and Time: </td><td>' + moment(data.adm_date).format(
-                            'LLL') + '</td></tr>' +
-                        '<tr><td colspan="2" style="margin-top: -5rem;"><h3 style="color: #38c172"><center>--- SCHEDULE DETAILS ---</center></h3></td></tr>' +
-                        '<tr><td>Date of Schedule: </td><td>' + moment(data.date_of_sched).format(
-                            'LL') + '</td></tr>' +
-                        '<tr><td>Time Start: </td><td>' + moment(data.timeStart).format('LT') +
-                        '</td></tr>' +
-                        '<tr><td>Time Duration: </td><td>' + data.timeDuration + ' hour/s' +
-                        '</td></tr>' +
-                        '<tr><td>Surgeon/s: </td><td>' + 'Dr.' + ' ' + data.surgeon + '</td></tr>' +
-                        '<tr><td>Type of Anesthesia: </td><td>' + data.anesname + '</td></tr>' +
-                        '<tr><td>Procedure: </td><td>' + data.procedures + '</td></tr>' +
-                        '<tr><td>Instrument/s Needed: </td><td>' + data.instru + '</td></tr>' +
-                        '<tr><td>Entry By and Date: </td><td>' + data.firstname + ' ' + data
-                        .middlename + ' ' + data.lastname + ', ' + ' ' + moment(data.created_at)
-                        .format('LLL') + '</td></tr>';
-                    template += '</table>';
-
-                    $('#patdetailsbody').append(template);
-                    $('#patientdetails').modal('show');
-                }
-            },
-        });
-    });
-
     function rad(type) {
         document.getElementById("result").value = type;
         console.log(type);
     }
-
-    // $(document).on('click','.elec', function() {
-    //     var get_id = $(this).attr('data-id');
-    //     var endTime = '16:00:00';
-    //     var begTime = '07:00:00'
-    //     var today = new Date();
-    //     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    //     console.log(time);
-
-    //     if(get_id == 'elec' && time >= endTime && time <= begTime) 
-    //     {
-    //         $('#btnAddSchedule').prop('disabled', false);
-    //     }
-    //     else
-    //     {
-    //         $('#btnAddSchedule').prop('disabled', false);
-    //     }
-
-
-    //     console.log(get_id);
-    // });
-
-    // $(document).on('click','.emer', function() {
-    //     var get_id = $(this).attr('data-id');
-    //     var endTime = '16:00:00';
-    //     var begTime = '07:00:00'
-    //     var today = new Date();
-    //     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    //     console.log(time);
-
-    //     $('#btnAddSchedule1').prop('disabled', false);
-
-    //     console.log(get_id);
-    // });
 
 </script>
 @endsection

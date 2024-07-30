@@ -504,8 +504,7 @@
     </div>
 </div>
 @endforeach
-@elseif(App\Http\Controllers\LoggedUser::getUser() && App\Http\Controllers\LoggedUser::user_role()==1 ||
-App\Http\Controllers\LoggedUser::user_role()==2)
+@elseif(App\Http\Controllers\LoggedUser::getUser() && App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2)
 @foreach($scheds as $pats)
 <div class="modal fade changeTimeModal" id="changeTimeModal{{$pats->id}}" role="dialog">
     <div class="modal-dialog ">
@@ -557,8 +556,6 @@ App\Http\Controllers\LoggedUser::user_role()==2)
     </div>
 </div>
 @endforeach
-
-
 @endif
 
 <!-- Modal -->
@@ -609,31 +606,6 @@ App\Http\Controllers\LoggedUser::user_role()==2)
     </div>
 </div>
 
-{{-- @if(Carbon\Carbon::now()->format('h:i:s') > $timeEnd && Carbon\Carbon::now()->format('h:i:s') < $timeStart ) 
-<div class="modal fade" id="addsched1" name="" value{{$elec}} role="dialog">
-<div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header shadow-sm bg-danger">
-            <h4 class="modal-title">Warning !!</h4>
-            <button type="button" class="close btn F-danger" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <center>
-                        <h2>No adding of schedule before 8:00 AM and beyond 4:00 PM.</h2>
-                    </center>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn shadow btn-lg btn-block btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-    </div>
-</div>
-</div>
-@else --}}
-
 {{-- ELECTIVE SCHEDULE --}}
 
 <div class="modal fade" id="addsched1" name="" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -680,143 +652,26 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="room" class="col-sm-3 col-form-label">Room:</label>
                         <div class="col-sm-9">
+                            @php
+                                $rooms = [
+                                    1 => 'Room 1 - MIS',
+                                    2 => 'Room 2 - ER',
+                                    3 => 'Room 3 - Surgery',
+                                    4 => 'Room 4 - OB Gyne',
+                                    5 => 'Room 5 - ENT',
+                                    6 => 'Room 6 - Ortho',
+                                    7 => 'Room 7 - Ophtha',
+                                    8 => 'Room 8 - Surgery',
+                                ];
+                            @endphp
+                            
                             <select name="room" id="room" class="form-control is-invalid">
-                                <option value="0" disabled>Select Room</option>
-                                @if($roomtoday == 1)
-                                <option value="1" selected>Room 1 - MIS</option>
-                                @else
-                                <option value="1">Room 1 - MIS</option>
-                                @endif
-                                
-                                @if($roomtoday == 2)
-                                <option value="2" selected>Room 2 - ER</option>
-                                @else
-                                <option value="2">Room 2 - ER</option>
-                                @endif
-
-                                @if($roomtoday == 3)
-                                <option value="3" selected>Room 3 - Surgery</option>
-                                @else
-                                <option value="3">Room 3 - Surgery</option>
-                                @endif
-
-                                @if($roomtoday == 4)
-                                <option value="4" selected>Room 4 - OB Gyne</option>
-                                @else
-                                <option value="4">Room 4 - OB Gyne</option>
-                                @endif
-
-                                @if($roomtoday == 5)
-                                <option value="5" selected>Room 5 - ENT</option>
-                                @else
-                                <option value="5">Room 5 - ENT</option>
-                                @endif
-
-                                @if($roomtoday == 6)
-                                <option value="6" selected>Room 6 - Ortho</option>
-                                @else
-                                <option value="6">Room 6 - Ortho</option>
-                                @endif
-
-                                @if($roomtoday == 7)
-                                <option value="7" selected>Room 7 - Ophtha</option>
-                                @else
-                                <option value="7">Room 7 - Ophtha</option>
-                                @endif
-
-                                @if($roomtoday == 8)
-                                <option value="8" selected>Room 8 - Surgery</option>
-                                @else
-                                <option value="8">Room 8 - Surgery</option>
-                                @endif
-
-                                {{-- @elseif($roomtoday == 2)
-                                Room 2 - ER
-                                @elseif($roomtoday == 3)
-                                Room 3 - Surgery
-                                @elseif($roomtoday == 4)
-                                Room 4 - OB Gyne
-                                @elseif($roomtoday == 5)
-                                Room 5 - ENT
-                                @elseif($roomtoday == 6)
-                                Room 6 - Ortho
-                                @elseif($roomtoday == 7)
-                                Room 7 - Ophtha
-                                @elseif($roomtoday == 8)
-                                Room 8 - Surgery
-                                @else
-                                
-                                @endif --}}
-
-                                {{-- @if ($roomtoday == 1)
-                                <option value="1" selected>Annex 1 - Private</option>
-                                @else
-                                <option value="1">Annex 1 - Private</option>
-                                @endif
-
-                                @if ($roomtoday == 2)
-                                <option value="2" selected>Annex 2 - Private</option>
-                                @else
-                                <option value="2">Annex 2 - Private</option>
-                                @endif
-
-                                @if ($roomtoday == 3)
-                                <option value="3" selected>Annex 3 - Private</option>
-                                @else
-                                <option value="3">Annex 3 - Private</option>
-                                @endif
-                                @if ($roomtoday == 4)
-                                <option value="4" selected>Room 1 - ER</option>
-                                @else
-                                <option value="4">Room 1 - ER</option>
-                                @endif
-
-                                @if ($roomtoday == 5)
-                                <option value="5" selected>Room 2 - Optha</option>
-                                @else
-                                <option value="5">Room 2 - Optha</option>
-                                @endif
-
-                                @if ($roomtoday == 6)
-                                <option value="6" selected>Room 3</option>
-                                @else
-                                <option value="6">Room 3</option>
-                                @endif
-
-                                @if ($roomtoday == 7)
-                                <option value="7" selected>Room 4</option>
-                                @else
-                                <option value="7">Room 4</option>
-                                @endif
-
-                                @if ($roomtoday == 8)
-                                <option value="8" selected>Room 5</option>
-                                @else
-                                <option value="8">Room 5</option>
-                                @endif
-
-                                @if ($roomtoday == 9)
-                                <option value="9" selected>Room 6</option>
-                                @else
-                                <option value="9">Room 6</option>
-                                @endif
-
-                                @if ($roomtoday == 10)
-                                <option value="10" selected>Room 7 - Optha</option>
-                                @else
-                                <option value="10">Room 7 - Optha</option>
-                                @endif
-                                @if ($roomtoday == 11)
-                                <option value="11" selected>Room 8 </option>
-                                @else
-                                <option value="11">Room 8 </option>
-                                @endif
-                                @if ($roomtoday == 12)
-                                <option value="12" selected>Covid Room </option>
-                                @else
-                                <option value="12">Covid Room </option>
-                                @endif --}}
+                                <option value="0" disabled>Select Annex / Room</option>
+                                @foreach ($rooms as $key => $room)
+                                    <option value="{{ $key }}" {{ $roomtoday == $key ? 'selected' : '' }}>{{ $room }}</option>
+                                @endforeach
                             </select>
+                        
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -848,15 +703,8 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Total Schedule:</label>
                         <div class="col-sm-9">
-                            {{-- <input type="text" value="{{$get_schedule}}"> --}}
                             <span id="full_time"><span id="show_time"></span>
                             <input type="text" id="show_time" hidden>
-                            {{-- <span id="full_time">
-                                    <span id="show_time"></span>
-                                </span>
-                                 --}}
-                            {{-- <input hidden id="time_in"
-                                    type="time" value="{{$available_time}}"> --}}
                         </div>
                     </div>
 
@@ -898,32 +746,18 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="surgeon" class="col-sm-3 col-form-label">Surgeon:</label>
                         <div class="col-sm-9">
-                            {{-- <select name="surgeon" class="custom-select">
-                                <option selected disabled value="">-- Select Surgeon --</option>
-                                @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
-                                <option
-                                    value="{{$doclist->lastname}}, {{$doclist->firstname}} {{$doclist->middlename}}">
-                            {{$doclist->lastname}}, {{$doclist->firstname}} {{$doclist->middlename}}
-                            {{$doclist->empdegree}} | {{$doclist->tsdesc}}
-                            </option>
-                            @endforeach
-                            <input name="surgeon_name" type="hidden"
-                                value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                            </select> --}}
-                            {{-- <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple
-                                data-live-search="true" required>
+                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple data-live-search="true"
+                                required>
                                 <option disabled value="">-- Select Surgeon --</option>
                                 @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
-                                <option value="{{$doclist->firstname}} {{$doclist->middlename}} {{$doclist->lastname}}">
+                                <option value="{{$doclist->employeeid}}">
                                     {{$doclist->lastname}}, {{$doclist->firstname}} {{$doclist->middlename}}
                                     {{$doclist->empdegree}} | {{$doclist->tsdesc}}
                                 </option>
                                 @endforeach
                                 <input name="entry_by" type="hidden"
                                     value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                            </select> --}}
-
-                            <input type="text" class="form-control col-sm-12 is-invalid" name="surgeon" required>
+                            </select>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -933,29 +767,12 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                         <label for="patient" class="col-sm-3 col-form-label">Patient:</label>
                         <div class="col-sm-9">
                             <select name="patid" id="patient" class="form-control is-invalid" required>
-                                <option class="text-primary" disabled selected>-- Please Select Patient --</option>
-
                                 @foreach($pat as $pats)
-                                @if(empty($pats->scheduled))
+                                {{-- @if(empty($pats->scheduled)) --}}
                                 <option value="{{$pats->id}}"> {{$pats->patlast}}, {{$pats->patfirst}}
-                                    {{$pats->patmiddle}} | Entry by - {{$pats->lastname}}, {{$pats->firstname}}</option>
-                                @endif
+                                    {{$pats->patmiddle}} </option>
+                                {{-- @endif --}}
                                 @endforeach
-
-                                {{-- @foreach($pat1 as $pats)
-                                 <input type="text" name="patID" value="{{$pats->hpercode}}" hidden>
-                                @endforeach
-                                @else
-                                @foreach($pat as $pats)
-                                <input type="text" name="patID" value="{{$pats->hpercode}}" hidden>
-                                @if(empty($pats->scheduled))
-                                <option value="{{$pats->id}}"> {{$pats->patlast}}, {{$pats->patfirst}}
-                                    {{$pats->patmiddle}}</option>
-                                @endif
-                                @endforeach
-                                @foreach ($pat as $pats)
-                                <input type="text" name="patID" value="{{$pats->hpercode}}" hidden>
-                                @endforeach --}}
                             </select>
                             <div class="invalid-feedback">
                                 required
@@ -991,35 +808,6 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                             </div>
                         </div>
                     </div>
-
-                    {{-- <div class="form-group row">
-                        <label for="" class="col-sm-3 col-form-label">Time Taken</label>
-                        <div class="col-sm-9">
-                            @foreach($scheds as $sched)
-                            <span class="text-primary">{{date('h:i A', strtotime($sched->date_from))}} to
-                    {{date('h:i A', strtotime($sched->date_to))}}</span> - <i class="fa fa-user"></i>
-                    {{$sched->patlast}}, {{$sched->patfirst}} {{$sched->patmiddle}} <br>
-                    @endforeach
-                </div>
-            </div> --}}
-
-            {{--   <div class="form-group row">
-                        <label for="time" class="col-sm-3 col-form-label">Suggested time:</label>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-5">
-                                    <input type="time" id="time" name="time" class="form-control" required>
-                                </div>
-                                <div class="col-2">
-                                    <label for="timeout" class="text-center">TO</label>
-                                </div>
-                                <div class="col-5">
-                                    <input type="time" id="timeout" name="timeout" class="form-control" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-
     </div>
     <div class="modal-footer">
         <button type="button" class="btn shadow btn-primary btnAddSchedule" id="btnAddSchedule">Add</button>
@@ -1030,6 +818,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
 </div>
 </div>
 
+{{-- EMERGENT SCHEDULE --}}
 <div class="modal fade" id="addsched2" name="" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <form id="addscheduleform1" action="/addschedule2" method="POST" enctype="multipart/form-data">
@@ -1068,126 +857,26 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="room" class="col-sm-3 col-form-label">Annex / Room:</label>
                         <div class="col-sm-9">
+                            @php
+                                $rooms = [
+                                    1 => 'Room 1 - MIS',
+                                    2 => 'Room 2 - ER',
+                                    3 => 'Room 3 - Surgery',
+                                    4 => 'Room 4 - OB Gyne',
+                                    5 => 'Room 5 - ENT',
+                                    6 => 'Room 6 - Ortho',
+                                    7 => 'Room 7 - Ophtha',
+                                    8 => 'Room 8 - Surgery',
+                                ];
+                            @endphp
+
                             <select name="room" id="room" class="form-control is-invalid">
                                 <option value="0" disabled>Select Annex / Room</option>
-
-                                @if($roomtoday == 1)
-                                <option value="1" selected>Room 1 - MIS</option>
-                                @else
-                                <option value="1">Room 1 - MIS</option>
-                                @endif
-                                
-                                @if($roomtoday == 2)
-                                <option value="2" selected>Room 2 - ER</option>
-                                @else
-                                <option value="2">Room 2 - ER</option>
-                                @endif
-
-                                @if($roomtoday == 3)
-                                <option value="3" selected>Room 3 - Surgery</option>
-                                @else
-                                <option value="3">Room 3 - Surgery</option>
-                                @endif
-
-                                @if($roomtoday == 4)
-                                <option value="4" selected>Room 4 - OB Gyne</option>
-                                @else
-                                <option value="4">Room 4 - OB Gyne</option>
-                                @endif
-
-                                @if($roomtoday == 5)
-                                <option value="5" selected>Room 5 - ENT</option>
-                                @else
-                                <option value="5">Room 5 - ENT</option>
-                                @endif
-
-                                @if($roomtoday == 6)
-                                <option value="6" selected>Room 6 - Ortho</option>
-                                @else
-                                <option value="6">Room 6 - Ortho</option>
-                                @endif
-
-                                @if($roomtoday == 7)
-                                <option value="7" selected>Room 7 - Ophtha</option>
-                                @else
-                                <option value="7">Room 7 - Ophtha</option>
-                                @endif
-
-                                @if($roomtoday == 8)
-                                <option value="8" selected>Room 8 - Surgery</option>
-                                @else
-                                <option value="8">Room 8 - Surgery</option>
-                                @endif
-                                
-                                {{-- @if ($roomtoday == 1)
-                                <option value="1" selected>Annex 1 - Private</option>
-                                @else
-                                <option value="1">Annex 1 - Private</option>
-                                @endif
-
-                                @if ($roomtoday == 2)
-                                <option value="2" selected>Annex 2 - Private</option>
-                                @else
-                                <option value="2">Annex 2 - Private</option>
-                                @endif
-
-                                @if ($roomtoday == 3)
-                                <option value="3" selected>Annex 3 - Private</option>
-                                @else
-                                <option value="3">Annex 3 - Private</option>
-                                @endif
-                                @if ($roomtoday == 4)
-                                <option value="4" selected>Room 1 - ER</option>
-                                @else
-                                <option value="4">Room 1 - ER</option>
-                                @endif
-
-                                @if ($roomtoday == 5)
-                                <option value="5" selected>Room 2 - Optha</option>
-                                @else
-                                <option value="5">Room 2 - Optha</option>
-                                @endif
-
-                                @if ($roomtoday == 6)
-                                <option value="6" selected>Room 3</option>
-                                @else
-                                <option value="6">Room 3</option>
-                                @endif
-
-                                @if ($roomtoday == 7)
-                                <option value="7" selected>Room 4</option>
-                                @else
-                                <option value="7">Room 4</option>
-                                @endif
-
-                                @if ($roomtoday == 8)
-                                <option value="8" selected>Room 5</option>
-                                @else
-                                <option value="8">Room 5</option>
-                                @endif
-
-                                @if ($roomtoday == 9)
-                                <option value="9" selected>Room 6</option>
-                                @else
-                                <option value="9">Room 6</option>
-                                @endif
-
-                                @if ($roomtoday == 10)
-                                <option value="10" selected>Room 7 - Optha</option>
-                                @else
-                                <option value="10">Room 7 - Optha</option>
-                                @endif
-                                @if ($roomtoday == 11)
-                                <option value="11" selected>Room 8 </option>
-                                @else
-                                <option value="11">Room 8 </option>
-                                @endif
-                                @if ($roomtoday == 12)
-                                <option value="12" selected>Covid Room </option>
-                                @else
-                                <option value="12">Covid Room </option>
-                                @endif --}}
+                                @foreach ($rooms as $key => $room)
+                                    <option value="{{ $key }}" {{ $roomtoday == $key ? 'selected' : '' }}>{{ $room }}</option>
+                                @endforeach
                             </select>
+
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -1259,19 +948,18 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="surgeon" class="col-sm-3 col-form-label">Surgeon:</label>
                         <div class="col-sm-9">
-                            {{-- <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple data-live-search="true"
+                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple data-live-search="true"
                                 required>
                                 <option disabled value="">-- Select Surgeon --</option>
                                 @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
-                                <option value="{{$doclist->firstname}} {{$doclist->middlename}} {{$doclist->lastname}}">
+                                <option value="{{$doclist->employeeid}}">
                                     {{$doclist->lastname}}, {{$doclist->firstname}} {{$doclist->middlename}}
                                     {{$doclist->empdegree}} | {{$doclist->tsdesc}}
                                 </option>
                                 @endforeach
                                 <input name="entry_by" type="hidden"
                                     value="{{App\Http\Controllers\LoggedUser::getUser()}}">
-                            </select> --}}
-                            <input type="text" class="form-control col-sm-12 is-invalid" name="surgeon" required>
+                            </select>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -1281,13 +969,11 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                         <label for="patient" class="col-sm-3 col-form-label">Patient:</label>
                         <div class="col-sm-9">
                             <select name="patid" id="patient" class="form-control is-invalid" required>
-                                <option class="text-primary" disabled selected>-- Please Select Patient --</option>
-
                                 @foreach($pat as $pats)
-                                @if(empty($pats->scheduled))
+                                {{-- @if(empty($pats->scheduled)) --}}
                                 <option value="{{$pats->id}}"> {{$pats->patlast}}, {{$pats->patfirst}}
-                                    {{$pats->patmiddle}} | Entry by - {{$pats->lastname}}, {{$pats->firstname}}</option>
-                                @endif
+                                    {{$pats->patmiddle}} </option>
+                                {{-- @endif --}}
                                 @endforeach
                             </select>
                             <div class="invalid-feedback">

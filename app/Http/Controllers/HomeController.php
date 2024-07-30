@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Carbon;
+use Carbon\Carbon;
 use App\Model\patient;
 use App\Model\toAccept;
 use App\Http\Controllers\LoggedUser;
@@ -28,7 +28,7 @@ class HomeController extends Controller
     {   
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
         $mydata = DB::select("SELECT * from jhay.orsched_user WHERE employeeid = '".Auth::user()->employeeid."'");
-        $today = Carbon\Carbon::now();
+        $today = Carbon::now();
         $employee = Auth::user()->employeeid;
         $patients = toAccept::with('reservation')
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
@@ -39,81 +39,46 @@ class HomeController extends Controller
         // ->whereMonth('jhay.vw_toAccept.created_at', '=', $today)
         ->get();
 
-        // dd($patients);
+        $check_ward = DB::SELECT("SELECT COUNT(*) as ward FROM jhay.orsched_user WHERE employeeid = '$employee' AND ward IS NOT NULL");
+        $get_ward = $check_ward[0]->ward;
+        if($get_ward > 1) {
+            
+        } else {
+
+        }
+
+        $ward = DB::TABLE('dbo.hward')
+        ->where('wardstat','A' )
+        ->get();
 
         $patients1 = toAccept::with('reservation')
         ->join('hospital.dbo.hpersonal', 'jhay.vw_toAccept.entry_by', '=', 'dbo.hpersonal.employeeid')
         ->where('entry_by', Auth::user()->employeeid)
         ->where('accept', '=', null)
-        // ->orwhereDate('jhay.vw_toAccept.created_at','=', $today)
         ->get();
         
         if(LoggedUser::user_role() == 1 || LoggedUser::user_role() == 2 || LoggedUser::user_role() == 3) {
             // ADMIN
-            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date)");
+            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(accepted_at as date)  = cast(getdate() as date)");
         }
         else
         // WARD
-            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(created_at as date)  = cast(getdate() as date) AND entry_by = '$employee'");      
-            // $pat = DB::SELECT("SELECT * FROM jhay.orsched_reservations AS re INNER JOIN jhay.orsched_patients pa ON re.patient_id = pa.id  WHERE pa.entry_by =  '$employee'");      
+            $pat = DB::SELECT("SELECT * from jhay.vw_toAccept WHERE cast(accepted_at as date)  = cast(getdate() as date) AND entry_by = '$employee'");      
+            
 
         $emer = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 1 AND b.accept = 1 and year(b.created_at) = year(getdate())");
         $elec = DB::SELECT("SELECT COUNT(a.id) as total from jhay.orsched_reservations AS a INNER JOIN jhay.orsched_patients AS b on a.patient_id = b.id where a.type = 0 AND b.accept = 1 and year(b.created_at) = year(getdate())");
         // $tot = DB::SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations where op_status = '1'");
        
         $month = $request->month;
-        if($request->month == '1')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '1' AND year(created_at) = year(getdate()) and  op_status = '1'");
+        $query = "SELECT COUNT(id) as tot FROM jhay.orsched_reservations WHERE year(created_at) = year(getdate()) AND op_status = '1'";
+        if ($month >= 1 && $month <= 12) {
+            $query .= " AND month(created_at) = :month";
+            $tot = DB::select($query, ['month' => $month]);
+        } else {
+            $tot = DB::select($query);
         }
-        elseif($request->month == '2')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '2' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '3')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '3' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '4')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '4' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '5')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '5' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '6')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '6' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '7')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '7' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '8')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '8' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '9')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '9' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '10')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '10' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '11')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '11' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        elseif($request->month == '12')
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE month(created_at) = '12' AND year(created_at) = year(getdate()) and  op_status = '1'");
-        }
-        else
-        {
-            $tot = DB:: SELECT("SELECT COUNT (id) as tot from jhay.orsched_reservations WHERE year(created_at) = year(getdate()) and  op_status = '1'");
-        }
+
         $tot1 = DB::SELECT("SELECT COUNT(id) as tot from jhay.orsched_reservations where op_status = '1' and cast(date_finish as date) = cast(getdate() as date)");
         $patcount = count($pat);
         $patcount1 = count($patients);
@@ -134,6 +99,17 @@ class HomeController extends Controller
         WHERE accept = 1 and cast(re.created_at as date) = '$datetoday'");
         $schedcount = count($scheds);
 
+        $roomNames = [
+            1 => 'Room 1 - MIS',
+            2 => 'Room 2 - ER',
+            3 => 'Room 3 - Surgery',
+            4 => 'Room 4 - OB Gyne',
+            5 => 'Room 5 - ENT',
+            6 => 'Room 6 - Ortho',
+            7 => 'Room 7 - Ophtha',
+            8 => 'Room 8 - Surgery',
+        ];
+
         return view('home',[
             'emer'=> $emer,
             'elec'=> $elec,
@@ -152,7 +128,8 @@ class HomeController extends Controller
             'scheds' => $scheds,
             'schedcount' => $schedcount,
             'getTrigger' => $trigger,
-            'mydata' => $mydata
+            'mydata' => $mydata,
+            'roomNames' => $roomNames
         ]);
     }
 
@@ -162,7 +139,6 @@ class HomeController extends Controller
         $employeeid = $request->name;
         $namePat = $request->namePat;
         $nameEmp = $request->nameEmp;
-        // dd($patID);
 
         DB::table('jhay.orsched_patients')
         ->where('id', $id)
@@ -170,6 +146,13 @@ class HomeController extends Controller
                 'accept_by' => $nameEmp,
                 'accept' => '1'
             ]);
+
+        DB::TABLE('jhay.orsched_schedule')
+        ->where('patient_id', $id)
+        ->update([
+            'accepted_by'   => $nameEmp,
+            'accepted_at'   => now(),
+        ]);
         
         DB::table('hospital.jhay.orsched_actlog')
         ->insert([
@@ -192,13 +175,13 @@ class HomeController extends Controller
         DB::TABLE('jhay.orsched_reservations')
         ->where('patient_id', $id)
         ->update([
-            'deleted_at'    => Carbon\Carbon::now()
+            'deleted_at'    => Carbon::now()
         ]);
 
         DB::TABLE('jhay.orsched_schedule')
         ->where('patient_id', $id)
         ->update([
-            'deleted_at'    => Carbon\Carbon::now(),
+            'deleted_at'    => Carbon::now(),
             'cancel_by' => $nameEmp,
             'cancel' => 1
         ]);
@@ -215,7 +198,7 @@ class HomeController extends Controller
 
     public function cancelRemarks(Request $r) {
         $employee = Auth::user()->employeeid;
-        $today = Carbon\Carbon::now();
+        $today = Carbon::now();
         $hosp_id = $r->hospID;
         $cancelRemarks = $r->cancelRemarks;
 
@@ -309,7 +292,7 @@ class HomeController extends Controller
                 'username'     => $employee,
                 'message'      => $message,
                 'status'       => 1,
-                'created_at'   => Carbon\Carbon::now(),
+                'created_at'   => Carbon::now(),
  
             ]);
 
@@ -328,7 +311,7 @@ class HomeController extends Controller
                 'remarks'       => $prog_message,
                 'remarks_by'    => $employee,
                 'status'        => 2,
-                'updated_at'    => Carbon\Carbon::now(),
+                'updated_at'    => Carbon::now(),
             ]);
         
         return redirect()->back()->with('status', 'Programmer Feedback Successfully!');
@@ -341,7 +324,7 @@ class HomeController extends Controller
         ->where('id', $id)
         ->update([
             'status'        => 3,
-            'updated_at'    => Carbon\Carbon::now(),
+            'updated_at'    => Carbon::now(),
         ]);
 
         return redirect()->back();

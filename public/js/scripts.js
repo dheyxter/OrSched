@@ -293,7 +293,7 @@ $(function () {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Remarks Saved! :)',
+                        title: 'Remarks Saved!',
                         showConfirmButton: false,
                         timer: 1000
                     });
@@ -301,7 +301,7 @@ $(function () {
                     Swal.fire({
                         position: 'center',
                         icon: 'error',
-                        title: 'Remarks not saved :(',
+                        title: 'Remarks not saved',
                         showConfirmButton: false,
                         timer: 1000
                     });
