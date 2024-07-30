@@ -35,9 +35,9 @@ class PatientController extends Controller
 
         if($user_role == 1 || $user_role == 4) {
             $patients = DB::SELECT("SELECT * from jhay.orsched_patients as a with (nolock)
-                INNER JOIN jhay.orsched_reservations as b with (nolock) ON a.id = b.patient_id
-                INNER JOIN dbo.hpersonal as c with (nolock) ON a.entry_by = c.employeeid
-                INNER JOIN jhay.orsched_schedule as d with (nolock) ON a.id = d.patient_id
+                LEFT JOIN jhay.orsched_reservations as b with (nolock) ON a.id = b.patient_id
+                LEFT JOIN dbo.hpersonal as c with (nolock) ON a.entry_by = c.employeeid
+                LEFT JOIN jhay.orsched_schedule as d with (nolock) ON a.id = d.patient_id
                 where a.entry_by = '$employee'
                 order by a.created_at desc
             ");
