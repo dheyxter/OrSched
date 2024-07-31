@@ -529,7 +529,6 @@ class ReservationController extends Controller
     }
 
     public function addschedule(request $request) {
-        dd($request->all());
         $patID = $request->patID;
         $type = $request->type;
         $room = $request->room;
@@ -544,11 +543,13 @@ class ReservationController extends Controller
         $instru = $request->instru;
         $procedures = $request->procedures;
 
+        $surgeonJson = json_encode($surgeon);
+
         DB::table('hospital.jhay.orsched_reservations')->insert([  
             'patient_id'=>$patid,
             'room_id'=>$room,
             'type'=>$type,
-            'surgeon'=>$surgeon,
+            'surgeon'=>$surgeonJson,
             'procedures'=>$procedures,
             'entry_by'=> $emp,
             'reservation_status'=> '1',
@@ -591,9 +592,7 @@ class ReservationController extends Controller
             'annex' => $schedule_annex,
             'type' =>$type,
             'date_of_sched' => $schedule_date,
-            // 'latest_sched' => $schedule_timeout,
-            'surgeons_name' => $schedule_surgeon,
-            // 'scheduled_patient' => $schedule_patient,
+            'surgeons_name' => $surgeonJson,
             'patient_id' => $patid
         ]);
 

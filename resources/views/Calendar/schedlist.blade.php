@@ -105,13 +105,17 @@
                                     $doctors = \App\Http\Controllers\ReservationController::doclist();
                                     $surgeonIds = json_decode($sched->surgeon, true);
                                     @endphp
-                                    @foreach ($surgeonIds as $surgeonId)
-                                        @foreach ($doctors as $doctor)
-                                        @if ($doctor->employeeid == $surgeonId)
-                                        DR. {{ $doctor->firstname }} {{ $doctor->lastname }} <br>
-                                        @endif
-                                        @endforeach
+                                    @if (empty($surgeonIds))
+                                        <small>No entered surgeon/s</small>
+                                    @else
+                                        @foreach ($surgeonIds as $surgeonId)
+                                            @foreach ($doctors as $doctor)
+                                                @if ($doctor->employeeid == $surgeonId)
+                                                Dr/s. {{ $doctor->firstname }} {{ $doctor->lastname }} <br>
+                                                @endif
+                                            @endforeach
                                     @endforeach
+                                    @endif
                                 </small>
                             </td>
 
@@ -217,13 +221,17 @@
                                     $doctors = \App\Http\Controllers\ReservationController::doclist();
                                     $surgeonIds = json_decode($sched->surgeon, true);
                                     @endphp
-                                    @foreach ($surgeonIds as $surgeonId)
-                                    @foreach ($doctors as $doctor)
-                                    @if ($doctor->employeeid == $surgeonId)
-                                    DR. {{ $doctor->firstname }} {{ $doctor->lastname }} <br>
+                                    @if (empty($surgeonIds))
+                                        <small>No entered surgeon/s</small>
+                                    @else
+                                        @foreach ($surgeonIds as $surgeonId)
+                                            @foreach ($doctors as $doctor)
+                                                @if ($doctor->employeeid == $surgeonId)
+                                                Dr/s. {{ $doctor->firstname }} {{ $doctor->lastname }} <br>
+                                                @endif
+                                            @endforeach
+                                    @endforeach
                                     @endif
-                                    @endforeach
-                                    @endforeach
                                 </small>
                             </td>
 
@@ -297,8 +305,6 @@
                                     title="Cancel schedule"> Cancel</button>
                             </td>
                             @endif
-
-                          
                         </tr>
                         @endif
                         <div class="modal fade" id="btnPatDetails{{$sched->id}}" tabindex="-1"
@@ -348,13 +354,17 @@
                                                         \App\Http\Controllers\ReservationController::doclist();
                                                         $surgeonIds = json_decode($sched->surgeon, true);
                                                         @endphp
-                                                        @foreach ($surgeonIds as $surgeonId)
-                                                        @foreach ($doctors as $doctor)
-                                                        @if ($doctor->employeeid == $surgeonId)
-                                                        DR. {{ $doctor->firstname }} {{ $doctor->lastname }} ;
-                                                        @endif
-                                                        @endforeach
-                                                        @endforeach
+                                                            @if (empty($surgeonIds))
+                                                                No enntered surgeon/s
+                                                            @else
+                                                            @foreach ($surgeonIds as $surgeonId)
+                                                            @foreach ($doctors as $doctor)
+                                                            @if ($doctor->employeeid == $surgeonId)
+                                                            DR. {{ $doctor->firstname }} {{ $doctor->lastname }} ;
+                                                            @endif
+                                                            @endforeach
+                                                            @endforeach
+                                                            @endif
                                                     </span> <br>
                                                     <span>{{$sched->anesname}}</span> <br>
                                                     <span>{{$sched->procedures}}</span> <br>

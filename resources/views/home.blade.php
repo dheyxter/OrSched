@@ -102,14 +102,11 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $roomNames[$pat->annex] ?? 'Unknown Room' }}
+                                    <small>{{ $roomNames[$pat->annex] ?? 'Unknown Room' }}</small>
                                 </td>
-                                @if(App\Http\Controllers\LoggedUser::user_role()== 1 || App\Http\Controllers\LoggedUser::user_role()== 2)
                                 <td>
-                                    {{-- <a href="{{route('myschedules')}}" class="btn btn-sm btn-primary">See Details</a> --}}
                                     <small>{{$pat->accept_by}}</small>
                                 </td>
-                                @endif
                             </tr>
                             @endif
                             <div class="modal fade" id="btnPatDetails{{$pat->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -162,7 +159,7 @@
                                                         @foreach ($surgeonIds as $surgeonId)
                                                             @foreach ($doctors as $doctor)
                                                                 @if ($doctor->employeeid == $surgeonId)
-                                                                DR. {{ $doctor->firstname }} {{ $doctor->lastname }} ;
+                                                                Dr/s. {{ $doctor->firstname }} {{ $doctor->lastname }} /
                                                                 @endif
                                                             @endforeach
                                                         @endforeach
@@ -173,7 +170,7 @@
                                                     <span>{{$pat->anesname}}</span> <br>
                                                     <span>{{$pat->procedures}}</span> <br>
                                                     <span>{{$pat->instru}}</span> <br>
-                                                    <span>{{$pat->accept_by}} - <small>{{date('F d,Y h:i A', strtotime($pat->created_at))}}</small></span>
+                                                    <span>{{$pat->entry}} - <small>{{date('F d,Y h:i A', strtotime($pat->created_at))}}</small></span>
                                                     
                                                 </div>
                                             </div>
@@ -269,7 +266,7 @@
                                                     <h5>Patient: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
                                                     <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
                                                     <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
-                                                        {{ $roomNames[$pat->annex] ?? 'Unknown Room' }}
+                                                        <small>{{ $roomNames[$pat->annex] ?? 'Unknown Room' }}</small>
                                                     </h5>
                                                 </div>
                                               <div class="form-group">
@@ -288,22 +285,93 @@
                                 </td>
                             </tr>
                         </tbody>
+                            <div class="modal fade" id="btnPatDetails1{{$pat->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="exampleModalLabel"><i class="fas fa-hospital-user"></i> Patient Details</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body text-dark">
+                                        <div class="container-fluid font-weight-bold">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <span class="font-weight-normal">Hospital Number</span> <br>
+                                                    <span class="font-weight-normal">Patient Name</span> <br>
+                                                    <span class="font-weight-normal">Age</span> <br>
+                                                    <span class="font-weight-normal">Gender</span> <br>
+                                                    <span class="font-weight-normal">Department</span> <br>
+                                                    <span class="font-weight-normal">Ward</span> <br>
+                                                    <span class="font-weight-normal">Admitted Date and Time</span> <br>
+                                                    <span class="font-weight-normal">Date of Schedule</span> <br>
+                                                    <span class="font-weight-normal">Time Start</span> <br>
+                                                    <span class="font-weight-normal">Time Duration</span> <br>
+                                                    <span class="font-weight-normal">Surgeon/s</span> <br>
+                                                    <span class="font-weight-normal">Type of Anesthesia</span> <br>
+                                                    <span class="font-weight-normal">Procedure</span> <br>
+                                                    <span class="font-weight-normal">Instrument/s Needed</span> <br>
+                                                    <span class="font-weight-normal">Entry By and Date</span> <br>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <span>{{$pat->hpercode}}</span> <br>
+                                                    <span>{{$pat->patlast}}, {{$pat->patfirst}} <small>{{$pat->patmiddle}}</small></span> <br>
+                                                    <span>{{$pat->patage}} year/s old</span> <br>
+                                                    <span>{{$pat->patsex == 'M' ? 'Male' : 'Female'}}</span> <br>
+                                                    <span>{{$pat->tsdesc}} </span> <br>
+                                                    <span>{{$pat->patward}} </span> <br>
+                                                    <span>{{date('F d,Y h:i A', strtotime($pat->adm_date))}}</span> <br>
+                                                    <span>{{date('F d,Y h:i A', strtotime($pat->date_of_sched))}}</span> <br>
+                                                    <span>{{$pat->timeStart ? date('h:i A', strtotime($pat->timeStart)) : 'no time entered'}}</span> <br>
+                                                    <span>{{$pat->timeDuration}}</span><br>
+                                                    <span>
+                                                        @php
+                                                        $doctors = \App\Http\Controllers\ReservationController::doclist();
+                                                        $surgeonIds = json_decode($pat->surgeon, true);
+                                                        @endphp
+                            
+                                                        @if ($surgeonIds)
+                                                        @foreach ($surgeonIds as $surgeonId)
+                                                            @foreach ($doctors as $doctor)
+                                                                @if ($doctor->employeeid == $surgeonId)
+                                                                Dr/s. {{ $doctor->firstname }} {{ $doctor->lastname }} ;
+                                                                @endif
+                                                            @endforeach
+                                                        @endforeach
+                                                        @else
+                                                            {{$pat->surgeon}}
+                                                        @endif
+                                                    </span> <br>
+                                                    <span>{{$pat->anesname}}</span> <br>
+                                                    <span>{{$pat->procedures}}</span> <br>
+                                                    <span>{{$pat->instru}}</span> <br>
+                                                    <span>{{$pat->entry}} - <small>{{date('F d,Y h:i A', strtotime($pat->created_at))}}</small></span>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
                         @endforeach
-                        @elseif(App\Http\Controllers\LoggedUser::getUser() &&
-                        App\Http\Controllers\LoggedUser::user_role()==1 ||
-                        App\Http\Controllers\LoggedUser::user_role()==2 ||
-                        App\Http\Controllers\LoggedUser::user_role()==3)
+                        @elseif(App\Http\Controllers\LoggedUser::getUser() && App\Http\Controllers\LoggedUser::user_role()==1 ||  App\Http\Controllers\LoggedUser::user_role()==2 || App\Http\Controllers\LoggedUser::user_role()==3)
                         @foreach($patients as $pat)
                         <tbody>
                             <tr>
                                 <td>
-                                    <input type="text" data-id="{{$pat->id}}" hidden>
-                                    <a class="btnpatientdetails" data-toggle="tooltip" data-placement="top"
-                                        title="Click to View Details" style="color: black" data-id="{{$pat->id}}"><img
-                                            class="mr-1" src="../img/plastic-surgery.png" height="30" width="30"
-                                            alt=""><b class="font-weight-bold">{{$pat->patlast}},</b> {{$pat->patfirst}}
-                                        <small class="text-muted">{{$pat->patmiddle}}</small></a>
-                                </td>
+                                    <button class="btn btn-sm" data-toggle="modal" data-target="#btnPatDetails1{{$pat->id}}">
+                                        <small data-toggle="tooltip" data-placement="top" title="Click to View Details">
+                                            <img class="mr-1" src="../img/plastic-surgery.png" height="30" width="30" alt="">
+                                            <b class="font-weight-bold">{{$pat->patlast}},</b> {{$pat->patfirst}}
+                                                <small class="text-muted">{{$pat->patmiddle}}</small>
+                                        </small>
+                                        </button>
+                                    </td>
                                 <td><small>{{$pat->patward}}</small></td>
                                 <td>
                                     @if(substr($pat->enccode, 0,2) == 'ER' )
@@ -347,7 +415,7 @@
                                                             <h5>Patient: <b>{{$pat->patlast}},</b> {{$pat->patfirst}}, <small class="text-muted">{{$pat->patmiddle}}</small></h5>
                                                             <span class="text-danger"><b>Schedule Date:</b>  <b>{{date('F j, Y', strtotime($pat->date_of_sched))}}</b></span>
                                                             <h5 class="text-danger"><i class="fa-solid fa-hospital"></i>:  
-                                                                {{ $roomNames[$pat->annex] ?? 'Unknown Room' }}
+                                                                <small>{{ $roomNames[$pat->annex] ?? 'Unknown Room' }}</small>
                                                             </h5>
                                                         </div>
                                                         <div class="form-group">
@@ -385,82 +453,80 @@
                                 </td>
                             </tr>
                         </tbody>
-
-                        <div class="modal fade" id="btnPatDetails1{{$pat->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                    <h3 class="modal-title" id="exampleModalLabel"><i class="fas fa-hospital-user"></i> Patient Details</h3>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body text-dark">
-                                    <div class="container-fluid font-weight-bold">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <span class="font-weight-normal">Hospital Number</span> <br>
-                                                <span class="font-weight-normal">Patient Name</span> <br>
-                                                <span class="font-weight-normal">Age</span> <br>
-                                                <span class="font-weight-normal">Gender</span> <br>
-                                                <span class="font-weight-normal">Department</span> <br>
-                                                <span class="font-weight-normal">Ward</span> <br>
-                                                <span class="font-weight-normal">Admitted Date and Time</span> <br>
-                                                <span class="font-weight-normal">Date of Schedule</span> <br>
-                                                <span class="font-weight-normal">Time Start</span> <br>
-                                                <span class="font-weight-normal">Time Duration</span> <br>
-                                                <span class="font-weight-normal">Surgeon/s</span> <br>
-                                                <span class="font-weight-normal">Type of Anesthesia</span> <br>
-                                                <span class="font-weight-normal">Procedure</span> <br>
-                                                <span class="font-weight-normal">Instrument/s Needed</span> <br>
-                                                <span class="font-weight-normal">Entry By and Date</span> <br>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <span>{{$pat->hpercode}}</span> <br>
-                                                <span>{{$pat->patlast}}, {{$pat->patfirst}} <small>{{$pat->patmiddle}}</small></span> <br>
-                                                <span>{{$pat->patage}} year/s old</span> <br>
-                                                <span>{{$pat->patsex == 'M' ? 'Male' : 'Female'}}</span> <br>
-                                                <span>{{$pat->tsdesc}} </span> <br>
-                                                <span>{{$pat->patward}} </span> <br>
-                                                <span>{{date('F d,Y h:i A', strtotime($pat->adm_date))}}</span> <br>
-                                                <span>{{date('F d,Y h:i A', strtotime($pat->date_of_sched))}}</span> <br>
-                                                <span>{{$pat->timeStart ? date('h:i A', strtotime($pat->timeStart)) : 'no time entered'}}</span> <br>
-                                                <span>{{$pat->timeDuration}}</span><br>
-                                                <span>
-                                                    @php
-                                                    $doctors = \App\Http\Controllers\ReservationController::doclist();
-                                                    $surgeonIds = json_decode($pat->surgeon, true);
-                                                    @endphp
-                        
-                                                    @if ($surgeonIds)
-                                                    @foreach ($surgeonIds as $surgeonId)
-                                                        @foreach ($doctors as $doctor)
-                                                            @if ($doctor->employeeid == $surgeonId)
-                                                            DR. {{ $doctor->firstname }} {{ $doctor->lastname }} ;
-                                                            @endif
+                        @endforeach
+                            <div class="modal fade" id="btnPatDetails1{{$pat->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="exampleModalLabel"><i class="fas fa-hospital-user"></i> Patient Details</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body text-dark">
+                                        <div class="container-fluid font-weight-bold">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <span class="font-weight-normal">Hospital Number</span> <br>
+                                                    <span class="font-weight-normal">Patient Name</span> <br>
+                                                    <span class="font-weight-normal">Age</span> <br>
+                                                    <span class="font-weight-normal">Gender</span> <br>
+                                                    <span class="font-weight-normal">Department</span> <br>
+                                                    <span class="font-weight-normal">Ward</span> <br>
+                                                    <span class="font-weight-normal">Admitted Date and Time</span> <br>
+                                                    <span class="font-weight-normal">Date of Schedule</span> <br>
+                                                    <span class="font-weight-normal">Time Start</span> <br>
+                                                    <span class="font-weight-normal">Time Duration</span> <br>
+                                                    <span class="font-weight-normal">Surgeon/s</span> <br>
+                                                    <span class="font-weight-normal">Type of Anesthesia</span> <br>
+                                                    <span class="font-weight-normal">Procedure</span> <br>
+                                                    <span class="font-weight-normal">Instrument/s Needed</span> <br>
+                                                    <span class="font-weight-normal">Entry By and Date</span> <br>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <span>{{$pat->hpercode}}</span> <br>
+                                                    <span>{{$pat->patlast}}, {{$pat->patfirst}} <small>{{$pat->patmiddle}}</small></span> <br>
+                                                    <span>{{$pat->patage}} year/s old</span> <br>
+                                                    <span>{{$pat->patsex == 'M' ? 'Male' : 'Female'}}</span> <br>
+                                                    <span>{{$pat->tsdesc}} </span> <br>
+                                                    <span>{{$pat->patward}} </span> <br>
+                                                    <span>{{date('F d,Y h:i A', strtotime($pat->adm_date))}}</span> <br>
+                                                    <span>{{date('F d,Y h:i A', strtotime($pat->date_of_sched))}}</span> <br>
+                                                    <span>{{$pat->timeStart ? date('h:i A', strtotime($pat->timeStart)) : 'no time entered'}}</span> <br>
+                                                    <span>{{$pat->timeDuration}}</span><br>
+                                                    <span>
+                                                        @php
+                                                        $doctors = \App\Http\Controllers\ReservationController::doclist();
+                                                        $surgeonIds = json_decode($pat->surgeon, true);
+                                                        @endphp
+                            
+                                                        @if ($surgeonIds)
+                                                        @foreach ($surgeonIds as $surgeonId)
+                                                            @foreach ($doctors as $doctor)
+                                                                @if ($doctor->employeeid == $surgeonId)
+                                                                Dr/s. {{ $doctor->firstname }} {{ $doctor->lastname }} /
+                                                                @endif
+                                                            @endforeach
                                                         @endforeach
-                                                    @endforeach
-                                                    @else
-                                                        {{$pat->surgeon}}
-                                                    @endif
-                                                </span> <br>
-                                                <span>{{$pat->anesname}}</span> <br>
-                                                <span>{{$pat->procedures}}</span> <br>
-                                                <span>{{$pat->instru}}</span> <br>
-                                                <span>{{$pat->accept_by}} - <small>{{date('F d,Y h:i A', strtotime($pat->created_at))}}</small></span>
-                                                
+                                                        @else
+                                                            {{$pat->surgeon}}
+                                                        @endif
+                                                    </span> <br>
+                                                    <span>{{$pat->anesname}}</span> <br>
+                                                    <span>{{$pat->procedures}}</span> <br>
+                                                    <span>{{$pat->instru}}</span> <br>
+                                                    <span>{{$pat->entry_by}} - <small>{{date('F d,Y h:i A', strtotime($pat->created_at))}}</small></span>
+                                                    
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
                                 </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
-                              </div>
                             </div>
-                        </div>
-                        @endforeach
-
                         @endif
                     </table>
                     @else
