@@ -156,7 +156,7 @@ class AuthLogin extends Controller
 
     public function tunnel(Request $r) {
         $empid = $r->empid;
-        $enctr = $r->enctr;
+        $enctr = $r->enccode;
 
    
     if(Auth::check()) {
@@ -200,12 +200,14 @@ class AuthLogin extends Controller
         // get hpercode
        
         // check if encounter was present and entered by current logged user
-        $check  = DB::TABLE('jhay.orsched_patients')->where('enccode', $enctr)->where('entry_by')->first();
+        $check  = DB::TABLE('jhay.orsched_patients')->where('enccode', $enctr)->where('entry_by', $empid)->first();
 
         // if checked was not valid, get the encounter based on the conditions
         if(!$check) {
             // $gethpercode = $f_check->hpercode;
-            $gethpercode = DB::TABLE('dbo.hadmlog')->where('enccode', $enctr)->where('admstat', 'A')->first();
+            $gethpercode = DB::TABLE('dbo.hadmlog')->where('enccode', $enctr)->first();
+            dd($gethpercode);
+           
             $enctrs = DB::SELECT("SELECT TOP 1 * from dex.AllPatEncounters('$gethpercode->hpercode') where admstat = 'A' order by admdate desc");    
             $enccode    =  $enctrs[0]->enccode;
             $hpercode   =  $enctrs[0]->hpercode;
