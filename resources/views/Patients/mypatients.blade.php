@@ -12,116 +12,106 @@
     </div>
     
 </div>
-<div class="row">
-    <div class="col row">
-        <div class="col-lg-12">
-        </div>
-        <div class="col">
-            <div class="">
-                <div class="card-body" style="width: 100%; height: 750px; overflow: auto;">
-                    <table class="table table-condensed table-hover table-striped" id="myTable1">
-                        <thead class="bg-secondary text-light">
-                            <tr>
-                                <th>Hospital #</th>
-                                <th>Full Name</th>
-                                <th>Age</th>
-                                <th>Gender</th>
-                                <th>Ward</th>
-                                <th>Type</th>
-                                <th>Admission Date and Time</th>
-                                <th>Scheduled Date</th>
-                                <th>Action</th>
-                                @if($user_role == 1)
-                                <th>Entry by</th>
-                                @endif
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($patients as $pat)
-                            <tr>
-                                <td>
-                                    <span class="text-muted"><small>{{$pat->hpercode}}</small></span>
-                                </td>
-                                <td>
-                                    <b>{{$pat->patlast}},</b> {{$pat->patfirst}} <small
-                                        class="text-muted">{{$pat->patmiddle}}</small>
-                                </td>
-                                <td>
-                                    {{$pat->patage}}
-                                </td>
-                                <td>
-                                    @if($pat->patsex == 'F')
-                                    Female
-                                    @else
-                                    Male
-                                    @endif
-                                </td>
-                                <td>
-                                    {{$pat->patward}}
-                                </td>
-                                <td>
-                                    @if(substr($pat->enccode, 0,2) == 'ER' )
-                                    <span class="badge badge-danger">ER</span>
-                                    @elseif(substr($pat->enccode, 0,2) == 'AD')
-                                    <span class="badge badge-success">ADM</span>
-                                    @else
-                                    <span class="badge badge-primary"> OPD</span>
-                                    @endif
+<div class="card">
+    <div class="card-body" >
+        <table class="table table-sm table-condensed table-hover table-striped" id="myTable1">
+            <thead class="bg-secondary text-light">
+                <tr>
+                    <th>Hospital #</th>
+                    <th>Full Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Ward</th>
+                    <th>Type</th>
+                    <th>Admission Date and Time</th>
+                    <th>Scheduled Date</th>
+                    <th>Action</th>
+                    @if($user_role == 1)
+                    <th>Entry by</th>
+                    @endif
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($patients as $pat)
+                <tr>
+                    <td>
+                        <span class="text-muted"><small>{{$pat->hpercode}}</small></span>
+                    </td>
+                    <td>
+                        <b>{{$pat->patlast}},</b> {{$pat->patfirst}} <small
+                            class="text-muted">{{$pat->patmiddle}}</small>
+                    </td>
+                    <td>
+                        {{$pat->patage}}
+                    </td>
+                    <td>
+                        @if($pat->patsex == 'F')
+                        Female
+                        @else
+                        Male
+                        @endif
+                    </td>
+                    <td>
+                        {{$pat->patward}}
+                    </td>
+                    <td>
+                        @if(substr($pat->enccode, 0,2) == 'ER' )
+                        <span class="badge badge-danger">ER</span>
+                        @elseif(substr($pat->enccode, 0,2) == 'AD')
+                        <span class="badge badge-success">ADM</span>
+                        @else
+                        <span class="badge badge-primary"> OPD</span>
+                        @endif
 
-                                </td>
-                                <td>
-                                    <small>{{date('F j, Y, g:i a', strtotime($pat->adm_date))}}</small>
-                                </td>
-                                @if($pat->date_of_sched == NULL)
-                                <td>
-                                    <small><span class="badge badge-pill badge-dark">No Scheduled date </span></small>
-                                </td>
-                                @else
-                                <td>
-                                    <small>{{date('F j, Y', strtotime($pat->date_of_sched))}}</small>
-                                </td>
-                                @endif
-                                <td>
-                                    @if($pat->scheduled == NULL)
-                                    <div class="row">
-                                        <span class="text-muted mr-1">No schedule yet</span>
-                                        @if(App\Http\Controllers\LoggedUser::getuser())
-                                        <form action="{{route('myschedules')}}" method="POST">
-                                            @csrf
-                                            <input name="myTrigger" type="hidden" value="test" hidden>
-                                            <input type="text" value="{{$pat->hpercode}}" name="hpercode" hidden>
-                                            <button class=" ml-1 mx-auto btn btn-outline-primary btn-sm">Create Schedule</button>
-                                        </form>
-                                        @endif
-                                    </div>
-                                    @elseif($pat->accept == NULL)
-                                    <span class="font-weight-bold text-primary">Waiting to Accept</span>
-                                    @else
-                                    <span class="font-weight-bold">Scheduled </span>
-                                    @if(App\Http\Controllers\LoggedUser::getuser())
-                                    <form action="{{route('myschedules')}}" method="POST">
-                                        @csrf
-                                        <input name="myTrigger" type="hidden" value="test" hidden>
-                                        <input type="text" value="{{$pat->hpercode}}" name="hpercode" hidden>
-                                        <button class=" ml-1 mx-auto btn btn-outline-danger btn-sm">Create Another Schedule</button>
-                                    </form>
-                                    @endif
-                                    @endif
-                                </td>
-                                @if(App\Http\Controllers\LoggedUser::user_role() == 1)
-                                <td>
-                                    <small>{{$pat->lastname}}, {{$pat->firstname}} {{$pat->middlename}}</small>
-                                </td>
-                                @endif
+                    </td>
+                    <td>
+                        <small>{{date('F j, Y, g:i a', strtotime($pat->adm_date))}}</small>
+                    </td>
+                    @if($pat->date_of_sched == NULL)
+                    <td>
+                        <small><span class="badge badge-pill badge-dark">No Scheduled date </span></small>
+                    </td>
+                    @else
+                    <td>
+                        <small>{{date('F j, Y', strtotime($pat->date_of_sched))}}</small>
+                    </td>
+                    @endif
+                    <td>
+                        @if($pat->scheduled == NULL)
+                            <small>No schedule yet</small>
+                            {{-- <span class="text-muted mr-1">No schedule yet</span> --}}
+                            @if(App\Http\Controllers\LoggedUser::getuser())
+                            <form action="{{route('myschedules')}}" method="POST">
+                                @csrf
+                                <input name="myTrigger" type="hidden" value="test" hidden>
+                                <input type="text" value="{{$pat->hpercode}}" name="hpercode" hidden>
+                                <button class=" btn btn-outline-primary btn-sm">Create Schedule</button>
+                            </form>
+                            @endif
+                        @elseif($pat->accept == NULL)
+                        <span class="font-weight-bold text-primary">Waiting to Accept</span>
+                        @else
+                        <span class="font-weight-bold">Scheduled </span>
+                        @if(App\Http\Controllers\LoggedUser::getuser())
+                        <form action="{{route('myschedules')}}" method="POST">
+                            @csrf
+                            <input name="myTrigger" type="hidden" value="test" hidden>
+                            <input type="text" value="{{$pat->hpercode}}" name="hpercode" hidden>
+                            <button class=" btn btn-outline-danger btn-sm">Create Another Schedule</button>
+                        </form>
+                        @endif
+                        @endif
+                    </td>
+                    @if(App\Http\Controllers\LoggedUser::user_role() == 1)
+                    <td>
+                        <small>{{$pat->lastname}}, {{$pat->firstname}} {{$pat->middlename}}</small>
+                    </td>
+                    @endif
 
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 

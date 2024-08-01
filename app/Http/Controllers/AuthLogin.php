@@ -151,14 +151,12 @@ class AuthLogin extends Controller
             }
         }
     }
-
         // http://192.168.7.82:81/orsched_tunnel?empid=BALDEX&enctr=ADM1568842Jul302024175207
 
     public function tunnel(Request $r) {
         $empid = $r->empid;
-        $enctr = $r->enccode;
+        $enctr = $r->enctr;
 
-   
     if(Auth::check()) {
         if( Auth::User()->employeeid ==  $empid){
             $this->get_enccode($enctr, $empid);
@@ -197,16 +195,13 @@ class AuthLogin extends Controller
     public function get_enccode($enctr, $empid) {
         // check first if encounter is existing
         $f_check  = DB::TABLE('jhay.orsched_patients')->where('enccode', $enctr)->first();
-        // get hpercode
        
         // check if encounter was present and entered by current logged user
         $check  = DB::TABLE('jhay.orsched_patients')->where('enccode', $enctr)->where('entry_by', $empid)->first();
-
         // if checked was not valid, get the encounter based on the conditions
         if(!$check) {
             // $gethpercode = $f_check->hpercode;
             $gethpercode = DB::TABLE('dbo.hadmlog')->where('enccode', $enctr)->first();
-            dd($gethpercode);
            
             $enctrs = DB::SELECT("SELECT TOP 1 * from dex.AllPatEncounters('$gethpercode->hpercode') where admstat = 'A' order by admdate desc");    
             $enccode    =  $enctrs[0]->enccode;

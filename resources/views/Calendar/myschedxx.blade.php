@@ -503,7 +503,8 @@
     </div>
 </div>
 @endforeach
-@elseif(App\Http\Controllers\LoggedUser::getUser() && App\Http\Controllers\LoggedUser::user_role()==1 || App\Http\Controllers\LoggedUser::user_role()==2)
+@elseif(App\Http\Controllers\LoggedUser::getUser() && App\Http\Controllers\LoggedUser::user_role()==1 ||
+App\Http\Controllers\LoggedUser::user_role()==2)
 @foreach($scheds as $pats)
 <div class="modal fade changeTimeModal" id="changeTimeModal{{$pats->id}}" role="dialog">
     <div class="modal-dialog ">
@@ -621,10 +622,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label for="date" class="col-sm-3 col-form-label" value="{{date('d-m-Y', strtotime($datetoday))}}">Date of Operation:</label>
+                        <label for="date" class="col-sm-3 col-form-label"
+                            value="{{date('d-m-Y', strtotime($datetoday))}}">Date of Operation:</label>
                         <div class="col-sm-9">
-                            {{-- <input type="date" id="date" name="date" class="form-control font-weight-bold" readonly
-                                hidden> --}}
                             <input type="date" id="date" name="date" class="form-control is-invalid font-weight-bold"
                                 required>
                             <div class="invalid-feedback">
@@ -652,25 +652,26 @@
                         <label for="room" class="col-sm-3 col-form-label">Room:</label>
                         <div class="col-sm-9">
                             @php
-                                $rooms = [
-                                    1 => 'Room 1 - MIS',
-                                    2 => 'Room 2 - ER',
-                                    3 => 'Room 3 - Surgery',
-                                    4 => 'Room 4 - OB Gyne',
-                                    5 => 'Room 5 - ENT',
-                                    6 => 'Room 6 - Ortho',
-                                    7 => 'Room 7 - Ophtha',
-                                    8 => 'Room 8 - Surgery',
-                                ];
+                            $rooms = [
+                            1 => 'Room 1 - MIS',
+                            2 => 'Room 2 - ER',
+                            3 => 'Room 3 - Surgery',
+                            4 => 'Room 4 - OB Gyne',
+                            5 => 'Room 5 - ENT',
+                            6 => 'Room 6 - Ortho',
+                            7 => 'Room 7 - Ophtha',
+                            8 => 'Room 8 - Surgery',
+                            ];
                             @endphp
-                            
+
                             <select name="room" id="room" class="form-control is-invalid">
                                 <option value="0" disabled>Select Annex / Room</option>
                                 @foreach ($rooms as $key => $room)
-                                    <option value="{{ $key }}" {{ $roomtoday == $key ? 'selected' : '' }}>{{ $room }}</option>
+                                <option value="{{ $key }}" {{ $roomtoday == $key ? 'selected' : '' }}>{{ $room }}
+                                </option>
                                 @endforeach
                             </select>
-                        
+
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -703,7 +704,7 @@
                         <label for="procedure" class="col-sm-3 col-form-label">Total Schedule:</label>
                         <div class="col-sm-9">
                             <span id="full_time"><span id="show_time"></span>
-                            <input type="text" id="show_time" hidden>
+                                <input type="text" id="show_time" hidden>
                         </div>
                     </div>
 
@@ -719,9 +720,9 @@
                         <div class="col-sm-9">
                             <input type="text" name="timeDuration" id="timeDuration" class="form-control is-invalid"
                                 placeholder="indicate number of hours only">
-                                <div class="invalid-feedback">
-                                    required
-                                </div>
+                            <div class="invalid-feedback">
+                                required
+                            </div>
                         </div>
                     </div>
 
@@ -745,8 +746,8 @@
                     <div class="form-group row">
                         <label for="surgeon" class="col-sm-3 col-form-label">Surgeon:</label>
                         <div class="col-sm-9">
-                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple data-live-search="true"
-                                required>
+                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple
+                                data-live-search="true" required>
                                 <option disabled value="">-- Select Surgeon --</option>
                                 @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
                                 <option value="{{$doclist->employeeid}}">
@@ -781,7 +782,8 @@
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Planned Procedure:</label>
                         <div class="col-sm-9">
-                            <textarea id="procedures" name="procedures" class="form-control is-invalid" rows="3" required> </textarea>
+                            <textarea id="procedures" name="procedures" class="form-control is-invalid" rows="3"
+                                required> </textarea>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -791,7 +793,8 @@
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Instruments Needed:</label>
                         <div class="col-sm-9">
-                            <textarea id="instru" name="instru" class="form-control is-invalid" rows="2" required></textarea>
+                            <textarea id="instru" name="instru" class="form-control is-invalid" rows="2"
+                                required></textarea>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -801,20 +804,21 @@
                     <div class="form-group row">
                         <label for="procedure" class="col-sm-3 col-form-label">Other Instruments Needed:</label>
                         <div class="col-sm-9">
-                            <textarea id="other_instru" name="other_instru" class="form-control is-invalid" rows="2" required></textarea>
+                            <textarea id="other_instru" name="other_instru" class="form-control is-invalid" rows="2"
+                                required></textarea>
                             <div class="invalid-feedback">
                                 required
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn shadow btn-primary btnAddSchedule" id="btnAddSchedule">Add</button>
+                    <button type="button" class="btn shadow btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn shadow btn-primary btnAddSchedule" id="btnAddSchedule">Add</button>
-        <button type="button" class="btn shadow btn-danger" data-dismiss="modal">Close</button>
-    </div>
-</div>
-</form>
-</div>
 </div>
 
 {{-- EMERGENT SCHEDULE --}}
@@ -833,7 +837,8 @@
                     <div class="form-group row">
                         <label for="date" class="col-sm-3 col-form-label">Date of Operation:</label>
                         <div class="col-sm-9">
-                            <input type="date" id="date" name="date" class="form-control is-invalid font-weight-bold" required>
+                            <input type="date" id="date" name="date" class="form-control is-invalid font-weight-bold"
+                                required>
                             <div class="invalid-feedback">
                                 required
                             </div>
@@ -857,22 +862,23 @@
                         <label for="room" class="col-sm-3 col-form-label">Annex / Room:</label>
                         <div class="col-sm-9">
                             @php
-                                $rooms = [
-                                    1 => 'Room 1 - MIS',
-                                    2 => 'Room 2 - ER',
-                                    3 => 'Room 3 - Surgery',
-                                    4 => 'Room 4 - OB Gyne',
-                                    5 => 'Room 5 - ENT',
-                                    6 => 'Room 6 - Ortho',
-                                    7 => 'Room 7 - Ophtha',
-                                    8 => 'Room 8 - Surgery',
-                                ];
+                            $rooms = [
+                            1 => 'Room 1 - MIS',
+                            2 => 'Room 2 - ER',
+                            3 => 'Room 3 - Surgery',
+                            4 => 'Room 4 - OB Gyne',
+                            5 => 'Room 5 - ENT',
+                            6 => 'Room 6 - Ortho',
+                            7 => 'Room 7 - Ophtha',
+                            8 => 'Room 8 - Surgery',
+                            ];
                             @endphp
 
                             <select name="room" id="room" class="form-control is-invalid">
                                 <option value="0" disabled>Select Annex / Room</option>
                                 @foreach ($rooms as $key => $room)
-                                    <option value="{{ $key }}" {{ $roomtoday == $key ? 'selected' : '' }}>{{ $room }}</option>
+                                <option value="{{ $key }}" {{ $roomtoday == $key ? 'selected' : '' }}>{{ $room }}
+                                </option>
                                 @endforeach
                             </select>
 
@@ -947,8 +953,8 @@
                     <div class="form-group row">
                         <label for="surgeon" class="col-sm-3 col-form-label">Surgeon:</label>
                         <div class="col-sm-9">
-                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple data-live-search="true"
-                                required>
+                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple
+                                data-live-search="true" required>
                                 <option disabled value="">-- Select Surgeon --</option>
                                 @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)
                                 <option value="{{$doclist->employeeid}}">
@@ -985,9 +991,9 @@
                         <div class="col-sm-9">
                             <textarea id="procedures" name="procedures" class="form-control is-invalid" rows="3"
                                 required></textarea>
-                                <div class="invalid-feedback">
-                                    required
-                                </div>
+                            <div class="invalid-feedback">
+                                required
+                            </div>
                         </div>
                     </div>
 
@@ -1006,7 +1012,6 @@
         </form>
     </div>
 </div>
-{{-- @endif --}}
 @endsection
 
 @section('script')

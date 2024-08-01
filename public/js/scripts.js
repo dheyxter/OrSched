@@ -482,7 +482,6 @@ $(function () {
         // } else {
         //ALL THE VALIDATIONS ARE FALSE
         if ($show_time >= 0) {
-
             Swal.fire({
                 title: 'Confirmation',
                 text: "Are you sure about the details on scheduling?",
