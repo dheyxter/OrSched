@@ -17,7 +17,6 @@ class PatientController extends Controller
     public function index()
     {
         $patients = patient::with('reservation')->get();
-        // $patients = DB::SELECT("SELECT * FROM hospital.jhay.orsched_patients ORDER BY created_at DESC");
         $hpersonal = DB::SELECT("EXEC [hospital].[jhay].[spIntranetmydata] '".Auth::user()->employeeid."'");
         return view('Patients.index', compact(
             'hpersonal',
@@ -39,6 +38,7 @@ class PatientController extends Controller
                 LEFT JOIN dbo.hpersonal as c with (nolock) ON a.entry_by = c.employeeid
                 LEFT JOIN jhay.orsched_schedule as d with (nolock) ON a.id = d.patient_id
                 where a.entry_by = '$employee'
+                AND year(a.created_at) = year(getdate())
                 order by a.created_at desc
             ");
 

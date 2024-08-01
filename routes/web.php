@@ -26,14 +26,9 @@ Route::any('/logout', 'AuthLogout@logout')->name('logout');
 Route::any('/', 'AuthLogin@login')->name('check');
 
 Route::post('/login-api','AuthLogin@login_api')->name('login_api');
+Route::get('/orsched_tunnel','AuthLogin@tunnel')->name('orsched_tunnel');
 
 Route::middleware('auth')->group (function (){
-
-    // Route::get('/', function () {
-    //     return view('/home');
-    // });
-
-    // Route::get('/', 'HomeController@index')->name('home');
     Route::get('/', 'MainHomeController@index')->name('homepage\master_index');
     Route::get('/orScheduler', 'HomeController@index')->name('home');
     Route::GET('/selectAnes', 'HomeController@index')->name('selectAnes');

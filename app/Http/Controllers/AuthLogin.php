@@ -21,8 +21,7 @@ class AuthLogin extends Controller
 
     }
 
-    public static function authCDOEAccount(Request $request)
-    {
+    public static function authCDOEAccount(Request $request) {
          $username = $request->username;
         $password = $request->password;
         
@@ -38,7 +37,6 @@ class AuthLogin extends Controller
     }
 
     public function login_api(Request $request) {
-
         
         $username = $request->username;
         $password = $request->password;
@@ -152,10 +150,91 @@ class AuthLogin extends Controller
 
             }
         }
-        
+    }
 
-       
+        // http://192.168.7.82:81/orsched_tunnel?empid=BALDEX&enctr=ADM1568842Jul302024175207
 
+    public function tunnel(Request $r) {
+        $empid = $r->empid;
+        $enctr = $r->enctr;
 
+   
+    if(Auth::check()) {
+        if( Auth::User()->employeeid ==  $empid){
+            $this->get_enccode($enctr, $empid);
+            return redirect()->route('mypatients');
+        } else {
+            $check = DB::TABLE('jhay.orsched_user')->where('employeeid', $empid)->first();
+             $this->get_enccode($enctr, $empid);
+           
+            Auth::loginUsingId($check->employeeid);
+            return redirect()->route('mypatients');
+        }
+    } else {
+        $check = DB::TABLE('jhay.orsched_user')->where('employeeid', $empid)->first();
+            if($check) {
+                 $this->get_enccode($enctr, $empid);
+                Auth::loginUsingId($check->employeeid);
+            } else {
+                $getuser = DB::TABLE('hospital.dbo.hpersonal')->where('employeeid', $empid)->where('empstat', 'A')->first();
+                if($getuser) {
+                    DB::TABLE('jhay.orsched_user')->insert([
+                        'employeeid'    => $getuser->employeeid,
+                        'user_role'     => 0,
+                        'is_confirm'    => 1,
+                        'created_at'    => now()
+                    ]);
+                    $this->get_enccode($enctr, $empid);
+                    Auth::loginUsingId($check->employeeid);
+                } else {
+                    return response()->json(['error' => 'Unauthorized access'], 403);
+                } 
+            }
+        return redirect()->route('mypatients');
+    }
+ }
+
+    public function get_enccode($enctr, $empid) {
+        // check first if encounter is existing
+        $f_check  = DB::TABLE('jhay.orsched_patients')->where('enccode', $enctr)->first();
+        // get hpercode
+        $gethpercode = $f_check->hpercode;
+        // check if encounter was present and entered by current logged user
+        $check  = DB::TABLE('jhay.orsched_patients')->where('enccode', $enctr)->where('entry_by')->first();
+
+        // if checked was not valid, get the encounter based on the conditions
+        if(!$check) {
+            $enctrs = DB::SELECT("SELECT TOP 1 * from dex.AllPatEncounters('$gethpercode') where admstat = 'A' order by admdate desc");    
+            $enccode    =  $enctrs[0]->enccode;
+            $hpercode   =  $enctrs[0]->hpercode;
+            $patlast    =  $enctrs[0]->patlast;
+            $patfirst   =  $enctrs[0]->patfirst;
+            $patmiddle  =  $enctrs[0]->patmiddle;
+            $patage     =  $enctrs[0]->patage;
+            $patsex     =  $enctrs[0]->patsex;
+            $tscode     =  $enctrs[0]->tscode;
+            $ward       =  $enctrs[0]->ward;
+            $admdate    =  $enctrs[0]->admdate;
+            $adm_time   =  $enctrs[0]->admdate;
+          
+            DB::TABLE('jhay.orsched_patients')
+            ->insert([
+                'enccode'   => $enccode,
+                'hpercode'  => $hpercode,
+                'patlast'   => $patlast,
+                'patfirst'  => $patfirst,
+                'patmiddle' => $patmiddle,
+                'patage'    => $patage,
+                'patsex'    => $patsex,
+                'tscode'    => $tscode,
+                'patward'   => $ward,
+                'adm_date'  => $admdate,
+                'adm_time'  => $admdate,
+                'entry_by'  => $empid,
+                'created_at' => now()
+            ]);
+        } else {
+            return response()->json(['error' => 'Unauthorized access'], 403);
+        }
     }
 }
