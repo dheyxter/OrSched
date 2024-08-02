@@ -515,7 +515,7 @@
                                                     <span>{{$pat->anesname}}</span> <br>
                                                     <span>{{$pat->procedures}}</span> <br>
                                                     <span>{{$pat->instru}}</span> <br>
-                                                    <span>{{$pat->entry_by}} - <small>{{date('F d,Y h:i A', strtotime($pat->created_at))}}</small></span>
+                                                    <span>{{$pat->firstname}} {{$pat->lastname}} - <small>{{date('F d,Y h:i A', strtotime($pat->created_at))}}</small></span>
                                                     
                                                 </div>
                                             </div>

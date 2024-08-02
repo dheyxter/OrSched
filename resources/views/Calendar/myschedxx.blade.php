@@ -20,17 +20,6 @@
 </div>
 <hr>
 <div class="row">
-    <div class="col">
-        {{-- <button class="btn btn-outline-primary btn-lg shadow" data-toggle="modal" data-target="#addschedule">
-            Add Schedule
-            <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-plus mb-1" fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd"
-                    d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z" />
-                <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z" />
-            </svg>
-        </button> --}}
-    </div>
     <div class="col float-right">
         <div class="row">
             <div class="col">
@@ -50,76 +39,28 @@
                         </div>
                         <select class="form-control" type="text" class="selectroom" id="selectroom" name="selectroom">
 
+                            @php
+                                $rooms = [
+                                    1 => 'Annex 1 - Private',
+                                    2 => 'Annex 2 - Private',
+                                    3 => 'Annex 3 - Private',
+                                    4 => 'Room 1 - ER',
+                                    5 => 'Room 2 - Optha',
+                                    6 => 'Room 3',
+                                    7 => 'Room 4',
+                                    8 => 'Room 5',
+                                    9 => 'Room 6',
+                                    10 => 'Room 7 - Optha',
+                                    11 => 'Room 8',
+                                    12 => 'Covid Room'
+                                ];
+                            @endphp
+
                             <option value="0" disabled>Select Annex / Room</option>
+                            @foreach($rooms as $key => $name)
+                                <option value="{{ $key }}" {{ $roomtoday == $key ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
 
-                            @if ($roomtoday == 1)
-                            <option value="1" selected>Annex 1 - Private</option>
-                            @else
-                            <option value="1">Annex 1 - Private</option>
-                            @endif
-
-                            @if ($roomtoday == 2)
-                            <option value="2" selected>Annex 2 - Private</option>
-                            @else
-                            <option value="2">Annex 2 - Private</option>
-                            @endif
-
-                            @if ($roomtoday == 3)
-                            <option value="3" selected>Annex 3 - Private</option>
-                            @else
-                            <option value="3">Annex 3 - Private</option>
-                            @endif
-                            @if ($roomtoday == 4)
-                            <option value="4" selected>Room 1 - ER</option>
-                            @else
-                            <option value="4">Room 1 - ER</option>
-                            @endif
-
-                            @if ($roomtoday == 5)
-                            <option value="5" selected>Room 2 - Optha</option>
-                            @else
-                            <option value="5">Room 2 - Optha</option>
-                            @endif
-
-                            @if ($roomtoday == 6)
-                            <option value="6" selected>Room 3</option>
-                            @else
-                            <option value="6">Room 3</option>
-                            @endif
-
-                            @if ($roomtoday == 7)
-                            <option value="7" selected>Room 4</option>
-                            @else
-                            <option value="7">Room 4</option>
-                            @endif
-
-                            @if ($roomtoday == 8)
-                            <option value="8" selected>Room 5</option>
-                            @else
-                            <option value="8">Room 5</option>
-                            @endif
-
-                            @if ($roomtoday == 9)
-                            <option value="9" selected>Room 6</option>
-                            @else
-                            <option value="9">Room 6</option>
-                            @endif
-
-                            @if ($roomtoday == 10)
-                            <option value="10" selected>Room 7 - Optha</option>
-                            @else
-                            <option value="10">Room 7 - Optha</option>
-                            @endif
-                            @if ($roomtoday == 11)
-                            <option value="11" selected>Room 8 </option>
-                            @else
-                            <option value="11">Room 8 </option>
-                            @endif
-                            @if ($roomtoday == 12)
-                            <option value="12" selected>Covid Room </option>
-                            @else
-                            <option value="12">Covid Room </option>
-                            @endif
                         </select>
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-primary" type="button" id="button-addon2">Generate
@@ -578,14 +519,13 @@ App\Http\Controllers\LoggedUser::user_role()==2)
 
 
 <!-- Modal -->
-<div class="modal fade" id="addschedule" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="addschedule" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header shadow bg-dark">
                 <h5 class="modal-title" id="exampleModalLabel">Select Type</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -607,7 +547,6 @@ App\Http\Controllers\LoggedUser::user_role()==2)
 </div>
 
 {{-- ELECTIVE SCHEDULE --}}
-
 <div class="modal fade" id="addsched1" name="" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-scrollable modal-lg ">
         <form id="addscheduleform" action="{{route('addschedule')}}" method="POST" enctype="multipart/form-data"
@@ -826,7 +765,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <form id="addscheduleform1" action="/addschedule2" method="POST" enctype="multipart/form-data">
             @csrf
-            <input class="form-control" type="date" class="selectdate" name="selectdate"
+            <input class="form-control" type="date" id="selectdate1" name="selectdate"
                 value="{{date('Y-m-d', strtotime($datetoday))}}" hidden>
             <div class="modal-content">
                 <div class="modal-header shadow-sm bg-danger">
@@ -837,7 +776,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="date" class="col-sm-3 col-form-label">Date of Operation:</label>
                         <div class="col-sm-9">
-                            <input type="date" id="date" name="date" class="form-control is-invalid font-weight-bold"
+                            <input type="date" id="date_emer" name="date" class="form-control is-invalid font-weight-bold"
                                 required>
                             <div class="invalid-feedback">
                                 required
@@ -953,7 +892,7 @@ App\Http\Controllers\LoggedUser::user_role()==2)
                     <div class="form-group row">
                         <label for="surgeon" class="col-sm-3 col-form-label">Surgeon:</label>
                         <div class="col-sm-9">
-                            <select class="selectpicker form-control col-sm-12 is-invalid" name="surgeon[]" multiple
+                            <select class="selectpicker form-control col-sm-12 is-invalid" id="surgeon_emer" name="surgeon[]" multiple
                                 data-live-search="true" required>
                                 <option disabled value="">-- Select Surgeon --</option>
                                 @foreach(\App\Http\Controllers\ReservationController::doclist() as $doclist)

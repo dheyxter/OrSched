@@ -86,6 +86,7 @@ $(function () {
     });
     //LOCKING THE DATE FOR THE ADDSCHEDULE FORM/MODAL
     $('#date').val($('#selectdate').val());
+    $('#date_emer').val($('#selectdate1').val());
 
     $('.btnCancel').on('click', function () {
         $pat_id = $(this).siblings('.patId').val();
@@ -412,76 +413,40 @@ $(function () {
     // })
 
     //WHEN BUTTON ADD IS CLICKED, IT WILL CHECK FOR VALIDATIONS
-    $('.btnAddSchedule').on('click', function () {
-        // $full_time = $('#full_time').val();
-        $show_time = $('#show_time').val();
-        console.log($show_time);
+    function validateForm() {
+        var isValid = true;
+        
+        // Check if all input fields and selects have values
+        $('#addscheduleform input, #addscheduleform select, #addscheduleform textarea').each(function() {
+            if ($(this).prop('required') && $.trim($(this).val()) === '') {
+                isValid = false;
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
 
-        // $time_in = $('#time_in').val();
-        // $available_time = $('#time_in').val();
-        // $input_time = $('#time').val();
-        // console.log($time_in);
-        // console.log($available_time);
+        // Check if at least one surgeon is selected
+        var selectedSurgeons = $('select[name="surgeon[]"]').val();
+        if (!selectedSurgeons || selectedSurgeons.length === 0) {
+            isValid = false;
+            Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: 'Please select at least one surgeon',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
 
-        //    var dt = new Date('01/01/1900 '+$timeout);
-        //    dt.setMinutes( dt.getMinutes() + 30 );
-        // //    console.log(dt);
+        // Return the result of validation
+        return isValid;
+    }
 
-        //    if($input_time < $available_time){
-        //         Swal.fire({
-        //             position: 'center',
-        //             icon: 'warning',
-        //             title: 'Invalid TIME-IN',
-        //             showConfirmButton: false,
-        //             timer: 1000
-        //         });
-        //         $('#time').attr("autofocus");
-        //     }
-        //     else 
-        // if ($timeout > '17:00') {
-        //     Swal.fire({
-        //         position: 'center',
-        //         icon: 'info',
-        //         title: 'Schedules are up to 5PM only',
-        //         showConfirmButton: false,
-        //         timer: 2000
-        //     });
-        // } else if ($input_time > '17:00') {
-        //     Swal.fire({
-        //         position: 'center',
-        //         icon: 'info',
-        //         title: 'Schedules are up to 5PM only',
-        //         showConfirmButton: false,
-        //         timer: 2000
-        //     });
-        // } else if ($input_time > $timeout || $input_time == $timeout) {
-        //     Swal.fire({
-        //         position: 'center',
-        //         icon: 'warning',
-        //         title: 'Invalid TIME-OUT',
-        //         showConfirmButton: false,
-        //         timer: 1000
-        //     });
-        //     $('#timeout').attr("autofocus");
-        // } else if ($('#date').val() == '' || $('#patient').val() == 0 || $('#procedures').val() == '' || $('#time').val() == '') {
-        //     Swal.fire({
-        //         position: 'center',
-        //         icon: 'warning',
-        //         title: 'Please fill all fields',
-        //         showConfirmButton: false,
-        //         timer: 1000
-        //     });
-        // } else if ($timeout == '') {
-        //     Swal.fire({
-        //         position: 'center',
-        //         icon: 'error',
-        //         title: "Timeout can't be blank",
-        //         showConfirmButton: false,
-        //         timer: 1000
-        //     });
-        // } else {
-        //ALL THE VALIDATIONS ARE FALSE
-        if ($show_time >= 0) {
+    $('.btnAddSchedule').on('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        if (validateForm()) {
             Swal.fire({
                 title: 'Confirmation',
                 text: "Are you sure about the details on scheduling?",
@@ -493,33 +458,63 @@ $(function () {
                 cancelButtonText: 'Back'
             }).then((result) => {
                 if (result.value) {
-                    // IF CONFIRMED
-                    // CALL THE ADD SCHEDULE FORM TO BE SUBMITTED
                     $('#addscheduleform').submit();
                     Swal.fire(
                         'Confirmed',
                         'Successfully scheduled',
                         'success'
-                    )
+                    );
                 }
             });
         } else {
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-                // footer: '<a href>Why do I have this issue?</a>'
-            })
+                position: 'center',
+                icon: 'warning',
+                title: 'Please fill out all required fields',
+                showConfirmButton: false,
+                timer: 2000
+            });
         }
     });
 
-    //WHEN BUTTON ADD IS CLICKED, IT WILL CHECK FOR VALIDATIONS
-    $('.btnAddSchedule1').on('click', function () {
-        $show_time = $('#show_time').val();
-        $show_date = $('#date').val();
-        console.log($show_date);
-        if ($show_time >= 0) {
 
+    //WHEN BUTTON ADD IS CLICKED, IT WILL CHECK FOR VALIDATIONS
+    function emervalidate() {
+        var isValid = true;
+    
+        // Check if all input fields, selects, and textareas have values
+        $('#addscheduleform1 input, #addscheduleform1 select, #addscheduleform1 textarea').each(function() {
+            if ($(this).prop('required') && $.trim($(this).val()) === '') {
+                isValid = false;
+                console.log("Invalid field: ", $(this).attr('name'));
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
+    
+        // Check if at least one surgeon is selected
+        var selectedSurgeons = $('#surgeon_emer').val();
+        if (!selectedSurgeons || selectedSurgeons.length === 0) {
+            isValid = false;
+            // console.log("No surgeon selected");
+            Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: 'Please select at least one surgeon',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+    
+        // Return the result of validation
+        return isValid;
+    }
+    
+    $('.btnAddSchedule1').on('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+    
+        if (emervalidate()) {
             Swal.fire({
                 title: 'Confirmation',
                 text: "Are you sure about the details on scheduling?",
@@ -531,26 +526,63 @@ $(function () {
                 cancelButtonText: 'Back'
             }).then((result) => {
                 if (result.value) {
-                    // IF CONFIRMED
-                    // CALL THE ADD SCHEDULE FORM TO BE SUBMITTED
-                    $('#addscheduleform1').submit();
+                    $('#addscheduleform1').submit(); // Correct form id
                     Swal.fire(
                         'Confirmed',
                         'Successfully scheduled',
                         'success'
-                    )
+                    );
                 }
             });
         } else {
             Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
+                position: 'center',
+                icon: 'warning',
+                title: 'Please fill out all required fields',
                 showConfirmButton: false,
                 timer: 2000
-            })
+            });
         }
     });
+    
+
+    // $('.btnAddSchedule1').on('click', function () {
+    //     $show_time = $('#show_time').val();
+    //     $show_date = $('#date').val();
+    //     console.log($show_date);
+    //     if ($show_time >= 0) {
+
+    //         Swal.fire({
+    //             title: 'Confirmation',
+    //             text: "Are you sure about the details on scheduling?",
+    //             icon: 'warning',
+    //             showCancelButton: true,
+    //             confirmButtonColor: '#3085d6',
+    //             confirmButtonText: 'Yes',
+    //             cancelButtonColor: '#d33',
+    //             cancelButtonText: 'Back'
+    //         }).then((result) => {
+    //             if (result.value) {
+    //                 // IF CONFIRMED
+    //                 // CALL THE ADD SCHEDULE FORM TO BE SUBMITTED
+    //                 $('#addscheduleform1').submit();
+    //                 Swal.fire(
+    //                     'Confirmed',
+    //                     'Successfully scheduled',
+    //                     'success'
+    //                 )
+    //             }
+    //         });
+    //     } else {
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             text: 'Something went wrong!',
+    //             showConfirmButton: false,
+    //             timer: 2000
+    //         })
+    //     }
+    // });
 
 
     // BUTTON FOR CHANGE USER ROLE
