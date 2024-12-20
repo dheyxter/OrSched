@@ -209,7 +209,7 @@ class HomeController extends Controller
             'cancel_remarks_by' => $employee,
             'cancel_remarks_at' => $today
         ]);
-        return redirect('/');
+        return redirect()->route('home');
 
     }
 

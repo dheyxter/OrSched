@@ -362,7 +362,7 @@ class ReservationController extends Controller
         ON hpersonal.employeeid = hprovider.employeeid AND hprovider.empstat = 'A'
         INNER JOIN htypser
         ON hpersonal.deptcode = htypser.tscode
-        WHERE htypser.tsdesc = 'SURGERY' OR htypser.tsdesc = 'ORTHOPEDICS' OR htypser.tsdesc = 'OPHTHALMOLOGY' OR htypser.tsdesc = 'OBSTETRICS' OR htypser.tsdesc = 'ENT-HNS'
+        WHERE htypser.tsdesc = 'SURGERY' OR htypser.tsdesc = 'ORTHOPEDICS' OR htypser.tsdesc = 'OPHTHALMOLOGY' OR htypser.tsdesc = 'OBSTETRICS' OR htypser.tsdesc = 'ENT-HNS' OR htypser.tsdesc = 'Dental'
         ORDER BY htypser.tsdesc");
     }
 
